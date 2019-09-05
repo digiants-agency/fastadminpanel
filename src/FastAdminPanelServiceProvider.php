@@ -31,7 +31,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
         ], 'fap_public');
 
         $this->publishes([
-            __DIR__.'/views'  => base_path('resources/views/vendor/fastadminpanel'),
+            __DIR__.'/views'  => base_path('resources/views/fastadminpanel'),
         ], 'fap_view');
     }
 

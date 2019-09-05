@@ -79,6 +79,7 @@ class FastAdminPanelInstall extends Command {
                 $table->string('table_name');
                 $table->text('fields');
                 $table->integer('is_dev');
+                $table->integer('multilanguage');
                 $table->integer('is_soft_delete');
                 $table->integer('sort');
                 $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
