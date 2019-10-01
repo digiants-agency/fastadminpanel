@@ -1,4 +1,5 @@
 <script type="text/x-template" id="template-index">
+
     <div class="index">
         <div v-show="!is_edit" class="btn btn-info" v-on:click="add_new_row">Add new</div>
         <div v-show="!is_edit" class="portlet box green">
@@ -62,7 +63,7 @@
             </div>
         </div>
         
-        <template-edit v-if="is_edit" :menu_item="menu_item" :id="edit_id" :language_id="edit_language_id" v-on:back="set_back"></template-edit>
+        <template-edit v-if="is_edit" :menu_item="menu_item" :id="edit_id" :language_id="edit_language_id" :key="edit_unique_id" v-on:back="set_back"></template-edit>
     </div>
 </script>
     

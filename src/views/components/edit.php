@@ -25,6 +25,14 @@
                 <div v-else-if="field.type == 'color'">
                     <input class="form-control colorpicker" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
                 </div>
+                <div v-else-if="field.type == 'date'">
+                    <input class="form-control datepicker" data-init="0" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
+                </div>
+                <div v-if="field.type == 'enum'">
+                    <select class="form-control" v-model="fields_instance[field.db_title]">
+                        <option :value="field.enum[index]" v-for="(item, index) in field.enum" v-text="field.enum[index]"></option>
+                    </select>
+                </div>
                 <div v-else-if="field.type == 'relationship'">
                     <select v-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
                         <option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
@@ -46,6 +54,10 @@
                         <div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Add photo</div>
                     </div>
                 </div>
+                <div v-else-if="field.type == 'file'">
+                    <input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
+                    <div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Add file</div>
+                </div>
                 <div v-else-if="field.type == 'gallery'">
                     <template v-for="(item, index) in fields_instance[field.db_title]">
                         <input class="form-control gallery-margin-top" type="text" v-model="fields_instance[field.db_title][index]">
@@ -55,6 +67,9 @@
                         </div>
                     </template>
                     <div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery(field.db_title)">Add photos</div>
+                </div>
+                <div v-else-if="field.type == 'translater'">
+                    <textarea class="form-control translate-field" v-model="fields_instance[field.db_title][k]" :placeholder="k" v-for="(v, k, i) in fields_instance[field.db_title]"></textarea>
                 </div>
                 <div v-else-if="field.type == 'number' || field.type == 'money'">
                     <input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
@@ -79,7 +94,10 @@
 <link rel="stylesheet" href="/vendor/fastadminpanel/css/spectrum.css" />
 <script src="/vendor/fastadminpanel/js/spectrum.js"></script>
 
+<link rel="stylesheet" href="/vendor/fastadminpanel/css/jquery.ui.css" />
+<script src="/vendor/fastadminpanel/js/jquery.ui.js"></script>
+
 <script src="/vendor/fastadminpanel/js/ckeditor-MyCustomUploadAdapterPlugin.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor.js"></script>
-<script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>  
+<script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>
 <script src="/vendor/fastadminpanel/js/components/edit.js"></script>

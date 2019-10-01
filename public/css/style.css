@@ -283,3 +283,35 @@ td.td-content {
 .langs-elm:hover {
     text-decoration: underline;
 }
+.ck-editor__editable_inline {
+    min-height: 250px;
+}
+.add-file-btn {
+    margin-top: 10px;
+}
+#loader svg path,
+#loader svg rect{
+	fill: #FF6700;
+}
+#loader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 100;
+	opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+}
+#loader.active {
+	opacity: 1;
+	pointer-events: auto;
+}
+.translate-field {
+    margin-bottom: 15px;
+}

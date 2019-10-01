@@ -111,17 +111,25 @@ Vue.component('template-menu',{
 
             return fields
         },
+        add_enum: function(select){
+            select.push('')
+            this.$forceUpdate()
+        },
+        remove_enum: function(select){
+            select.splice(-1,1)
+            this.$forceUpdate()
+        },
     },
     watch: {
-        // 'menu_item_edit.fields': function(val){
-        //     val.forEach((elm)=>{
-        //         if (elm.type == 'relationship') {
-        //             Vue.set(this.errors, field.db_title, '')
-        //         } else if () {
-
-        //         }
-        //     })
-        // }
+        'menu_item_edit.fields': function(fields){
+            fields.forEach((field)=>{
+                if (field.type == 'enum' && field.enum == undefined) {
+                    field.enum = []
+                } else if (field.type != 'enum' && field.enum != undefined) {
+                    delete field.enum;
+                }
+            })
+        }
     },
     mounted: function(){
         

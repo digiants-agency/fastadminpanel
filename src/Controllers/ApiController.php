@@ -116,29 +116,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
     private function add_field(&$table, $field) {
 
-        if ($field->type == 'text') {
+        if ($field->type == 'enum' || $field->type == 'password' || $field->type == 'text' || $field->type == 'email' || $field->type == 'color' || $field->type == 'file' || $field->type == 'photo') {
 
             $table->string($field->db_title);
 
-        } else if ($field->type == 'email') {
-
-            $table->string($field->db_title);
-            
-        } else if ($field->type == 'textarea') {
-
-            $table->text($field->db_title);
-            
-        } else if ($field->type == 'ckeditor') {
-
-            $table->text($field->db_title);
-            
-        } else if ($field->type == 'checkbox') {
+        } else if ($field->type == 'number' || $field->type == 'checkbox') {
 
             $table->integer($field->db_title);
-            
-        } else if ($field->type == 'color') {
-
-            $table->string($field->db_title);
             
         } else if ($field->type == 'date') {
 
@@ -148,33 +132,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
             $table->dateTime($field->db_title);
             
-        } else if ($field->type == 'file') {
-
-            $table->string($field->db_title);
-            
-        } else if ($field->type == 'photo') {
-
-            $table->string($field->db_title);
-            
-        } else if ($field->type == 'gallery') {
+        } else if ($field->type == 'translater' || $field->type == 'gallery' || $field->type == 'repeat' || $field->type == 'textarea' || $field->type == 'ckeditor') {
 
             $table->text($field->db_title);
-            
-        } else if ($field->type == 'password') {
-
-            $table->string($field->db_title);
             
         } else if ($field->type == 'money') {
 
             $table->decimal($field->db_title, 15, 2);
-            
-        } else if ($field->type == 'number') {
-
-            $table->integer($field->db_title);
-            
-        } else if ($field->type == 'enum') {
-            
-        } else if ($field->type == 'repeat') {
             
         } else if ($field->type == 'relationship') {
 
@@ -310,7 +274,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         $r = request();
 
         $fields = (array)json_decode($r->get('fields'));
-        unset($fields['id']);
+        // unset($fields['id']);
         unset($fields['created_at']);
         unset($fields['updated_at']);
 
@@ -330,7 +294,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         } else {
             $row = DB::table($r->get('table_name'))
-            ->where('id', $id)
+            ->where('id', $fields['id'])
             ->update($fields);
 
             $this->db_update_languages($id, $r->get('table_name'));
@@ -386,16 +350,28 @@ class ApiController extends \App\Http\Controllers\Controller {
         foreach ($langs as $l) {
             foreach ($field_properties as $properties) {
                 if ($properties->lang == 0) {
-                    $title = $properties->db_title;
-                    $update[$properties->db_title] = $row->$title;
+                    if ($properties->type == 'relationship' && $properties->relationship_count == 'single') {
+
+                        $title = 'id_' . $properties->relationship_table_name;
+                        $update[$title] = $row->$title;
+
+                    } else if ($properties->type != 'relationship') {
+
+                        $title = $properties->db_title;
+                        $update[$title] = $row->$title;
+                    } else {
+                        // TODO: 
+                    }
                 }
             }
         }
 
-        DB::table($table_name)
-        ->where('language_id', $row->language_id)
-        ->where('id', '!=', $row->id)
-        ->update($update);
+        if (count($update) > 0) {
+            DB::table($table_name)
+            ->where('language_id', $row->language_id)
+            ->where('id', '!=', $row->id)
+            ->update($update);
+        }
     }
 
     private function db_add_relationship_many ($id_first, $relationship_many) {

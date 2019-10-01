@@ -1,4 +1,9 @@
+var timeout_loading = null
+
 function request (path, params, callback, onerror) {
+
+    loading(true)
+
     $.ajax({
         type: "POST",
         url: path,
@@ -7,12 +12,31 @@ function request (path, params, callback, onerror) {
         success: function(data) {
             if (callback != undefined) 
                 callback(data)
+            loading(false)
         },
         error: function(data) {
             if (onerror != undefined) 
                 onerror(data)
+            loading(false)
         }
     });
+}
+
+function loading (is_load) {
+    if (is_load) {
+
+        $('#loader').addClass('active')
+
+    } else {
+
+        if (timeout_loading != null)
+            clearTimeout(timeout_loading)
+
+        timeout_loading = setTimeout(()=>{
+            
+            $('#loader').removeClass('active')
+        }, 200)
+    }
 }
 
 function set_cookie (name,value,days) {

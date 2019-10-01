@@ -105,11 +105,12 @@
                         <option value="number">Number</option>
                         <option value="enum">Select (ENUM)</option>
                         <option value="repeat">Repeat</option>
+                        <option value="translater">Translater</option>
                     </select>
                 </td>
                 <td>
-                    <input v-if="field.type != 'relationship'" v-model="field.db_title" type="text" class="form-control title" placeholder="Field DB name">
-                    <div v-else>
+                    <input v-if="field.type != 'relationship' && field.type != 'enum'" v-model="field.db_title" type="text" class="form-control title" placeholder="Field DB name">
+                    <div v-else-if="field.type == 'relationship'">
                         <select v-model="field.relationship_count" class="form-control type">
                             <option value="single">Single</option>
                             <option value="many">Many</option>
@@ -122,6 +123,12 @@
                                 <option :value="item.db_title" v-for="(item, index) in get_fields_by_table_name(field.relationship_table_name)" v-text="item.title"></option>
                             </select>
                         </div>
+                    </div>
+                    <div v-else-if="field.type == 'enum'">
+                        <input v-model="field.db_title" type="text" class="form-control title" placeholder="Field DB name">
+                        <input v-for="(item, index) in field.enum" v-model="field.enum[index]" type="text" class="form-control title" placeholder="Element">
+                        <button class="btn-primary btn" v-on:click="add_enum(field.enum)">Add</button>
+                        <button class="btn-danger btn" v-on:click="remove_enum(field.enum)">Remove</button>
                     </div>
                 </td>
                 <td>

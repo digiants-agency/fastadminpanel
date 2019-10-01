@@ -1,4 +1,5 @@
 Vue.component('template-edit',{
+
     template: '#template-edit',
     props: ['menu_item', 'id', 'language_id'],
     components: {
@@ -22,7 +23,8 @@ Vue.component('template-edit',{
 
             this.menu_item.fields.forEach((field)=>{
 
-                if (field.type == 'gallery' && fields[field.db_title]) {
+                if ((field.type == 'gallery' || field.type == 'translater') && fields[field.db_title]) {
+                    
                     fields[field.db_title] = JSON.parse(fields[field.db_title])
                 }
             })
@@ -35,7 +37,7 @@ Vue.component('template-edit',{
 
             this.menu_item.fields.forEach((field)=>{
 
-                if (field.type == 'gallery') {
+                if (field.type == 'gallery' || field.type == 'translater') {
                     prepared_field_instance[field.db_title] = JSON.stringify(fields_instance[field.db_title])
                 }
             })
@@ -105,6 +107,7 @@ Vue.component('template-edit',{
                     if (type == 'date') return '2000-00-00'
                     if (type == 'datetime') return '2000-00-00 12:00:00'
                     if (type == 'gallery') return []
+                    if (type == 'translater') return {}
                     if (type == 'repeat') return ''
                     return ''
                 }
@@ -137,6 +140,22 @@ Vue.component('template-edit',{
                 }
             };
         },
+        add_file: function(id){
+
+            window.open('/laravel-filemanager?type=file', 'FileManager', 'width=900,height=600');
+            window.SetUrl = (items)=>{
+
+                for (var i = 0; i < items.length; i++) {
+
+                    var url = items[i].url.replace(document.location.origin, '')
+
+                    this.fields_instance[id] = url
+                    this.$forceUpdate()
+
+                    break;
+                }
+            };
+        },
         add_gallery: function(id){
             window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
             window.SetUrl = (items)=>{
@@ -156,6 +175,34 @@ Vue.component('template-edit',{
         },
         remove_gallery: function(id, index){
             this.fields_instance[id].splice(index, 1)
+            this.$forceUpdate()
+        },
+        init_date: function(){
+            
+            var app = this
+            $(".datepicker").each((i, elm)=>{
+
+                var id = $(elm).attr('id')
+                var today = new Date()
+                var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+                if (app.fields_instance[id] != undefined && app.fields_instance[id] != '')
+                    date = app.fields_instance[id]
+                else app.fields_instance[id] = date
+
+                if ($(elm).attr('data-init') == "0") {
+
+                    $(elm).datepicker({
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function(text) {
+                            app.fields_instance[id] = text
+                        }
+                    })
+                    $(elm).attr('data-init', '1')
+                }
+                
+                $(elm).datepicker( "setDate", date );
+            })
         },
         init_color: function(){
 
@@ -177,10 +224,20 @@ Vue.component('template-edit',{
                 })
             })
         },
+        init_enum: function(){
+
+            this.menu_item.fields.forEach((field)=>{
+
+                if (field.type == 'enum') {
+                    if (field.enum.length > 0)
+                        this.fields_instance[field.db_title] = field.enum[0]
+                }
+            })
+        },
         get_relationships: function(stack, callback){
             
             if (stack.length == 0) {
-
+                
                 callback()
                 return
             }
@@ -235,6 +292,7 @@ Vue.component('template-edit',{
                     if (field.relationship_count == 'many') {
                         this.fields_instance['$' + this.menu_item.table_name + '_' + field.relationship_table_name] = []
                     }
+
                 }
             })
 
@@ -262,9 +320,12 @@ Vue.component('template-edit',{
                         this.is_loading = false
                         this.fields_instance = this.unprepare_fields(data[0])
                         this.init_color()
+                        this.init_date()
                     })
                 } else {
                     this.init_color()
+                    this.init_date()
+                    this.init_enum()
                 }
             })
         },
@@ -273,14 +334,9 @@ Vue.component('template-edit',{
         },
     },
     created: function(){
-
-        this.refresh()
     },
     mounted: function(){
 
-        this.$root.$on('set_language', (lang)=>{
-
-            this.refresh()
-        })
+        this.refresh()
     },
 })

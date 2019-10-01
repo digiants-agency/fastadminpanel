@@ -1,4 +1,5 @@
 Vue.component('template-index',{
+
     template: '#template-index',
     data: function () {
         return {
@@ -9,6 +10,7 @@ Vue.component('template-index',{
             instances: [],
             edit_id: 0,
             edit_language_id: 0,
+            edit_unique_id: 0,
             is_edit: false,
             search_timeout: null,
             search: '',
@@ -84,7 +86,12 @@ Vue.component('template-index',{
                 })
 
                 this.instances = data
+
+                this.rerender_edit()
             })
+        },
+        rerender_edit: function(){
+            this.edit_unique_id++
         },
         get_count: function(){
             request('/admin/db-select', {
@@ -95,7 +102,6 @@ Vue.component('template-index',{
                 limit: 999999,
             }, (data)=>{
                 this.count = data.length
-                // console.log('get_count result')
                 this.get_fields_instances()
             })
         },
