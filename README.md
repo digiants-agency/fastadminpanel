@@ -9,7 +9,7 @@ TODO: required_once field, show in list: editable, soft delete, fields (date, da
                 
 1. Configure DB and APP_URL file .env
 2. composer require sv-digiants/fastadminpanel
-3. Publish the packages config and assets: `php artisan vendor:publish --tag=fap_config` and `php artisan vendor:publish --tag=fap_public`
+3. Publish the packages config and assets: `php artisan vendor:publish --tag=fap_config` and `php artisan vendor:publish --tag=fap_view`
 4. php artisan fastadminpanel:install
 5. And add class aliases:
 ```php
@@ -17,9 +17,9 @@ TODO: required_once field, show in list: editable, soft delete, fields (date, da
 ```
 6. Publish the packages config and assets: `php artisan vendor:publish --tag=lfm_config` and `php artisan vendor:publish --tag=lfm_public`
 7. Run commands to clear cache: `php artisan route:clear` and `php artisan config:clear`
-8. In "config/lfm.php" add line:
+8. In "config/lfm.php":
 ```php
-'middlewares' => ['admin'],
+add line: 'middlewares' => ['admin'],
 change line: ('disk' => 'public',) to ('disk' => 'lfm',)
 ```
 9. Add disk "config/filesystems.php":
