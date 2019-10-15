@@ -151,6 +151,7 @@ Vue.component('template-index',{
             this.is_edit = false
             this.menu_item = menu_item
             this.order = order
+            this.offset = 0
             this.get_count()
         },
     },
