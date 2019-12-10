@@ -42,7 +42,7 @@ class MyUploadAdapter {
         xhr.addEventListener( 'error', () => reject( genericErrorText ) );
         xhr.addEventListener( 'abort', () => reject() );
         xhr.addEventListener( 'load', () => {
-            const response = xhr.response;
+            const response = JSON.parse(xhr.response);
 
             // This example assumes the XHR server's "response" object will come with
             // an "error" which has its own "message" that can be passed to reject()
@@ -59,7 +59,7 @@ class MyUploadAdapter {
             // This URL will be used to display the image in the content. Learn more in the
             // UploadAdapter#upload documentation.
             resolve( {
-                default: response.url
+                default: '/' + response.url
             } );
         } );
 
