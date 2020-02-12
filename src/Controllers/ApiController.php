@@ -15,6 +15,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         $offset = $this->get_val('offset', 0);
         $limit = $this->get_val('limit', 100);
         $order = $this->get_val('order', 'id');
+        $sort_order = $this->get_val('sort_order', 'ASC');
         $fields = $this->get_val('fields', '*');
         $where = $this->get_val('where', '');
         $language = $this->get_val('language', '');
@@ -30,7 +31,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         })
         ->offset($offset)
         ->limit($limit)
-        ->orderBy(DB::raw($order))
+        ->orderBy(DB::raw($order), $sort_order)
         ->get();
 
         if ($relationships == '') {
@@ -543,10 +544,10 @@ class ApiController extends \App\Http\Controllers\Controller {
         $img = request()->file('upload');
 
         if ($img != null) {
-            $img_name = $img->getClientOriginalName();
+            $img_name = time().'-'.$img->getClientOriginalName();
             $img->move($upload_path, $img_name);
 
-            return response()->json('{"url":"' . $upload_path . '/' . $img_name . '"}');
+            return response()->json('{"url":"' . $upload_path . $img_name . '"}');
         }
 
         return response()->json('{"error":"Error, file not found"}');

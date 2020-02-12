@@ -14,6 +14,10 @@
                                 <select v-on:change="get_fields_instances" v-model="order">
                                     <option v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :value="field.db_title" v-text="field.title"></option>
                                 </select>
+                                <select v-on:change="get_fields_instances" v-model="sort_order">
+                                    <option value="DESC">Descending</option>
+                                    <option value="ASC">Ascending</option>
+                                </select>
                             </label>
                         </div>
                         <label>

@@ -8,6 +8,9 @@ Vue.component('template-content',{
         }
     },
     mounted: function(){
+        this.$root.$on('set_menu_back', (item)=>{
+            this.$refs.index.set_back(false)
+        })
         this.$root.$on('set_menu', (item)=>{
 
             this.menu_item = item
@@ -25,6 +28,13 @@ Vue.component('template-content',{
                 var order = ''
                 for (var i = 0; i < item.fields.length; i++) {
                     if (item.fields[i].show_in_list != 'no') {
+                        order = item.fields[i].db_title
+                        break
+                    }
+                }
+                // check date
+                for (var i = 0; i < item.fields.length; i++) {
+                    if (item.fields[i].show_in_list != 'no' && item.fields[i].db_title == 'date') {
                         order = item.fields[i].db_title
                         break
                     }

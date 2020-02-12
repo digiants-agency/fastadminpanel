@@ -5,6 +5,7 @@ Vue.component('template-index',{
         return {
             menu_item: {},
             order: '',
+            sort_order: 'DESC',
             count: 0,
             offset: 0,
             instances: [],
@@ -75,6 +76,7 @@ Vue.component('template-index',{
             request('/admin/db-select', {
                 table: this.menu_item.table_name,
                 order: this.order,
+                sort_order: this.sort_order,
                 offset: this.offset,
                 language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
                 where: where,

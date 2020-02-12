@@ -9,7 +9,7 @@ TODO: required_once field, show in list: editable, soft delete, fields (date, da
                 
 1. Configure DB and APP_URL file .env
 2. composer require sv-digiants/fastadminpanel
-3. Publish the packages config and assets: `php artisan vendor:publish --tag=fap_config` and `php artisan vendor:publish --tag=fap_view`
+3. Publish the packages config and assets: `php artisan vendor:publish --tag=fap_public` and `php artisan vendor:publish --tag=fap_view`
 4. php artisan fastadminpanel:install
 5. And add class aliases:
 ```php
@@ -31,7 +31,7 @@ change line: ('disk' => 'public',) to ('disk' => 'lfm',)
     'visibility' => 'public',
 ],
 ```
-10. unisharp/laravel-filemanager/src/Lfm.php
+10. /vendor/unisharp/laravel-filemanager/src/Lfm.php
 
 ```php
 // Change first function:
@@ -75,4 +75,12 @@ public static function mb_pathinfo($path, $options = null)
             return $ret;
     }
 }
+```
+11. /vendor/unisharp/laravel-filemanager/src/Controllers/UploadController.php:
+
+```php
+// change line 46:
+$response = count($error_bag) > 0 ? $error_bag : parent::$success_response;
+// to:
+$response = count($error_bag) > 0 ? $error_bag : array(parent::$success_response);
 ```

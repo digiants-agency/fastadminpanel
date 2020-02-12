@@ -1,0 +1,7 @@
+To add field:
+
+1) views/fastadminpanel/components/menu.php
+Menu select option
+
+2) /vendor/sv-digiants/fastadminpanel/src/Controllers/ApiController.php
+function add_field(&$table, $field)

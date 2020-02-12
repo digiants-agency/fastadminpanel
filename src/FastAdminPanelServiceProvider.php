@@ -7,7 +7,7 @@ use Digiants\FastAdminPanel\Controllers;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Foundation\AliasLoader;
 
 class FastAdminPanelServiceProvider extends ServiceProvider
 {
@@ -36,6 +36,18 @@ class FastAdminPanelServiceProvider extends ServiceProvider
     }
 
     public function register() {
-        
+
+        // require_once __DIR__ . '/Helpers/JSAssembler.php';
+        // require_once __DIR__ . '/Helpers/Lang.php';
+        // require_once __DIR__ . '/Helpers/ResizeImg.php';
+        // require_once __DIR__ . '/Helpers/Translater.php';
+
+        $this->app->booting(function() {
+            $loader = AliasLoader::getInstance();
+            $loader->alias('JSAssembler', \Digiants\FastAdminPanel\Helpers\JSAssembler::class);
+            $loader->alias('Lang', \Digiants\FastAdminPanel\Helpers\Lang::class);
+            $loader->alias('ResizeImg', \Digiants\FastAdminPanel\Helpers\ResizeImg::class);
+            $loader->alias('Tr', \Digiants\FastAdminPanel\Helpers\Translater::class);
+        });
     }
 }
