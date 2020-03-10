@@ -13,7 +13,7 @@ class Translater {
     
     private static $cache = [];
 
-    public static function tr($title, $controller = '') {
+    public static function tr($title, $value, $group, $controller = '') {
 
         if ($controller == '') {
             $action = app('request')->route()->getAction();
@@ -29,20 +29,24 @@ class Translater {
             ->first();
             
             if ($translate == null) {
-
+                
                 $database = Config::get('database.connections.mysql.database');
                 $next_id = DB::select(DB::raw("SELECT `AUTO_INCREMENT`
                 FROM  INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_SCHEMA = '$database'
                 AND   TABLE_NAME   = 'translates'"))[0]->AUTO_INCREMENT;
-                
+
                 foreach (Lang::get_langs() as $l) {
                     DB::table('translates')->insert([
-                        'title'         => '',
+                        'title'         => $controller,
                         'slug'          => $controller,
                         'language'      => $l->tag,
-                        'language_id'   => $next,
-                        'phrases'       => json_encode([$title => $title], JSON_UNESCAPED_UNICODE),
+                        'language_id'   => $next_id,
+                        'phrases'       => json_encode([
+                            $group => [
+                                $title => $value,
+                            ],
+                        ], JSON_UNESCAPED_UNICODE),
                     ]);
                 }
 
@@ -51,8 +55,8 @@ class Translater {
                 foreach (Lang::get_langs() as $l) {
                     $tr = DB::table('translates')->where('slug', $controller)->where('language', $l->tag)->first();
                     $phrases = json_decode($tr->phrases, true);
-                    if (!isset($phrases[$title])) {
-                        $phrases[$title] = $title;
+                    if (!isset($phrases[$group][$title])) {
+                        $phrases[$group][$title] = $value;
                         DB::table('translates')
                         ->where('slug', $controller)
                         ->where('language', $l->tag)
@@ -77,9 +81,14 @@ class Translater {
                 $cache[$controller] = $phrases;
             }
             
-            return $cache[$controller][$title];
+            return Translater::prepare_content($cache[$controller][$group][$title]);
         }
 
         return 'Saved';
+    }
+
+    private static function prepare_content ($content) {
+        return str_replace('
+', '<br>', str_replace(']', '</span>', str_replace('[', '<span>', $content)));
     }
 }

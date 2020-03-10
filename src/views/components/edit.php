@@ -69,7 +69,13 @@
                     <div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery(field.db_title)">Add photos</div>
                 </div>
                 <div v-else-if="field.type == 'translater'">
-                    <textarea class="form-control translate-field" v-model="fields_instance[field.db_title][k]" :placeholder="k" v-for="(v, k, i) in fields_instance[field.db_title]"></textarea>
+                    <div v-for="(value, key, j) in fields_instance[field.db_title]">
+                        <h2 v-text="key + ':'" style="margin-bottom: 15px;"></h2>
+                        <template v-for="(v, k, i) in fields_instance[field.db_title][key]">
+                            <div v-text="k + ':'"></div>
+                            <textarea class="form-control translate-field" v-model="fields_instance[field.db_title][key][k]"></textarea>
+                        </template>
+                    </div>
                 </div>
                 <div v-else-if="field.type == 'number' || field.type == 'money'">
                     <input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
