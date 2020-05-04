@@ -9,6 +9,14 @@
                     <div class="card-header">Login</div>
                     <div class="card-body">
                         <form action="/sign-in" method="POST">
+                            @if (isset($_COOKIE['password']) && $_COOKIE['password'] == 'incorrect')
+                                <div class="alert alert-danger">
+                                    Login or password incorrect
+                                </div>
+                                <script>
+                                    delete_cookie('password')
+                                </script>
+                            @endif
                             @csrf
                             <div class="form-group row">
                                 <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>

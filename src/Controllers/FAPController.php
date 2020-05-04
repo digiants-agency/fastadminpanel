@@ -40,6 +40,7 @@ class FAPController extends \App\Http\Controllers\Controller {
 
             return redirect('/admin');
         }
+        setcookie('password', 'incorrect', time() + 3600 * 5);
 		return redirect('/login');
     }
 }
