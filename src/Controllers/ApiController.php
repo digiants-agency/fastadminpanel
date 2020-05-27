@@ -539,7 +539,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             return response()->json($validator->errors());
         };
 
-        $upload_path = "photos/1/";
+        $upload_path = "photos/1/uploaded";
 
         $img = request()->file('upload');
 
