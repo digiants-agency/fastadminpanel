@@ -11,34 +11,29 @@ class ApiController extends \App\Http\Controllers\Controller {
 
     public function db_select () {
 
-        $table = $this->get_val('table', 'error');
+        $table = $this->get_val('table');
         $offset = $this->get_val('offset', 0);
         $limit = $this->get_val('limit', 100);
         $order = $this->get_val('order', 'id');
         $sort_order = $this->get_val('sort_order', 'ASC');
         $fields = $this->get_val('fields', '*');
         $where = $this->get_val('where', '');
-        $language = $this->get_val('language', '');
         $relationships = $this->get_val('relationships', '');   // many
 
-        $values = DB::table($table)
+        $values = DB::table($this->get_table(
+            $this->get_val('table'),
+            $this->get_val('language')
+        ))
         ->selectRaw($fields)
         ->when($where != '', function($q) use ($where){
             $q->whereRaw($where);
-        })
-        ->when($language != '', function($q) use ($language){
-            $q->where('language', $language);
         })
         ->offset($offset)
         ->limit($limit)
         ->orderBy(DB::raw($order), $sort_order)
         ->get();
-
-        if ($relationships == '') {
-
-            return $values;
-
-        } else {
+        
+        if ($relationships != '') {
 
             $rels = json_decode($relationships);
 
@@ -67,9 +62,9 @@ class ApiController extends \App\Http\Controllers\Controller {
                     return $item;
                 });
             }
-
-            return $values;
         }
+
+        return $values;
     }
 
     private function get_val ($title, $default = '') {
@@ -82,25 +77,82 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $default;
     }
 
+    private function get_tables ($entity, $multilanguage = -1) {
+
+        $tables = [];
+
+        if ($multilanguage == -1) {
+
+            $menu = DB::table('menu')
+            ->select('multilanguage', 'table_name')
+            ->when(is_numeric($entity), function($q) use ($entity){
+                $q->where('id', $entity);
+            })
+            ->when(!is_numeric($entity), function($q) use ($entity){
+                $q->where('table_name', $entity);
+            })
+            ->first();
+
+            $title = $menu->table_name;
+            $multilanguage = $menu->multilanguage;
+
+        } else {
+            $title = $entity;
+        }
+
+        if ($multilanguage == 1) {
+
+            $langs = DB::table('languages')->get();
+            foreach ($langs as $lang) {
+                $tables[] = $title.'_'.$lang->tag;
+            }
+            
+        } else {
+
+            $tables[] = $title;
+        }
+
+        return $tables;
+    }
+
+    private function get_table ($table, $lang) {
+
+        $element = DB::table('menu')
+        ->select('multilanguage')
+        ->where('table_name', $table)
+        ->first();
+
+        if (empty($element))
+            return $table;
+
+        if ($element->multilanguage == 1 && !empty($lang))
+            return $table.'_'.$lang;
+        return $table;
+    }
+
     public function db_create_table () {
 
         $r = request();
 
-        Schema::create($r->get('table_name'), function ($table) use ($r) {
-            $table->bigIncrements('id');
-            $table->string('language')->nullable();
-            $table->integer('language_id')->nullable();
-            
-            foreach (json_decode($r->get('fields')) as $field) {
-                $this->add_field($table, $field);
-            }
+        $tables = $this->get_tables($r->get('table_name'), $r->get('multilanguage'));
 
-            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+        foreach ($tables as $table) {
 
-            if ($r->get('is_soft_delete') == 1)
-                $table->timestamp('deleted_at')->nullable();
-        });
+            Schema::create($table, function ($table) use ($r) {
+                $table->bigIncrements('id');
+                
+                foreach (json_decode($r->get('fields')) as $field) {
+                    $this->add_field($table, $field);
+                }
+
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+
+                if ($r->get('is_soft_delete') == 1)
+                    $table->timestamp('deleted_at')->nullable();
+            });
+        }
+
 
         DB::table('menu')->insert([
             'title'             => $r->get('title'),
@@ -115,7 +167,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         return 'Success';
     }
 
-    private function add_field(&$table, $field) {
+    private function add_field (&$table, $field) {
 
         if ($field->type == 'enum' || $field->type == 'password' || $field->type == 'text' || $field->type == 'email' || $field->type == 'color' || $field->type == 'file' || $field->type == 'photo') {
 
@@ -151,12 +203,16 @@ class ApiController extends \App\Http\Controllers\Controller {
 
                 $r = request();
 
-                Schema::create($r->get('table_name').'_'.$field->relationship_table_name, function ($table) use ($r, $field) {
-                    $table->bigIncrements('id');
-                    
-                    $table->integer('id_'.$r->get('table_name'));
-                    $table->integer('id_'.$field->relationship_table_name);
-                });
+                $table_name = $r->get('table_name').'_'.$field->relationship_table_name;
+
+                if (!Schema::hasTable($table_name)) {
+                    Schema::create($table_name, function ($table) use ($r, $field) {
+                        $table->bigIncrements('id');
+                        
+                        $table->integer('id_'.$r->get('table_name'));
+                        $table->integer('id_'.$field->relationship_table_name);
+                    });
+                }
             }
             // $field->relationship_view_field
         }
@@ -166,14 +222,16 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         $r = request();
 
-        Schema::dropIfExists($r->get('table_name'));
+        $tables = $this->get_tables($r->get('id'));
+
+        foreach ($tables as $table)
+            Schema::dropIfExists($table);
 
         DB::table('menu')->where('id', $r->get('id'))->delete();
 
         return 'Success';
     }
 
-    // TODO: refactor
     public function db_update_table () {
 
         $r = request();
@@ -186,20 +244,24 @@ class ApiController extends \App\Http\Controllers\Controller {
         ->first()
         ->fields);
         
-        //                      \_(0_0)_/
-        $this->remove_fields($r->get('table_name'), json_decode($r->get('to_remove')), $fields_curr);
-        $this->rename_fields($r->get('table_name'), $fields_new, $fields_curr);
-        $this->add_fields($r->get('table_name'), $fields_new, $fields_curr);
-        
-        DB::table('menu')->
-        where('table_name', $r->get('table_name'))->
-        update([
-            'title'             => $r->get('title'),
-            'fields'            => $r->get('fields'),
-            'is_dev'            => $r->get('is_dev'),
-            'is_soft_delete'    => $r->get('is_soft_delete'),
-            'sort'              => $r->get('sort'),
-        ]);
+        $tables = $this->get_tables($r->get('table_name'));
+
+        foreach ($tables as $table) {
+
+            $this->remove_fields($table, json_decode($r->get('to_remove')), $fields_curr);
+            $this->rename_fields($table, $fields_new, $fields_curr);
+            $this->add_fields($table, $fields_new, $fields_curr);
+            
+            DB::table('menu')->
+            where('table_name', $r->get('table_name'))->
+            update([
+                'title'             => $r->get('title'),
+                'fields'            => $r->get('fields'),
+                'is_dev'            => $r->get('is_dev'),
+                'is_soft_delete'    => $r->get('is_soft_delete'),
+                'sort'              => $r->get('sort'),
+            ]);
+        }
 
         return 'Success';
     }
@@ -280,69 +342,63 @@ class ApiController extends \App\Http\Controllers\Controller {
         unset($fields['updated_at']);
 
         $id = $r->get('id');
-        $lang = $r->get('language');
 
-        $relationship_many = $this->db_rm_relationship_many($fields);
+        $relationship_many = $this->db_get_and_rm_relationship_many($fields);
 
         if ($id == 0) {
-            $row = DB::table($r->get('table_name'))->insert($fields);
 
-            $new_id = DB::getPdo()->lastInsertId();
+            $tables = $this->get_tables($r->get('table_name'));
 
-            $this->db_add_languages($new_id, $r->get('table_name'), $fields);
+            foreach ($tables as $table) {
 
-            $this->db_add_relationship_many($new_id, $relationship_many);
+                $id = DB::table($table)->insertGetId($fields);
+            }
+
+            $this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
 
         } else {
-            $row = DB::table($r->get('table_name'))
-            ->where('id', $fields['id'])
-            ->update($fields);
 
-            $this->db_update_languages($id, $r->get('table_name'));
+            $element = DB::table('menu')
+            ->select('multilanguage')
+            ->where('table_name', $r->get('table_name'))
+            ->first();
 
-            $this->db_add_relationship_many($id, $relationship_many);
+            if ($element->multilanguage == 1) {
+
+                $table = $r->get('table_name').'_'.$r->get('language');
+
+                $row = DB::table($table)
+                ->where('id', $fields['id'])
+                ->update($fields);
+
+                $this->db_update_languages($id, $r->get('table_name'), $table);
+
+            } else {
+
+                $table = $r->get('table_name');
+
+                $row = DB::table($table)
+                ->where('id', $fields['id'])
+                ->update($fields);
+            }
+
+            $this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
         }
 
         return 'Success';
     }
 
-    private function db_add_languages ($id, $table_name, $fields) {
+    private function db_update_languages ($id, $table_name, $table_name_curr) {
 
         $langs = DB::table('languages')->get();
-        $i = 0;
-        
-        foreach ($langs as $l) {
 
-            if ($i == 0) {
-
-                DB::table($table_name)
-                ->where('id', $id)
-                ->update([
-                    'language' => $l->tag,
-                    'language_id' => $id,
-                ]);
-
-            } else {
-
-                $fields['language'] = $l->tag;
-                $fields['language_id'] = $id;
-                DB::table($table_name)->insert($fields);
-            }
-
-            $i++;
-        }
-    }
-
-    private function db_update_languages ($id, $table_name) {
-
-        $langs = DB::table('languages')->get();
         $field_properties = json_decode(DB::table('menu')
         ->select('fields')
         ->where('table_name', $table_name)
         ->first()
         ->fields);
 
-        $row = DB::table($table_name)
+        $row = DB::table($table_name_curr)
         ->where('id', $id)
         ->first();
 
@@ -368,22 +424,23 @@ class ApiController extends \App\Http\Controllers\Controller {
         }
 
         if (count($update) > 0) {
-            DB::table($table_name)
-            ->where('language_id', $row->language_id)
-            ->where('id', '!=', $row->id)
-            ->update($update);
+            $tables = $this->get_tables($table_name);
+
+            foreach ($tables as $table) {
+
+                if ($table_name_curr == $table)
+                    continue;
+
+                DB::table($table)
+                ->where('id', $row->id)
+                ->update($update);
+            }
         }
     }
 
-    private function db_add_relationship_many ($id_first, $relationship_many) {
+    private function db_add_relationship_many ($id_first, $relationship_many, $table) {
 
-        $id_first = DB::table(request()->get('table_name'))
-        ->select('language_id')
-        ->where('id', $id_first)
-        ->first()
-        ->language_id;
-
-        $col_first = 'id_' . request()->get('table_name');
+        $col_first = 'id_' . $table;
 
         foreach ($relationship_many as $rel) {
 
@@ -412,7 +469,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         }
     }
 
-    private function db_rm_relationship_many (&$fields) {
+    private function db_get_and_rm_relationship_many (&$fields) {
 
         $data = [];
 
@@ -427,7 +484,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $data;
     }
 
-    private function db_remove_relationship_many ($id, $language_id, $table_name) {
+    private function db_remove_relationship_many ($id, $table_name) {
 
         $langs = DB::table('languages')->get();
         $field_properties = json_decode(DB::table('menu')
@@ -440,7 +497,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
                 
                 DB::table($table_name . '_' . $properties->relationship_table_name)
-                ->where('id_' . $table_name, $language_id)
+                ->where('id_' . $table_name, $id)
                 ->delete();
             }
         }
@@ -451,23 +508,18 @@ class ApiController extends \App\Http\Controllers\Controller {
         $r = request();
 
         $id = $r->get('id');
-
         $lang = $r->get('language');
 
         if ($lang != '') {
 
-            $language_id = DB::table($r->get('table_name'))
-            ->select('language_id')
-            ->where('id', $id)
-            ->where('language', $lang)
-            ->first()
-            ->language_id;
+            foreach ($this->get_tables($r->get('table_name')) as $table) {
 
-            DB::table($r->get('table_name'))
-            ->where('language_id', $language_id)
-            ->delete();
-
-            $this->db_remove_relationship_many($id, $language_id, $r->get('table_name'));
+                DB::table($table)
+                ->where('id', $id)
+                ->delete();
+            }
+            
+            $this->db_remove_relationship_many($id, $r->get('table_name'));
 
         } else {
 
@@ -485,24 +537,19 @@ class ApiController extends \App\Http\Controllers\Controller {
         $r = request();
 
         $ids = json_decode($r->get('ids'));
-        
         $lang = $r->get('language');
 
         if ($lang != '') {
             foreach ($ids as $id) {
+
+                foreach ($this->get_tables($r->get('table_name')) as $table) {
+
+                    DB::table($table)
+                    ->where('id', $id)
+                    ->delete();
+                }
                 
-                $language_id = DB::table($r->get('table_name'))
-                ->select('language_id')
-                ->where('id', $id)
-                ->where('language', $lang)
-                ->first()
-                ->language_id;
-
-                DB::table($r->get('table_name'))
-                ->where('language_id', $language_id)
-                ->delete();
-
-                $this->db_remove_relationship_many($id, $language_id, $r->get('table_name'));
+                $this->db_remove_relationship_many($id, $r->get('table_name'));
             }
         } else {
 
@@ -518,13 +565,15 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         $r = request();
 
-        // $table_name = $r->get('table_name');
         $field = json_decode($r->get('field'));
-        $lang = $r->get('language');
 
-        return DB::table($field->relationship_table_name)
-        ->select('language_id as id', $field->relationship_view_field.' as title')
-        ->where('language', $lang)
+        $table = $this->get_table(
+            $field->relationship_table_name, 
+            $r->get('language')
+        );
+
+        return DB::table($table)
+        ->select('id', $field->relationship_view_field.' as title')
         ->get();
     }
     
@@ -539,7 +588,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             return response()->json($validator->errors());
         };
 
-        $upload_path = "photos/1/uploaded";
+        $upload_path = "photos/1/";
 
         $img = request()->file('upload');
 

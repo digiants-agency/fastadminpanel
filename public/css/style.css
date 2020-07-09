@@ -1,19 +1,19 @@
 body, input, textarea {
-    font-family: "Roboto", sans-serif;
-    color: #333333;
+	font-family: "Roboto", sans-serif;
+	color: #333333;
 }
 img {
 	max-width: 100%;
 }
 * {
-    box-sizing: border-box;
-    outline: none !important;
+	box-sizing: border-box;
+	outline: none !important;
 	-webkit-tap-highlight-color: transparent;
 	/* -webkit-appearance:none; */
 }
 body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, p, span, b, i, input, textarea, fieldset {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 .none {
 	display: none;
@@ -41,253 +41,253 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	margin: 0 auto;
 }
 .navbar-laravel {
-    box-shadow: 0 2px 4px rgba(0,0,0,.04);
+	box-shadow: 0 2px 4px rgba(0,0,0,.04);
 }
 .my-form {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
 }
 .my-form .row {
-    margin-left: 0;
-    margin-right: 0;
+	margin-left: 0;
+	margin-right: 0;
 }
 .login-form {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
 }
 .login-form .row {
-    margin-left: 0;
-    margin-right: 0;
+	margin-left: 0;
+	margin-right: 0;
 }
-    
+	
 .topbar {
-    padding: 10px 15px;
-    background-color: #1f1f1f;
-    color: #C5C5C5;
-    font-size: 18px;
-    line-height: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	padding: 10px 15px;
+	background-color: #1f1f1f;
+	color: #C5C5C5;
+	font-size: 18px;
+	line-height: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 .sidebar {
-    background-color: #303030;
-    width: 235px;
-    min-height: calc(100vh - 40px);
-    overflow-y: auto;
+	background-color: #303030;
+	width: 235px;
+	min-height: calc(100vh - 40px);
+	overflow-y: auto;
 }
 .sidebar-menu-item {
-    border-top: 1px solid #484848;
-    color: #d9d9d9;
-    padding: 10px 15px;
-    font-size: 14px;
-    font-weight: 300;
-    cursor: pointer;
+	border-top: 1px solid #484848;
+	color: #d9d9d9;
+	padding: 10px 15px;
+	font-size: 14px;
+	font-weight: 300;
+	cursor: pointer;
 }
 .sidebar-menu-item.active,
 .sidebar-menu-item:hover {
-    background-color: #292929;
+	background-color: #292929;
 }
 main {
-    display: flex;
+	display: flex;
 }
 .content {
-    width: calc(100% - 235px);
-    padding: 15px;
+	width: calc(100% - 235px);
+	padding: 15px;
 }
 .content-title {
-    font-size: 28px;
-    display: block;
-    color: #666;
-    margin: 0px 0px 15px 0px;
-    font-weight: 300;
+	font-size: 28px;
+	display: block;
+	color: #666;
+	margin: 0px 0px 15px 0px;
+	font-weight: 300;
 }
 .control-label {
-    padding-top: 7px;
-    margin-bottom: 0;
-    text-align: right;
+	padding-top: 7px;
+	margin-bottom: 0;
+	text-align: right;
 }
 h1 {
-    font-size: 33px;
-    font-weight: 300;
-    margin-bottom: 10px;
+	font-size: 33px;
+	font-weight: 300;
+	margin-bottom: 10px;
 }
 .rem {
-    font-weight: bold;
-    font-size: 33px;
-    height: 38px;
-    line-height: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    cursor: pointer;
+	font-weight: bold;
+	font-size: 33px;
+	height: 38px;
+	line-height: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	cursor: pointer;
 }
 .table-editfields {
-    margin-top: 15px;
+	margin-top: 15px;
 }
 .btn {
-    cursor: pointer;
+	cursor: pointer;
 }
 .disabled {
-    opacity: 0.5;
+	opacity: 0.5;
 }
 .sides {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 .portlet {
-    border: 1px solid #30d0c1;
-    margin-top: 25px;
+	border: 1px solid #30d0c1;
+	margin-top: 25px;
 }
 .portlet-title {
-    background-color: #26a69a;
-    padding: 0 10px;
-    margin-bottom: 0;
-    color: #fff;
-    line-height: 41px;
+	background-color: #26a69a;
+	padding: 0 10px;
+	margin-bottom: 0;
+	color: #fff;
+	line-height: 41px;
 }
 #datatable_filter {
-    padding: 0.5em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	padding: 0.5em;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 #datatable_filter label {
-    margin: 0;
+	margin: 0;
 }
 #datatable_filter input {
-    margin-left: 15px;
+	margin-left: 15px;
 }
 .datatable {
-    display: table;
-    border-bottom: 1px solid #aaa;
+	display: table;
+	border-bottom: 1px solid #aaa;
 }
 .datatable tr {
-    width: 100%;
+	width: 100%;
 }
 .datatable .btn {
-    padding-top: 1px;
-    padding-bottom: 0;
-    font-size: 14px;
+	padding-top: 1px;
+	padding-bottom: 0;
+	font-size: 14px;
 }
 .td-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 50px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	min-height: 50px;
 }
 .td-actions-delete {
-    margin-left: 5px;
+	margin-left: 5px;
 }
 td.td-content {
-    vertical-align: middle;
-    font-size: 14px;
+	vertical-align: middle;
+	font-size: 14px;
 }
 .index-pagination {
-    padding: 0 .75rem .75rem .75rem;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    align-items: center;
+	padding: 0 .75rem .75rem .75rem;
+	display: flex;
+	justify-content: space-between;
+	font-size: 14px;
+	align-items: center;
 }
 .index-pagination-btns {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 .index-pagination-numbers {
-    display: flex;
+	display: flex;
 }
 .index-pagination-number {
-    color: #333;
-    padding: 0.5em 1em;
-    margin-left: 2px;
-    margin-right: 2px;
-    border: 1px solid transparent;
-    cursor: pointer;
+	color: #333;
+	padding: 0.5em 1em;
+	margin-left: 2px;
+	margin-right: 2px;
+	border: 1px solid transparent;
+	cursor: pointer;
 }
 .index-pagination-prev {
-    cursor: pointer;
-    border: 1px solid transparent;
-    padding: 0.5em 1em;
-    margin-right: 5px;
+	cursor: pointer;
+	border: 1px solid transparent;
+	padding: 0.5em 1em;
+	margin-right: 5px;
 }
 .index-pagination-next {
-    cursor: pointer;
-    border: 1px solid transparent;
-    padding: 0.5em 1em;
-    margin-left: 5px;
+	cursor: pointer;
+	border: 1px solid transparent;
+	padding: 0.5em 1em;
+	margin-left: 5px;
 }
 .index-pagination-prev:hover,
 .index-pagination-next:hover,
 .index-pagination-number.active,
 .index-pagination-number:hover {
-    border: 1px solid #979797;
-    background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
+	border: 1px solid #979797;
+	background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
 }
 .index-pagination-prev.disabled:hover,
 .index-pagination-next.disabled:hover {
-    border: 1px solid transparent;
-    background: transparent;
+	border: 1px solid transparent;
+	background: transparent;
 }
 .index-pagination-prev.disabled,
 .index-pagination-next.disabled {
-    color: #727272;
-    pointer-events: none;
+	color: #727272;
+	pointer-events: none;
 }
 .mass-delete-col {
-    padding: 0 .75rem .75rem .75rem;
+	padding: 0 .75rem .75rem .75rem;
 }
 .space-between {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 .align-self-flex-start {
-    align-self: center;
+	align-self: center;
 }
 .input-error {
-    color: red;
+	color: red;
 }
 .form-control-checkbox {
-    width: auto;
+	width: auto;
 }
 .relationship-many {
-    display: flex;
-    margin-bottom: 10px;
+	display: flex;
+	margin-bottom: 10px;
 }
 .photo-preview-wrapper {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
+	display: flex;
+	align-items: center;
+	padding-top: 10px;
 }
 .photo-preview-img {
-    max-height: 100px;
-    margin-right: 10px;
+	max-height: 100px;
+	margin-right: 10px;
 }
 .gallery-margin-top {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 .gallery-margin-top:nth-child(1) {
-    margin-top: 0px;
+	margin-top: 0px;
 }
 .langs {
-    display: flex;
-    text-transform: uppercase;
+	display: flex;
+	text-transform: uppercase;
 }
 .langs-elm {
-    margin: 0 10px;
-    cursor: pointer;
+	margin: 0 10px;
+	cursor: pointer;
 }
 .langs-elm.active {
-    color: white;
-    text-decoration: underline;
+	color: white;
+	text-decoration: underline;
 }
 .langs-elm:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 .ck-editor__editable_inline {
-    min-height: 250px;
+	min-height: 250px;
 }
 .add-file-btn {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 #loader svg path,
 #loader svg rect{
@@ -302,16 +302,19 @@ td.td-content {
 	background-color: rgba(255, 255, 255, 0.7);
 	z-index: 100;
 	opacity: 0;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s;
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.3s;
 }
 #loader.active {
 	opacity: 1;
 	pointer-events: auto;
 }
 .translate-field {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
+}
+.flex {
+	display: flex;
 }

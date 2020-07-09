@@ -1,7 +1,7 @@
 Vue.component('template-edit',{
 
     template: '#template-edit',
-    props: ['menu_item', 'id', 'language_id'],
+    props: ['menu_item', 'id'],
     components: {
         // Use the <ckeditor> component in this view.
         ckeditor: CKEditor.component
@@ -245,12 +245,10 @@ Vue.component('template-edit',{
             var field = stack.pop()
             
             request('/admin/db-relationship', {
-                // table_name: this.menu_item.table_name,
                 language: app.get_language().tag,
                 field: JSON.stringify(field)
             }, (data)=>{
 
-                // this.relationships[field.relationship_table_name] = data                
                 Vue.set(this.relationships, field.relationship_table_name, data)
                 this.get_relationships(stack, callback)
             })
@@ -306,14 +304,15 @@ Vue.component('template-edit',{
                     for (i in this.menu_item.fields) {
                         var field = this.menu_item.fields[i]
                         if (field.relationship_count == 'many')
-                            rels.push([this.language_id, this.menu_item.table_name + '_' + field.relationship_table_name, field.relationship_table_name])
+                            rels.push([this.id, this.menu_item.table_name + '_' + field.relationship_table_name, field.relationship_table_name])
                     }
                     if (rels.length > 0) rels = JSON.stringify(rels)
                     else rels = ''
                     
                     request('/admin/db-select', {
                         table: this.menu_item.table_name,
-                        where: 'language_id=' + this.language_id + ' AND language="' + app.get_language().tag + '"',
+                        where: 'id=' + this.id,
+                        language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
                         relationships: rels,
                         limit: 1,
                     }, (data)=>{

@@ -15,6 +15,9 @@ class JSAssembler {
     public static function get () {
 
         // need research of version collision
+
+        if (empty(Route::getCurrentRoute()))
+            return;
         
         $page_name = explode('@', Route::getCurrentRoute()->getActionName())[1];
 

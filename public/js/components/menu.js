@@ -43,6 +43,14 @@ Vue.component('template-menu',{
             this.to_remove.push(this.menu_item_edit.fields[index].id)
             this.menu_item_edit.fields.splice(index, 1)
         },
+        up_menu_item: function(index) {
+            if (index > 0) {
+                var temp = this.menu_item_edit.fields[index]
+                this.menu_item_edit.fields[index] = this.menu_item_edit.fields[index - 1]
+                this.menu_item_edit.fields[index - 1] = temp
+                this.$forceUpdate()
+            }
+        },
         add_menu_item: function(){
 
             var id = 0

@@ -142,7 +142,10 @@
                     </select>
                 </td>
                 <td>
-                    <div v-on:click="remove_menu_item(index)" class="rem btn btn-danger">-</div>
+                    <div class="flex">
+                        <div v-on:click="remove_menu_item(index)" class="rem btn btn-danger">-</div>
+                        <div v-on:click="up_menu_item(index)" class="btn btn-primary">↑</div>
+                    </div>
                 </td>
             </tr>
         </table>

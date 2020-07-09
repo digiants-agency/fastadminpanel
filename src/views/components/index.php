@@ -41,7 +41,7 @@
                                 </td>
                                 <td class="td-content" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" v-text="instance[field.db_title]"></td>
                                 <td class="td-actions">
-                                    <div class="btn btn-xs btn-info" v-on:click="edit_row(instance.id, instance.language_id)">Edit</div>
+                                    <div class="btn btn-xs btn-info" v-on:click="edit_row(instance.id)">Edit</div>
                                     <div class="btn btn-xs btn-danger td-actions-delete" v-on:click="remove_row(instance.id)">Delete</div>
                                 </td>
                             </tr>
@@ -67,7 +67,7 @@
             </div>
         </div>
         
-        <template-edit v-if="is_edit" :menu_item="menu_item" :id="edit_id" :language_id="edit_language_id" :key="edit_unique_id" v-on:back="set_back"></template-edit>
+        <template-edit v-if="is_edit" :menu_item="menu_item" :id="edit_id" :key="edit_unique_id" v-on:back="set_back"></template-edit>
     </div>
 </script>
     

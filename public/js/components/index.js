@@ -10,7 +10,6 @@ Vue.component('template-index',{
             offset: 0,
             instances: [],
             edit_id: 0,
-            edit_language_id: 0,
             edit_unique_id: 0,
             is_edit: false,
             search_timeout: null,
@@ -43,13 +42,11 @@ Vue.component('template-index',{
                 })
             }
         },
-        edit_row: function(id, lang_id){
-            this.edit_language_id = lang_id
+        edit_row: function(id){
             this.edit_id = id
             this.is_edit = true
         },
         add_new_row: function(){
-            this.edit_language_id = 0
             this.edit_id = 0
             this.is_edit = true
         },
