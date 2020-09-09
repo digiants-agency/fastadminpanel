@@ -1,60 +1,54 @@
 @extends('fastadminpanel.layouts.app')
 
 @section('content')
+<style>
+    body {
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
 <main class="login-form">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Login</div>
-                    <div class="card-body">
-                        <form action="/sign-in" method="POST">
-                            @if (isset($_COOKIE['password']) && $_COOKIE['password'] == 'incorrect')
-                                <div class="alert alert-danger">
-                                    Login or password incorrect
-                                </div>
-                                <script>
-                                    delete_cookie('password')
-                                </script>
-                            @endif
-                            @csrf
-                            <div class="form-group row">
-                                <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
-                                <div class="col-md-6">
-                                    <input type="text" id="email_address" class="form-control" name="email" required autofocus>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                <div class="col-md-6">
-                                    <input type="password" id="password" class="form-control" name="password" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-md-6 offset-md-4">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="remember" value="true"> Remember Me
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Login
-                                </button>
-                                {{-- <a href="#" class="btn btn-link">
-                                    Forgot Your Password?
-                                </a> --}}
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <div class="login-form-fields">
+        <div class="login-form-logo-wrapper">
+            <img src="/vendor/fastadminpanel/images/white-logo.svg" alt="" class="login-form-logo">
         </div>
+        <div class="login-form-title">Sign in</div>
+        <form action="/sign-in" method="POST">
+            <input type="text" class="login-form-input" name="email" placeholder="E-mail" required autofocus>
+            <input type="password" class="login-form-input" name="password" placeholder="Password" required>
+            <label class="login-form-checkbox">
+                <input class="login-form-checkbox-input" style="display: none;" type="checkbox" name="remember" value="true">
+                <div class="login-form-checkbox-rectangle">
+                    <svg class="login-form-checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
+                </div>
+                <div class="login-form-checkbox-text">Remember Me</div>
+            </label>
+            <button type="submit" class="login-form-btn">
+                Login
+            </button>
+
+            @if (isset($_COOKIE['password']) && $_COOKIE['password'] == 'incorrect')
+                <div class="mt-30 red">
+                    Login or password incorrect
+                </div>
+                <script>
+                    delete_cookie('password')
+                </script>
+            @endif
+            @csrf
+        </form>
     </div>
 </main>
 @endsection

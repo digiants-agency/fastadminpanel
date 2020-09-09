@@ -52,13 +52,117 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	margin-right: 0;
 }
 .login-form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	color: white;
+}
+.login-form-fields {
+	width: 417px;
+	max-width: 100%;
+}
+.login-form-logo-wrapper {
+	padding: 12px 7px 0px 7px;
+	border: 2px solid white;
+	border-radius: 50%;
+	width: 73px;
+	height: 73px;
+	margin: 0 auto;
+}
+.login-form-logo {
+	width: 55px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-form-title {
+	font-size: 48px;
+	text-align: center;
+	line-height: 55px;
+	position: relative;
+	margin-bottom: 30px;
+}
+.login-form-title::before,
+.login-form-title::after {
+	content: "";
+	width: 113px;
+	height: 1px;
+	position: absolute;
+	background-color: white;
+	top: 32px;
+}
+.login-form-title::before {
+	left: 0;
+}
+.login-form-title::after {
+	right: 0;
+}
+.login-form-input {
+	width: 100%;
+	display: block;
+	border: 2px solid #FFFFFF;
+	border-radius: 10px;
+	background-color: transparent;
+	height: 59px;
+	padding: 0 16px;
+	color: white;
+	margin-bottom: 11px;
+}
+.login-form-checkbox {
+	display: flex;
+	user-select: none;
+	cursor: pointer;
+	margin: 20px 0 35px;
+}
+.login-form-checkbox-rectangle {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #FFFFFF;
+	border-radius: 3px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-form-checkbox-mark {
+	display: none;
+	width: 15px;
+	height: 15px;
+}
+.login-form-checkbox-input:checked + .login-form-checkbox-rectangle > .login-form-checkbox-mark {
+	display: block;
+}
+.login-form-checkbox-text {
+	font-size: 18px;
+	line-height: 25px;
+	margin-left: 10px;
+	font-weight: 300;
+	color: rgba(255, 255, 255, 0.5);
+}
+.login-form-btn {
+	background-color: #9CC9E6;
+	border-radius: 10px;
+	color: #000000;
+	font-size: 24px;
+	height: 59px;
+	width: 100%;
+	display: block;
+	border: 0;
+}
+.mt-30 {
+	margin-top: 30px;
+}
+.red {
+	color: red;
+}
+/*.login-form {
 	padding-top: 1.5rem;
 	padding-bottom: 1.5rem;
 }
 .login-form .row {
 	margin-left: 0;
 	margin-right: 0;
-}
+}*/
 	
 .topbar {
 	padding: 10px 15px;
@@ -76,17 +180,42 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	min-height: calc(100vh - 40px);
 	overflow-y: auto;
 }
-.sidebar-menu-item {
+.sidebar-menu-item,
+a.sidebar-menu-item {
 	border-top: 1px solid #484848;
 	color: #d9d9d9;
 	padding: 10px 15px;
 	font-size: 14px;
 	font-weight: 300;
 	cursor: pointer;
+	display: block;
+	position: relative;
+	user-select: none;
 }
-.sidebar-menu-item.active,
-.sidebar-menu-item:hover {
+.sidebar-menu-item.router-link-active,
+.sidebar-menu-item:hover,
+a.sidebar-menu-item.router-link-active,
+a.sidebar-menu-item:hover {
 	background-color: #292929;
+}
+.sidebar-menu-item.child {
+	padding-left: 25px;
+	background-color: #242424;
+	display: none;
+}
+.sidebar-menu-item-ico {
+    width: 8px;
+    height: 8px;
+    fill: white;
+    position: absolute;
+    right: 10px;
+    top: 17px;
+}
+.sidebar-menu-item-parent.active > .sidebar-menu-item > .sidebar-menu-item-ico {
+	transform: rotate(90deg);
+}
+.sidebar-menu-item-parent.active > .sidebar-menu-item.child {
+	display: block;
 }
 main {
 	display: flex;
@@ -94,13 +223,6 @@ main {
 .content {
 	width: calc(100% - 235px);
 	padding: 15px;
-}
-.content-title {
-	font-size: 28px;
-	display: block;
-	color: #666;
-	margin: 0px 0px 15px 0px;
-	font-weight: 300;
 }
 .control-label {
 	padding-top: 7px;
@@ -317,4 +439,94 @@ td.td-content {
 }
 .flex {
 	display: flex;
+}
+.single-block-title {
+	font-size: 28px;
+	display: block;
+	color: #666;
+	margin: 0px 0px 15px 0px;
+	font-weight: 300;
+}
+.single-block {
+	padding: 15px;
+	border: 1px solid #999;
+	border-top: 0;
+}
+.single {
+	border-top: 1px solid #999;
+}
+.single-btns {
+	padding: 15px;
+	margin-top: 15px;
+}
+.single-repeat {
+    padding: 15px 0;
+    border: 1px solid #999;
+}
+.single-repeat-title {
+	font-size: 22px;
+	display: block;
+	color: #666;
+	margin: 0px 0px 15px 0px;
+	font-weight: 300;
+	padding: 0 15px;
+}
+.single-repeat-group {
+	border-top: 1px solid #999;
+	padding: 15px;
+    position: relative;
+}
+.single-repeat-btns {
+	padding: 15px 15px 0 15px;
+	display: flex;
+	justify-content: flex-end;
+	border-top: 1px solid #999;
+}
+.single-repeat-delete {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    cursor: pointer;
+    z-index: 1;
+    user-select: none;
+}
+.single-repeat-move {
+    position: absolute;
+    left: 24px;
+    top: 0;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 19px;
+    cursor: pointer;
+    padding-bottom: 6px;
+    border-radius: 0 0 5px 0;
+    z-index: 1;
+    user-select: none;
+}
+.editable-input {
+	max-width: 85px;
+}
+.editable-input.saving {
+	background-color: #ff9f9f;
+}
+.editable-input.saved {
+	background-color: #acf0ac;
+}
+.ck-content > * {
+    margin: 15px 0;
 }

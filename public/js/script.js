@@ -22,6 +22,30 @@ function request (path, params, callback, onerror) {
     });
 }
 
+function request_file (path, params, callback, onerror) {
+
+    loading(true)
+
+    return $.ajax({
+        type: "POST",
+        url: path,
+        processData: false,
+        contentType: false,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: params,
+        success: function(data) {
+            if (callback != undefined) 
+                callback(data)
+            loading(false)
+        },
+        error: function(data) {
+            if (onerror != undefined) 
+                onerror(data)
+            loading(false)
+        }
+    });
+}
+
 function loading (is_load) {
     if (is_load) {
 

@@ -7,7 +7,7 @@ class ResizeImg {
 	public static function get ($path, $width, $height) {
 
 		$site_path = public_path();
-		$is_chrome = strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') != false;
+		$is_chrome = strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') != false || strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') != false;
 
 		preg_match('/[^\/]+\.(jpg|jpeg|png|JPG|JPEG|PNG)$/', $path, $match);
 

@@ -9,38 +9,52 @@ use DB;
 
 class FAPController extends \App\Http\Controllers\Controller {
 
-    public function admin () {
+	public function admin () {
 
-        $languages = DB::table('languages')->get();
+		$languages = DB::table('languages')->get();
+		$custom_components_path = resource_path('views/fastadminpanel/components/custom');
+		$custom_components_files = scandir($custom_components_path);
+		$custom_components = [];
 
-        $data = array(
-            'languages' => $languages,
+		foreach ($custom_components_files as $custom_component) {
+			$pathinfo = pathinfo($custom_component);
+			if ($pathinfo['extension'] == 'php') {
+				$custom_components[] = [
+					'name'	=>	$pathinfo['filename'],
+					'path'	=> 'fastadminpanel/components/custom/'.$pathinfo['filename'],
+				];
+			}
+		}
+
+		$data = array(
+			'languages'			=> $languages,
+			'custom_components'	=> $custom_components,
 		);
 
-        return view('fastadminpanel.pages.admin')->with($data);
-    }
+		return view('fastadminpanel.pages.admin')->with($data);
+	}
 
-    public function login () {
+	public function login () {
 
 
-        $data = array(
+		$data = array(
 		);
 
 		return view('fastadminpanel.pages.login')->with($data);
-    }
+	}
 
-    public function sign_in () {
+	public function sign_in () {
 
-        $request = request();
+		$request = request();
 
-        $email = $request->get('email');
-        $password = $request->get('password');
+		$email = $request->get('email');
+		$password = $request->get('password');
 
-        if (Auth::attempt(['email' => $email, 'password' => $password], $request->get('remember') === 'true')) {
+		if (Auth::attempt(['email' => $email, 'password' => $password], $request->get('remember') === 'true')) {
 
-            return redirect('/admin');
-        }
-        setcookie('password', 'incorrect', time() + 3600 * 5);
+			return redirect('/admin');
+		}
+		setcookie('password', 'incorrect', time() + 3600 * 5);
 		return redirect('/login');
-    }
+	}
 }

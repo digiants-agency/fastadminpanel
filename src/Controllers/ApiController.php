@@ -6,603 +6,792 @@ use App\User;
 use DB;
 use Schema;
 use Validator;
+use Lang;
+use Digiants\FastAdminPanel\Helpers\Single;
 
 class ApiController extends \App\Http\Controllers\Controller {
 
-    public function db_select () {
-
-        $table = $this->get_val('table');
-        $offset = $this->get_val('offset', 0);
-        $limit = $this->get_val('limit', 100);
-        $order = $this->get_val('order', 'id');
-        $sort_order = $this->get_val('sort_order', 'ASC');
-        $fields = $this->get_val('fields', '*');
-        $where = $this->get_val('where', '');
-        $relationships = $this->get_val('relationships', '');   // many
-
-        $values = DB::table($this->get_table(
-            $this->get_val('table'),
-            $this->get_val('language')
-        ))
-        ->selectRaw($fields)
-        ->when($where != '', function($q) use ($where){
-            $q->whereRaw($where);
-        })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy(DB::raw($order), $sort_order)
-        ->get();
-        
-        if ($relationships != '') {
-
-            $rels = json_decode($relationships);
-
-            foreach ($rels as $rel) {
-
-                $rel_id = $rel[0];
-                $rel_table = $rel[1];
-                $rel_connected_table = $rel[2];
-    
-                $vals = DB::table($rel_table)
-                ->select('id_' . $rel_connected_table.' as id')
-                ->where('id_'.$table, $rel_id)
-                ->get();
-
-                $field = [];
-
-                foreach ($vals as $v) {
-                    $field[] = [$rel_connected_table => $v->id];
-                }
-
-                $val_title = '$'.$rel_table;
-
-                $values->map(function ($item) use ($val_title, $field) {
-
-                    $item->$val_title = $field;
-                    return $item;
-                });
-            }
-        }
-
-        return $values;
-    }
-
-    private function get_val ($title, $default = '') {
-        
-        $r = request();
-        $val = $r->get($title);
-
-        if (!empty($val))
-            return $val;
-        return $default;
-    }
+	public function update_dropdown () {
+
+		$dropdown = request()->get('dropdown');
+
+		DB::table('dropdown')->truncate();
+
+		$query = [];
+
+		if (!empty($dropdown)) {
+			foreach ($dropdown as $elm) {
+				$query[] = [
+					'id'	=> $elm['id'],
+					'title'	=> $elm['title'],
+					'sort'	=> $elm['sort'],
+				];
+			}
+		}
+
+		DB::table('dropdown')->insert($query);
+	}
+
+	public function set_single ($id) {
+
+		$blocks = request()->get('blocks');
+
+		foreach ($blocks as $block) {
+			foreach ($block as $field) {
+
+				$table_name = Single::$type_table[$field['type']];
+
+				if ($field['is_multilanguage'] == 1)
+					$table_name .= '_'.$_COOKIE['lang'];
+
+				Single::prepare_field_to_db($field);
+
+				if ($field['value'] == null) $field['value'] = '';
+
+				DB::statement("INSERT INTO $table_name (field_id, value) 
+				VALUES(".$field['id'].", ?) 
+				ON DUPLICATE KEY 
+				UPDATE value=?", [$field['value'],$field['value']]);
+			}
+		}
+	}
+
+	public function get_single ($id) {
+		
+		$single_fields = DB::table('single_field')
+		->select(
+			'id',
+			'is_multilanguage',
+			'type',
+			'title',
+			'block_title',
+			'single_page_id',
+			'sort'
+		)->where('single_page_id', $id)
+		->orderBy('sort', 'ASC')
+		->get();
+
+		$blocks = [];
+
+		foreach ($single_fields as &$field) {
+
+			$table_name = Single::$type_table[$field->type];
+
+			if ($field->is_multilanguage == 1)
+				$table_name .= '_'.$_COOKIE['lang'];
+			
+			$obj = DB::table($table_name)
+			->select('value')
+			->where('field_id', $field->id)
+			->first();
+
+			if (empty($obj)) $field->value = null;
+			else Single::prepare_field_to_admin($field, $obj->value);
+
+			if (empty($blocks[$field->block_title]))
+				$blocks[$field->block_title] = [];
+
+			$blocks[$field->block_title][$field->title] = $field;
+		}
+
+		return $blocks;
+	}
+
+	public function get_menu () {
+
+		$menu = DB::table('menu')
+		->select(
+			'id', 
+			'table_name',
+			'title',
+			'fields',
+			'is_dev', 
+			'multilanguage',
+			'is_soft_delete',
+			'sort',
+			'parent',
+			DB::raw('"multiple" AS type')
+		)->get();
+
+		$dropdown = DB::table('dropdown')->get();
+
+		foreach ($menu as &$elm) {
+			$elm->fields = json_decode($elm->fields);
+		}
+
+		return response()->json(
+			[
+				'menu'		=> array_values(
+					DB::table('single_page')
+					->select(
+						'id AS table_name',
+						'title',
+						'sort',
+						'parent',
+						DB::raw('0 AS is_dev'),
+						DB::raw('"single" AS type')
+					)->get()
+					->merge($menu)
+					->sortBy('sort')
+					->toArray()
+				),
+				'dropdown'	=> $dropdown,
+			]
+		);
+	}
+
+	public function db_select () {
+
+		$table = $this->get_val('table');
+		$offset = $this->get_val('offset', 0);
+		$limit = $this->get_val('limit', 100);
+		$order = $this->get_val('order', 'id');
+		$sort_order = $this->get_val('sort_order', 'ASC');
+		$fields = $this->get_val('fields', '*');
+		$where = $this->get_val('where', '');
+		$relationships = $this->get_val('relationships', '');   // many
+
+		$values = DB::table($this->get_table(
+			$this->get_val('table'),
+			$this->get_val('language')
+		))
+		->selectRaw($fields)
+		->when($where != '', function($q) use ($where){
+			$q->whereRaw($where);
+		})
+		->offset($offset)
+		->limit($limit)
+		->orderBy(DB::raw($order), $sort_order)
+		->get();
+		
+		if ($relationships != '') {
+
+			$rels = json_decode($relationships);
+
+			foreach ($rels as $rel) {
+
+				$rel_id = $rel[0];
+				$rel_table = $rel[1];
+				$rel_connected_table = $rel[2];
+
+				if ($rel_table == $rel_connected_table.'_'.$rel_connected_table)
+					$rel_connected_table_title = $rel_connected_table.'_other';
+				else $rel_connected_table_title = $rel_connected_table;
+	
+				$vals = DB::table($rel_table)
+				->select('id_' . $rel_connected_table_title.' as rel_id')
+				->where('id_'.$table, $rel_id)
+				->orderBy('id', 'ASC')
+				->get();
+
+				$field = [];
+
+				foreach ($vals as $v) {
+					$field[] = [$rel_connected_table => $v->rel_id];
+				}
+
+				$val_title = '$'.$rel_table;
+
+				$values->map(function ($item) use ($val_title, $field) {
+
+					$item->$val_title = $field;
+					return $item;
+				});
+			}
+		}
+
+		return $values;
+	}
+
+	public function db_count () {
+
+		$table = $this->get_val('table');
+		$language = $this->get_val('language');
+
+		return DB::selectOne("SELECT count(*) AS count FROM $table$language")->count;
+	}
+
+	private function get_val ($title, $default = '') {
+		
+		$r = request();
+		$val = $r->get($title);
+
+		if (!empty($val))
+			return $val;
+		return $default;
+	}
+
+	private function get_tables ($entity, $multilanguage = -1) {
+
+		$tables = [];
+
+		if ($multilanguage == -1) {
+
+			$menu = DB::table('menu')
+			->select('multilanguage', 'table_name')
+			->when(is_numeric($entity), function($q) use ($entity){
+				$q->where('id', $entity);
+			})
+			->when(!is_numeric($entity), function($q) use ($entity){
+				$q->where('table_name', $entity);
+			})
+			->first();
+
+			$title = $menu->table_name;
+			$multilanguage = $menu->multilanguage;
+
+		} else {
+			$title = $entity;
+		}
+
+		if ($multilanguage == 1) {
+
+			$langs = DB::table('languages')->get();
+			foreach ($langs as $lang) {
+				$tables[] = $title.'_'.$lang->tag;
+			}
+			
+		} else {
+
+			$tables[] = $title;
+		}
+
+		return $tables;
+	}
+
+	private function get_table ($table, $lang) {
+
+		$element = DB::table('menu')
+		->select('multilanguage')
+		->where('table_name', $table)
+		->first();
+
+		if (empty($element))
+			return $table;
+
+		if ($element->multilanguage == 1 && !empty($lang))
+			return $table.'_'.$lang;
+		return $table;
+	}
+
+	public function db_create_table () {
 
-    private function get_tables ($entity, $multilanguage = -1) {
-
-        $tables = [];
+		$r = request();
+
+		$tables = $this->get_tables($r->get('table_name'), $r->get('multilanguage'));
 
-        if ($multilanguage == -1) {
-
-            $menu = DB::table('menu')
-            ->select('multilanguage', 'table_name')
-            ->when(is_numeric($entity), function($q) use ($entity){
-                $q->where('id', $entity);
-            })
-            ->when(!is_numeric($entity), function($q) use ($entity){
-                $q->where('table_name', $entity);
-            })
-            ->first();
+		foreach ($tables as $table) {
 
-            $title = $menu->table_name;
-            $multilanguage = $menu->multilanguage;
+			Schema::create($table, function ($table) use ($r) {
+				$table->bigIncrements('id');
+				
+				foreach (json_decode($r->get('fields')) as $field) {
+					$this->add_field($table, $field);
+				}
 
-        } else {
-            $title = $entity;
-        }
+				$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+				$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 
-        if ($multilanguage == 1) {
+				if ($r->get('is_soft_delete') == 1)
+					$table->timestamp('deleted_at')->nullable();
+			});
+		}
 
-            $langs = DB::table('languages')->get();
-            foreach ($langs as $lang) {
-                $tables[] = $title.'_'.$lang->tag;
-            }
-            
-        } else {
 
-            $tables[] = $title;
-        }
+		DB::table('menu')->insert([
+			'title'             => $r->get('title'),
+			'table_name'        => $r->get('table_name'),
+			'fields'            => $r->get('fields'),
+			'is_dev'            => $r->get('is_dev'),
+			'multilanguage'     => $r->get('multilanguage'),
+			'is_soft_delete'    => $r->get('is_soft_delete'),
+			'sort'              => $r->get('sort'),
+			'parent'            => (empty($r->get('parent'))) ? 0 : $r->get('parent'),
+		]);
+
+		return 'Success';
+	}
+
+	private function add_field (&$table, $field) {
+
+		if ($field->type == 'enum' || $field->type == 'password' || $field->type == 'text' || $field->type == 'email' || $field->type == 'color' || $field->type == 'file' || $field->type == 'photo') {
+
+			$table->string($field->db_title);
+
+		} else if ($field->type == 'number' || $field->type == 'checkbox') {
+
+			$table->integer($field->db_title);
+			
+		} else if ($field->type == 'date') {
+
+			$table->date($field->db_title);
+			
+		} else if ($field->type == 'datetime') {
+
+			$table->dateTime($field->db_title);
+			
+		} else if ($field->type == 'translater' || $field->type == 'gallery' || $field->type == 'repeat' || $field->type == 'textarea' || $field->type == 'ckeditor') {
+
+			$table->text($field->db_title);
+			
+		} else if ($field->type == 'money') {
 
-        return $tables;
-    }
+			$table->decimal($field->db_title, 15, 2);
+			
+		} else if ($field->type == 'relationship') {
+
+			if ($field->relationship_count == 'single') {
+
+				$table->integer('id_'.$field->relationship_table_name);
+
+			} else if ($field->relationship_count == 'many') {
+
+				$r = request();
+
+				$table_name = $r->get('table_name').'_'.$field->relationship_table_name;
+
+				if (!Schema::hasTable($table_name)) {
+					Schema::create($table_name, function ($table) use ($r, $field) {
+						$table->bigIncrements('id');
+						
+						$col_first = 'id_'.$r->get('table_name');
+						$col_last = 'id_'.$field->relationship_table_name;
+
+						if ($col_first == $col_last)
+							$col_last = $col_last.'_other';
+
+						$table->integer($col_first);
+						$table->integer($col_last);
+					});
+				}
+			}
+			// $field->relationship_view_field
+		}
+	}
+
+	public function db_remove_table () {
+
+		$r = request();
+
+		$tables = $this->get_tables($r->get('id'));
+
+		foreach ($tables as $table)
+			Schema::dropIfExists($table);
+
+		DB::table('menu')->where('id', $r->get('id'))->delete();
+
+		return 'Success';
+	}
+
+	public function db_update_table () {
+
+		$r = request();
+
+		$fields_new = json_decode($r->get('fields'));
+
+		$fields_curr = json_decode(DB::table('menu')
+		->select('fields')
+		->where('id', $r->get('id'))
+		->first()
+		->fields);
+		
+		$tables = $this->get_tables($r->get('table_name'));
+
+		foreach ($tables as $table) {
+
+			$this->remove_fields($table, json_decode($r->get('to_remove')), $fields_curr);
+			$this->rename_fields($table, $fields_new, $fields_curr);
+			$this->add_fields($table, $fields_new, $fields_curr);
+			
+			DB::table('menu')->
+			where('table_name', $r->get('table_name'))->
+			update([
+				'title'             => $r->get('title'),
+				'fields'            => $r->get('fields'),
+				'is_dev'            => $r->get('is_dev'),
+				'is_soft_delete'    => $r->get('is_soft_delete'),
+				'sort'              => $r->get('sort'),
+				'parent'             => $r->get('parent'),
+			]);
+		}
 
-    private function get_table ($table, $lang) {
+		return 'Success';
+	}
 
-        $element = DB::table('menu')
-        ->select('multilanguage')
-        ->where('table_name', $table)
-        ->first();
+	private function remove_fields ($table_name, $array_ids_remove, $fields_curr) {
+		
+		foreach ($array_ids_remove as $id) {
+			foreach ($fields_curr as $field) {
+				if ($field->id == $id) {
+					Schema::table($table_name, function($table) use ($field) {
+						if ($field->type == 'relationship' && $field->relationship_count == 'single'){
 
-        if (empty($element))
-            return $table;
+							$table->dropColumn('id_'.$field->relationship_table_name);
 
-        if ($element->multilanguage == 1 && !empty($lang))
-            return $table.'_'.$lang;
-        return $table;
-    }
+						} else if ($field->type == 'relationship' && $field->relationship_count == 'many'){
 
-    public function db_create_table () {
+							$r = request();
+							Schema::dropIfExists($r->get('table_name').'_'.$field->relationship_table_name);
 
-        $r = request();
+						} else {
 
-        $tables = $this->get_tables($r->get('table_name'), $r->get('multilanguage'));
+							$table->dropColumn($field->db_title);
+						}
+					});
+					continue;
+				}
+			}
+		}
+	}
 
-        foreach ($tables as $table) {
+	private function rename_fields ($table_name, $fields_new, $fields_curr) {
 
-            Schema::create($table, function ($table) use ($r) {
-                $table->bigIncrements('id');
-                
-                foreach (json_decode($r->get('fields')) as $field) {
-                    $this->add_field($table, $field);
-                }
+		foreach ($fields_new as $new) {
+			foreach ($fields_curr as $curr) {
+				
+				if ($new->type == 'relationship' || $curr->type == 'relationship')
+					continue;
 
-                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+				if ($new->id == $curr->id && $new->db_title != $curr->db_title) {
+					Schema::table($table_name, function($table) use ($new, $curr) {
+						$table->renameColumn($curr->db_title, $new->db_title);
+					});
+					continue;
+				}
+			}
+		}
+	}
 
-                if ($r->get('is_soft_delete') == 1)
-                    $table->timestamp('deleted_at')->nullable();
-            });
-        }
+	private function add_fields ($table_name, $fields_new, $fields_curr) {
 
+		foreach ($fields_new as $new) {
 
-        DB::table('menu')->insert([
-            'title'             => $r->get('title'),
-            'table_name'        => $r->get('table_name'),
-            'fields'            => $r->get('fields'),
-            'is_dev'            => $r->get('is_dev'),
-            'multilanguage'     => $r->get('multilanguage'),
-            'is_soft_delete'    => $r->get('is_soft_delete'),
-            'sort'              => $r->get('sort'),
-        ]);
+			$is_new = true;
 
-        return 'Success';
-    }
+			foreach ($fields_curr as $curr) {
+				if ($new->id == $curr->id) {
 
-    private function add_field (&$table, $field) {
+					$is_new = false;
+					continue;
+				}
+			}
 
-        if ($field->type == 'enum' || $field->type == 'password' || $field->type == 'text' || $field->type == 'email' || $field->type == 'color' || $field->type == 'file' || $field->type == 'photo') {
+			if ($is_new) {
+				Schema::table($table_name, function($table) use ($new) {
+					$this->add_field($table, $new);
+				});
+			}
+		}
+	}
 
-            $table->string($field->db_title);
+	public function db_insert_or_update_row () {
 
-        } else if ($field->type == 'number' || $field->type == 'checkbox') {
+		$r = request();
 
-            $table->integer($field->db_title);
-            
-        } else if ($field->type == 'date') {
+		$fields = (array)json_decode($r->get('fields'));
+		// unset($fields['id']);
+		unset($fields['created_at']);
+		unset($fields['updated_at']);
 
-            $table->date($field->db_title);
-            
-        } else if ($field->type == 'datetime') {
+		$id = $r->get('id');
 
-            $table->dateTime($field->db_title);
-            
-        } else if ($field->type == 'translater' || $field->type == 'gallery' || $field->type == 'repeat' || $field->type == 'textarea' || $field->type == 'ckeditor') {
+		$relationship_many = $this->db_get_and_rm_relationship_many($fields);
 
-            $table->text($field->db_title);
-            
-        } else if ($field->type == 'money') {
+		if ($id == 0) {
 
-            $table->decimal($field->db_title, 15, 2);
-            
-        } else if ($field->type == 'relationship') {
+			$tables = $this->get_tables($r->get('table_name'));
 
-            if ($field->relationship_count == 'single') {
+			foreach ($tables as $table) {
 
-                $table->integer('id_'.$field->relationship_table_name);
+				$id = DB::table($table)->insertGetId($fields);
+			}
 
-            } else if ($field->relationship_count == 'many') {
+			$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
 
-                $r = request();
+		} else {
 
-                $table_name = $r->get('table_name').'_'.$field->relationship_table_name;
+			$element = DB::table('menu')
+			->select('multilanguage')
+			->where('table_name', $r->get('table_name'))
+			->first();
 
-                if (!Schema::hasTable($table_name)) {
-                    Schema::create($table_name, function ($table) use ($r, $field) {
-                        $table->bigIncrements('id');
-                        
-                        $table->integer('id_'.$r->get('table_name'));
-                        $table->integer('id_'.$field->relationship_table_name);
-                    });
-                }
-            }
-            // $field->relationship_view_field
-        }
-    }
+			if ($element->multilanguage == 1) {
 
-    public function db_remove_table () {
+				$table = $r->get('table_name').'_'.$r->get('language');
 
-        $r = request();
+				$row = DB::table($table)
+				->where('id', $fields['id'])
+				->update($fields);
 
-        $tables = $this->get_tables($r->get('id'));
+				$this->db_update_languages($id, $r->get('table_name'), $table);
 
-        foreach ($tables as $table)
-            Schema::dropIfExists($table);
+			} else {
 
-        DB::table('menu')->where('id', $r->get('id'))->delete();
+				$table = $r->get('table_name');
 
-        return 'Success';
-    }
+				$row = DB::table($table)
+				->where('id', $fields['id'])
+				->update($fields);
+			}
 
-    public function db_update_table () {
+			$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
+		}
 
-        $r = request();
+		return 'Success';
+	}
 
-        $fields_new = json_decode($r->get('fields'));
+	public function db_update () {
 
-        $fields_curr = json_decode(DB::table('menu')
-        ->select('fields')
-        ->where('id', $r->get('id'))
-        ->first()
-        ->fields);
-        
-        $tables = $this->get_tables($r->get('table_name'));
+		$r = request();
 
-        foreach ($tables as $table) {
+		DB::table($r->get('table'))
+		->where('id', $r->get('id'))
+		->update([
+			$r->get('field') => $r->get('value')
+		]);
+	}
 
-            $this->remove_fields($table, json_decode($r->get('to_remove')), $fields_curr);
-            $this->rename_fields($table, $fields_new, $fields_curr);
-            $this->add_fields($table, $fields_new, $fields_curr);
-            
-            DB::table('menu')->
-            where('table_name', $r->get('table_name'))->
-            update([
-                'title'             => $r->get('title'),
-                'fields'            => $r->get('fields'),
-                'is_dev'            => $r->get('is_dev'),
-                'is_soft_delete'    => $r->get('is_soft_delete'),
-                'sort'              => $r->get('sort'),
-            ]);
-        }
+	private function db_update_languages ($id, $table_name, $table_name_curr) {
 
-        return 'Success';
-    }
+		$langs = DB::table('languages')->get();
 
-    private function remove_fields ($table_name, $array_ids_remove, $fields_curr) {
-        
-        foreach ($array_ids_remove as $id) {
-            foreach ($fields_curr as $field) {
-                if ($field->id == $id) {
-                    Schema::table($table_name, function($table) use ($field) {
-                        if ($field->type == 'relationship' && $field->relationship_count == 'single'){
+		$field_properties = json_decode(DB::table('menu')
+		->select('fields')
+		->where('table_name', $table_name)
+		->first()
+		->fields);
 
-                            $table->dropColumn('id_'.$field->relationship_table_name);
+		$row = DB::table($table_name_curr)
+		->where('id', $id)
+		->first();
 
-                        } else if ($field->type == 'relationship' && $field->relationship_count == 'many'){
+		$update = [];
 
-                            $r = request();
-                            Schema::dropIfExists($r->get('table_name').'_'.$field->relationship_table_name);
+		foreach ($langs as $l) {
+			foreach ($field_properties as $properties) {
+				if ($properties->lang == 0) {
+					if ($properties->type == 'relationship' && $properties->relationship_count == 'single') {
 
-                        } else {
+						$title = 'id_' . $properties->relationship_table_name;
+						$update[$title] = $row->$title;
 
-                            $table->dropColumn($field->db_title);
-                        }
-                    });
-                    continue;
-                }
-            }
-        }
-    }
+					} else if ($properties->type != 'relationship') {
 
-    private function rename_fields ($table_name, $fields_new, $fields_curr) {
+						$title = $properties->db_title;
+						$update[$title] = $row->$title;
+					} else {
+						// TODO: 
+					}
+				}
+			}
+		}
 
-        foreach ($fields_new as $new) {
-            foreach ($fields_curr as $curr) {
-                
-                if ($new->type == 'relationship' || $curr->type == 'relationship')
-                    continue;
+		if (count($update) > 0) {
+			$tables = $this->get_tables($table_name);
 
-                if ($new->id == $curr->id && $new->db_title != $curr->db_title) {
-                    Schema::table($table_name, function($table) use ($new, $curr) {
-                        $table->renameColumn($curr->db_title, $new->db_title);
-                    });
-                    continue;
-                }
-            }
-        }
-    }
+			foreach ($tables as $table) {
 
-    private function add_fields ($table_name, $fields_new, $fields_curr) {
+				if ($table_name_curr == $table)
+					continue;
 
-        foreach ($fields_new as $new) {
+				DB::table($table)
+				->where('id', $row->id)
+				->update($update);
+			}
+		}
+	}
 
-            $is_new = true;
+	private function db_add_relationship_many ($id_first, $relationship_many, $table) {
 
-            foreach ($fields_curr as $curr) {
-                if ($new->id == $curr->id) {
+		$col_first = 'id_' . $table;
 
-                    $is_new = false;
-                    continue;
-                }
-            }
+		foreach ($relationship_many as $rel) {
 
-            if ($is_new) {
-                Schema::table($table_name, function($table) use ($new) {
-                    $this->add_field($table, $new);
-                });
-            }
-        }
-    }
+			foreach ($rel as $table_name_many => $elm) {
+				
+				DB::table($table_name_many)
+				->where($col_first, $id_first)
+				->delete();
 
-    public function db_insert_or_update_row () {
+				$data = [];
 
-        $r = request();
+				foreach ($elm as $obj) {
+					
+					$table_name_last = key((array)$obj);
 
-        $fields = (array)json_decode($r->get('fields'));
-        // unset($fields['id']);
-        unset($fields['created_at']);
-        unset($fields['updated_at']);
+					$id_last = $obj->$table_name_last;
+					$col_last = 'id_' . $table_name_last;
 
-        $id = $r->get('id');
+					if ($col_first == $col_last)
+						$col_last = $col_last.'_other';
 
-        $relationship_many = $this->db_get_and_rm_relationship_many($fields);
+					$data[] = [
+						$col_last => $id_last,
+						$col_first => $id_first,
+					];
+				}
+				DB::table($table_name_many)->insert($data);
+			}
+		}
+	}
 
-        if ($id == 0) {
+	private function db_get_and_rm_relationship_many (&$fields) {
 
-            $tables = $this->get_tables($r->get('table_name'));
+		$data = [];
 
-            foreach ($tables as $table) {
+		foreach ($fields as $table_name => &$f) {
+			if ($table_name[0] == '$') {
 
-                $id = DB::table($table)->insertGetId($fields);
-            }
+				$data[] = [substr($table_name, 1) => $f];
+				unset($fields[$table_name]);
+			}
+		}
 
-            $this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
+		return $data;
+	}
 
-        } else {
+	private function db_remove_relationship_many ($id, $table_name) {
 
-            $element = DB::table('menu')
-            ->select('multilanguage')
-            ->where('table_name', $r->get('table_name'))
-            ->first();
+		$langs = DB::table('languages')->get();
+		$field_properties = json_decode(DB::table('menu')
+		->select('fields')
+		->where('table_name', $table_name)
+		->first()
+		->fields);
 
-            if ($element->multilanguage == 1) {
+		foreach ($field_properties as $properties) {
+			if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
+				
+				DB::table($table_name . '_' . $properties->relationship_table_name)
+				->where('id_' . $table_name, $id)
+				->delete();
+			}
+		}
+	}
 
-                $table = $r->get('table_name').'_'.$r->get('language');
+	public function db_remove_row () {
 
-                $row = DB::table($table)
-                ->where('id', $fields['id'])
-                ->update($fields);
+		$r = request();
 
-                $this->db_update_languages($id, $r->get('table_name'), $table);
+		$id = $r->get('id');
+		$lang = $r->get('language');
 
-            } else {
+		if ($lang != '') {
 
-                $table = $r->get('table_name');
+			foreach ($this->get_tables($r->get('table_name')) as $table) {
 
-                $row = DB::table($table)
-                ->where('id', $fields['id'])
-                ->update($fields);
-            }
+				DB::table($table)
+				->where('id', $id)
+				->delete();
+			}
+			
+			$this->db_remove_relationship_many($id, $r->get('table_name'));
 
-            $this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
-        }
+		} else {
 
-        return 'Success';
-    }
+			DB::table($r->get('table_name'))
+			->where('id', $id)
+			->delete();
+		}
+		
 
-    private function db_update_languages ($id, $table_name, $table_name_curr) {
+		return 'Success';
+	}
 
-        $langs = DB::table('languages')->get();
+	public function db_remove_rows () {
 
-        $field_properties = json_decode(DB::table('menu')
-        ->select('fields')
-        ->where('table_name', $table_name)
-        ->first()
-        ->fields);
+		$r = request();
 
-        $row = DB::table($table_name_curr)
-        ->where('id', $id)
-        ->first();
+		$ids = json_decode($r->get('ids'));
+		$lang = $r->get('language');
 
-        $update = [];
+		if ($lang != '') {
+			foreach ($ids as $id) {
 
-        foreach ($langs as $l) {
-            foreach ($field_properties as $properties) {
-                if ($properties->lang == 0) {
-                    if ($properties->type == 'relationship' && $properties->relationship_count == 'single') {
+				foreach ($this->get_tables($r->get('table_name')) as $table) {
 
-                        $title = 'id_' . $properties->relationship_table_name;
-                        $update[$title] = $row->$title;
+					DB::table($table)
+					->where('id', $id)
+					->delete();
+				}
+				
+				$this->db_remove_relationship_many($id, $r->get('table_name'));
+			}
+		} else {
 
-                    } else if ($properties->type != 'relationship') {
+			DB::table($r->get('table_name'))
+			->whereIn('id', $ids)
+			->delete();
+		}
 
-                        $title = $properties->db_title;
-                        $update[$title] = $row->$title;
-                    } else {
-                        // TODO: 
-                    }
-                }
-            }
-        }
+		return 'Success';
+	}
 
-        if (count($update) > 0) {
-            $tables = $this->get_tables($table_name);
+	public function db_relationship () {
 
-            foreach ($tables as $table) {
+		$r = request();
 
-                if ($table_name_curr == $table)
-                    continue;
+		$field = json_decode($r->get('field'));
 
-                DB::table($table)
-                ->where('id', $row->id)
-                ->update($update);
-            }
-        }
-    }
+		$table = $this->get_table(
+			$field->relationship_table_name, 
+			$r->get('language')
+		);
 
-    private function db_add_relationship_many ($id_first, $relationship_many, $table) {
+		return DB::table($table)
+		->select('id', $field->relationship_view_field.' as title')
+		->get();
+	}
 
-        $col_first = 'id_' . $table;
+	public function db_relationships () {
 
-        foreach ($relationship_many as $rel) {
+		$r = request();
 
-            foreach ($rel as $table_name_many => $elm) {
-                
-                DB::table($table_name_many)
-                ->where($col_first, $id_first)
-                ->delete();
+		$fields = json_decode($r->get('fields'));
 
-                $data = [];
+		$results = [];
 
-                foreach ($elm as $obj) {
-                    
-                    $table_name_last = key((array)$obj);
+		foreach ($fields as $field) {
 
-                    $id_last = $obj->$table_name_last;
-                    $col_last = 'id_' . $table_name_last;
+			$table = $this->get_table(
+				$field->relationship_table_name, 
+				$r->get('language')
+			);
 
-                    $data[] = [
-                        $col_last => $id_last,
-                        $col_first => $id_first,
-                    ];
-                }
-                DB::table($table_name_many)->insert($data);
-            }
-        }
-    }
+			$results[$field->relationship_table_name] = DB::table($table)
+			->select('id', $field->relationship_view_field.' as title')
+			->get();
+		}
 
-    private function db_get_and_rm_relationship_many (&$fields) {
+		return $results;
+	}
+	
+	public function upload_image () {
 
-        $data = [];
+		$data = request()->all();
+		
+		$validator = Validator::make($data, [
+			'upload'      => 'image|max:10000'
+		]);
+		if ($validator->fails()) {
+			return response()->json($validator->errors());
+		};
 
-        foreach ($fields as $table_name => &$f) {
-            if ($table_name[0] == '$') {
+		$upload_path = "photos/1/";
 
-                $data[] = [substr($table_name, 1) => $f];
-                unset($fields[$table_name]);
-            }
-        }
+		$img = request()->file('upload');
 
-        return $data;
-    }
+		if ($img != null) {
+			$img_name = time().'-'.$img->getClientOriginalName();
+			$img->move($upload_path, $img_name);
 
-    private function db_remove_relationship_many ($id, $table_name) {
+			return response()->json('{"url":"' . $upload_path . $img_name . '"}');
+		}
 
-        $langs = DB::table('languages')->get();
-        $field_properties = json_decode(DB::table('menu')
-        ->select('fields')
-        ->where('table_name', $table_name)
-        ->first()
-        ->fields);
+		return response()->json('{"error":"Error, file not found"}');
+	}
 
-        foreach ($field_properties as $properties) {
-            if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
-                
-                DB::table($table_name . '_' . $properties->relationship_table_name)
-                ->where('id_' . $table_name, $id)
-                ->delete();
-            }
-        }
-    }
+	public function update_languages () {
 
-    public function db_remove_row () {
-
-        $r = request();
-
-        $id = $r->get('id');
-        $lang = $r->get('language');
-
-        if ($lang != '') {
-
-            foreach ($this->get_tables($r->get('table_name')) as $table) {
-
-                DB::table($table)
-                ->where('id', $id)
-                ->delete();
-            }
-            
-            $this->db_remove_relationship_many($id, $r->get('table_name'));
-
-        } else {
-
-            DB::table($r->get('table_name'))
-            ->where('id', $id)
-            ->delete();
-        }
-        
-
-        return 'Success';
-    }
-
-    public function db_remove_rows () {
-
-        $r = request();
-
-        $ids = json_decode($r->get('ids'));
-        $lang = $r->get('language');
-
-        if ($lang != '') {
-            foreach ($ids as $id) {
-
-                foreach ($this->get_tables($r->get('table_name')) as $table) {
-
-                    DB::table($table)
-                    ->where('id', $id)
-                    ->delete();
-                }
-                
-                $this->db_remove_relationship_many($id, $r->get('table_name'));
-            }
-        } else {
-
-            DB::table($r->get('table_name'))
-            ->whereIn('id', $ids)
-            ->delete();
-        }
-
-        return 'Success';
-    }
-
-    public function db_relationship () {
-
-        $r = request();
-
-        $field = json_decode($r->get('field'));
-
-        $table = $this->get_table(
-            $field->relationship_table_name, 
-            $r->get('language')
-        );
-
-        return DB::table($table)
-        ->select('id', $field->relationship_view_field.' as title')
-        ->get();
-    }
-    
-    public function upload_image () {
-
-        $data = request()->all();
-        
-        $validator = Validator::make($data, [
-            'upload'      => 'image|max:10000'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        };
-
-        $upload_path = "photos/1/";
-
-        $img = request()->file('upload');
-
-        if ($img != null) {
-            $img_name = time().'-'.$img->getClientOriginalName();
-            $img->move($upload_path, $img_name);
-
-            return response()->json('{"url":"' . $upload_path . $img_name . '"}');
-        }
-
-        return response()->json('{"error":"Error, file not found"}');
-    }
-
-    public function update_languages () {
-
-    }
+	}
 }
