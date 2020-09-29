@@ -374,4 +374,39 @@ class Single {
 
 		$console->info("Single tables created");
 	}
+
+	public static function rm_db ($tag) {
+
+		Schema::dropIfExists("single_int_$tag");
+		Schema::dropIfExists("single_varchar_$tag");
+		Schema::dropIfExists("single_text_$tag");
+		Schema::dropIfExists("single_money_$tag");
+		Schema::dropIfExists("single_tinyint_$tag");
+		Schema::dropIfExists("single_date_$tag");
+		Schema::dropIfExists("single_datetime_$tag");
+	}
+
+	public static function add_db ($tag, $main_tag) {
+
+		DB::statement("CREATE TABLE single_int_$tag LIKE single_int_$main_tag");
+		DB::statement("INSERT single_int_$tag SELECT * FROM single_int_$main_tag");
+
+		DB::statement("CREATE TABLE single_varchar_$tag LIKE single_varchar_$main_tag");
+		DB::statement("INSERT single_varchar_$tag SELECT * FROM single_varchar_$main_tag");
+
+		DB::statement("CREATE TABLE single_text_$tag LIKE single_text_$main_tag");
+		DB::statement("INSERT single_text_$tag SELECT * FROM single_text_$main_tag");
+
+		DB::statement("CREATE TABLE single_money_$tag LIKE single_money_$main_tag");
+		DB::statement("INSERT single_money_$tag SELECT * FROM single_money_$main_tag");
+
+		DB::statement("CREATE TABLE single_tinyint_$tag LIKE single_tinyint_$main_tag");
+		DB::statement("INSERT single_tinyint_$tag SELECT * FROM single_tinyint_$main_tag");
+
+		DB::statement("CREATE TABLE single_date_$tag LIKE single_date_$main_tag");
+		DB::statement("INSERT single_date_$tag SELECT * FROM single_date_$main_tag");
+
+		DB::statement("CREATE TABLE single_datetime_$tag LIKE single_datetime_$main_tag");
+		DB::statement("INSERT single_datetime_$tag SELECT * FROM single_datetime_$main_tag");
+	}
 }

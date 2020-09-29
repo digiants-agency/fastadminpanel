@@ -35,7 +35,8 @@ Route::group([
         Route::post('admin/db-relationships', 'ApiController@db_relationships');
 
         Route::post('admin/upload-image', 'ApiController@upload_image');
-        Route::post('admin/update-languages', 'ApiController@update_languages');
+        Route::post('admin/remove-language/{tag}', 'ApiController@remove_language');
+        Route::post('admin/add-language/{tag}', 'ApiController@add_language');
 
         Route::post('admin/newsletter/get', 'NewsletterController@get');
         Route::post('admin/newsletter/add', 'NewsletterController@add');

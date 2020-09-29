@@ -96,10 +96,12 @@ class Lang {
 			return $url;
 
 		$parts = parse_url($url);
-		if (!isset($parts['path'])) {
+		if (isset($parts['path'])) {
+			$url = $parts['path'];
+		} else if (isset($parts['fragment'])) {
 			$url = $parts['fragment'];
 		} else {
-			$url = $parts['path'];
+			return $url;
 		}
 
 		$lang = Lang::get();

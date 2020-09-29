@@ -791,7 +791,71 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return response()->json('{"error":"Error, file not found"}');
 	}
 
-	public function update_languages () {
+	public function remove_language ($tag) {
 
+		$tag = mb_strtolower($tag);
+
+		$lang = DB::table('languages')
+		->where('tag', $tag)
+		->where('main_lang', '!=', 1)
+		->first();
+
+		if (empty($lang))
+			return 'Language doesnt exist or you try delete main language';
+
+		$menu = DB::table('menu')->get();
+
+		foreach ($menu as $elm) {
+			if ($elm->multilanguage == 1) {
+				Schema::dropIfExists("{$elm->table_name}_$tag");
+			}
+		}
+
+		DB::table('languages')
+		->where('tag', $tag)
+		->delete();
+
+		Single::rm_db($tag);
+
+		return 'Success';
+	}
+
+	public function add_language ($tag) {
+
+		$tag = mb_strtolower($tag);
+
+		if (empty($tag) || mb_strlen($tag) != 2)
+			return 'Invalid tag';
+
+		$lang = DB::table('languages')
+		->where('tag', $tag)
+		->first();
+
+		if (!empty($lang))
+			return 'Language have already exist';
+
+		$main_tag = DB::table('languages')
+		->where('main_lang', 1)
+		->first()
+		->tag;
+
+		DB::table('languages')
+		->insert([
+			'tag'		=> $tag,
+			'main_lang'	=> 0,
+		]);
+
+		$menu = DB::table('menu')->get();
+
+		foreach ($menu as $elm) {
+			if ($elm->multilanguage == 1) {
+				DB::statement("CREATE TABLE {$elm->table_name}_$tag LIKE {$elm->table_name}_$main_tag");
+				DB::statement("INSERT {$elm->table_name}_$tag SELECT * FROM {$elm->table_name}_$main_tag");
+			}
+		}
+
+		Single::add_db($tag, $main_tag);
+
+		return 'Success';
 	}
 }
