@@ -61,7 +61,7 @@ class NewsletterSend extends Command {
 			$curr->email,
 			(empty($curr->subject)) ? '' : $curr->subject,
 			$this->handle_template($curr->template, $curr->data, $curr->user_id),
-			'From: Eva Miller <hello@digiants.agency>' . "\r\n" .
+			'From: Eva Miller <hello@example.com>' . "\r\n" .
 			"Content-type: text/html; charset=\"utf-8\""
 		)) {
 
