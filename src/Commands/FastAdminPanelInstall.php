@@ -129,7 +129,7 @@ class FastAdminPanelInstall extends Command {
 		}
 
 		$count = $this->ask('Languages count');
-		if ($count > 1) {
+		if ($count > 0) {
 			$id = $this->ask('ID of main language from 0 to '.($count - 1));
 
 			for ($i = 0; $i < $count; $i++) {
@@ -139,7 +139,7 @@ class FastAdminPanelInstall extends Command {
 				]);
 			}
 
-			$this->info('If you missclicked with main language ID, you can set it in table languages');
+			$this->info('If you missclicked with something, you can repair it in table languages');
 		}
 	}
 
