@@ -22,7 +22,15 @@ class Lang {
 		foreach ($langs as $l) {
 
 			$tag = $l->tag;
-			$url = str_replace("$host/$tag", $host, $url);
+
+			if (strpos($url, "/$tag") == strlen($url) - 3) {
+
+				$url = str_replace("$host/$tag", $host, $url);
+
+			} else {
+
+				$url = str_replace("$host/$tag/", $host.'/', $url);
+			}
 		}
 
 		$prefix = Lang::prefix($lang);
