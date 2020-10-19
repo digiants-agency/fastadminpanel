@@ -1,9 +1,7 @@
 ### About
 Inspired by serverless and quickadmin. you can use it at your own risk
 
-DOESNT WORK CORRECTLY: get_standart_val, check_type + check errors on photo field, column type change, remove/change type relationship
-
-TODO: required_once field, show in list: editable, soft delete, fields (date, datetime, file, password, select, repeat)
+TODO: required_once field, soft delete, fields (datetime, password, repeat)
 
 ### Install
                 
