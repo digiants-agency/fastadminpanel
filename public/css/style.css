@@ -1,4 +1,4 @@
-body, input, textarea {
+body, input, textarea, select {
 	font-family: "Roboto", sans-serif;
 	color: #333333;
 }
@@ -166,8 +166,8 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	
 .topbar {
 	padding: 10px 15px;
-	background-color: #1f1f1f;
-	color: #C5C5C5;
+	background-color: #43497e;
+	color: white;
 	font-size: 18px;
 	line-height: 20px;
 	display: flex;
@@ -175,15 +175,15 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	align-items: center;
 }
 .sidebar {
-	background-color: #303030;
-	width: 235px;
+	background-color: #43497e;
+	width: 250px;
 	min-height: calc(100vh - 40px);
 	overflow-y: auto;
+	padding: 15px;
 }
 .sidebar-menu-item,
 a.sidebar-menu-item {
-	border-top: 1px solid #484848;
-	color: #d9d9d9;
+	color: white;
 	padding: 10px 15px;
 	font-size: 14px;
 	font-weight: 300;
@@ -191,16 +191,17 @@ a.sidebar-menu-item {
 	display: block;
 	position: relative;
 	user-select: none;
+	background-color: #605495;
 }
 .sidebar-menu-item.router-link-active,
 .sidebar-menu-item:hover,
 a.sidebar-menu-item.router-link-active,
 a.sidebar-menu-item:hover {
-	background-color: #292929;
+	background-color: #8277b2;
 }
 .sidebar-menu-item.child {
 	padding-left: 25px;
-	background-color: #242424;
+	background-color: #50467b;
 	display: none;
 }
 .sidebar-menu-item-ico {
@@ -221,7 +222,7 @@ main {
 	display: flex;
 }
 .content {
-	width: calc(100% - 235px);
+	width: calc(100% - 250px);
 	padding: 15px;
 }
 .control-label {
@@ -529,4 +530,31 @@ td.td-content {
 }
 .ck-content > * {
     margin: 15px 0;
+}
+.btn-primary,
+.btn-info {
+	background-color: #43497e;
+	border-color: #43497e;
+}
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-info:not(:disabled):not(.disabled):active,
+.btn-primary:hover,
+.btn-info:hover {
+	background-color: #545a90;
+	border-color: #545a90;
+}
+.portlet-title {
+	background-color: #43497e;
+}
+.portlet {
+	border: 1px solid #43497e;
+}
+.table-striped tbody tr:nth-of-type(2n+1) {
+	background-color: rgba(177, 221, 249, 0.2);
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(177, 221, 249, 0.2);
+}
+select {
+	padding: 3px 5px;
 }
