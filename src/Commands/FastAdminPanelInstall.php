@@ -35,12 +35,105 @@ class FastAdminPanelInstall extends Command {
 	 * Execute the console command.
 	 */
 	public function handle() {
-		$this->info('Please note: FastAdminPanel requires fresh Laravel installation!');
+		$this->info('Please note: FastAdminPanel requires fresh Laravel installation! If you failed installation just clear your DB.');
 		$this->add_languages();
 		$this->create_db();
 		$this->add_roles();
 		$this->add_user();
 		$this->add_menu();
+		$this->import_default_template();
+	}
+
+	private function template_add_folder ($path) {
+
+		if (!is_dir($path)) {
+			mkdir($path);
+		}
+	}
+
+	private function template_path_package ($path) {
+
+		return base_path("/vendor/sv-digiants/fastadminpanel/template".$path);
+	}
+
+	private function import_default_template () {
+
+		$answer = $this->ask('Import default template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController, View Composer (Y/n)?');
+
+		if ($answer != 'n') {
+
+			// add converter
+			$this->template_add_folder(public_path('/css'));
+			$css = [
+				'converter-desktop.php', 
+				'converter-mobile.php',
+				'desktop-src.css',
+				'mobile-src.css',
+				'desktop.css',
+				'mobile.css',
+			];
+			foreach ($css as $path) {
+				copy(
+					$this->template_path_package("/css/$path"),
+					public_path("/css/$path")
+				);
+			}
+			// add views
+			$this->template_add_folder(base_path('/resources/views/inc'));
+			$this->template_add_folder(base_path('/resources/views/layouts'));
+			$this->template_add_folder(base_path('/resources/views/pages'));
+			$views = [
+				'layouts/app.blade.php',
+				'inc/footer.blade.php',
+				'inc/header.blade.php',
+				'inc/head.blade.php',
+				'inc/pagination.blade.php',
+				'pages/index.blade.php',
+			];
+			foreach ($views as $path) {
+				copy(
+					$this->template_path_package("/views/$path"),
+					base_path("/resources/views/$path")
+				);
+			}
+			// routes
+			if (file_exists(base_path("/routes/web.php")))
+				unlink(base_path("/routes/web.php"));
+			copy(
+				$this->template_path_package("/web.php"),
+				base_path("/routes/web.php")
+			);
+			// controllers
+			copy(
+				$this->template_path_package("/SitemapController.php"),
+				base_path("/app/Http/Controllers/SitemapController.php")
+			);
+			copy(
+				$this->template_path_package("/PagesController.php"),
+				base_path("/app/Http/Controllers/PagesController.php")
+			);
+			// view composer
+			$composer = 
+		'\\View::composer(["inc.header","inc.footer"], function ($view) {
+		
+			// 
+
+			$view->with([
+
+			]);
+		});';
+			$provider = file_get_contents(base_path("/app/Providers/AppServiceProvider.php"));
+			$pos = strrpos($provider, '//');
+			
+			file_put_contents(
+				base_path("/app/Providers/AppServiceProvider.php"),
+				substr_replace($provider, $composer, $pos, 2)
+			);
+			
+			// rm default view
+			if (file_exists(base_path("/resources/views/welcome.blade.php")))
+				unlink(base_path("/resources/views/welcome.blade.php"));
+		}
 	}
 
 	private function create_db() {
@@ -134,7 +227,7 @@ class FastAdminPanelInstall extends Command {
 
 			for ($i = 0; $i < $count; $i++) {
 				DB::table('languages')->insert([
-					'tag' => $this->ask("Language tag №$i"),
+					'tag' => $this->ask("Language tag number $i"),
 					'main_lang' => ($id == $i) ? 1 : 0,
 				]);
 			}

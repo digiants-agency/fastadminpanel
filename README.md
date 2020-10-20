@@ -3,6 +3,8 @@ Inspired by serverless and quickadmin. you can use it at your own risk
 
 TODO: required_once field, soft delete, fields (datetime, password, repeat)
 
+If installation failed - remove DB, routes/web.php and set app/Providers/AppServiceProvider.php to default value.
+
 ### Install
                 
 1. Configure DB and APP_URL file .env

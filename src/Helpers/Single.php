@@ -324,7 +324,7 @@ class Single {
 			if (!Schema::hasTable("single_text$prefix")) {
 				Schema::create("single_text$prefix", function (Blueprint $table) {
 					$table->increments("field_id");
-					$table->text("value")->default("");
+					$table->text("value")->nullable();
 				});
 			} else {
 				$console->info("single_text$prefix table has already exist!");
@@ -354,7 +354,8 @@ class Single {
 			if (!Schema::hasTable("single_date$prefix")) {
 				Schema::create("single_date$prefix", function (Blueprint $table) {
 					$table->increments("field_id");
-					$table->date("value")->default(DB::raw("NOW()"));
+					$table->date("value")->nullable();
+					// $table->date("value")->default(DB::raw("NOW()"));
 				});
 			} else {
 				$console->info("single_date$prefix table has already exist!");

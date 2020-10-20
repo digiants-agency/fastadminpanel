@@ -13,7 +13,8 @@
     ],
     "require": {
         "doctrine/dbal": "^2.9",
-        "unisharp/laravel-filemanager": "v2.1.0"
+        "unisharp/laravel-filemanager": "v2.1.0",
+        "jenssegers/agent": "dev-master"
     },
     "autoload": {
         "psr-4": {
