@@ -14,6 +14,10 @@ Route::group([
     Route::group([
         'middleware'    => [\Digiants\FastAdminPanel\Middleware\AdminOnly::class],
     ], function() {
+
+        Route::group(['prefix' => 'laravel-filemanager'], function () {
+            \UniSharp\LaravelFilemanager\Lfm::routes();
+        });
     
         Route::get('admin', 'FAPController@admin');
 
