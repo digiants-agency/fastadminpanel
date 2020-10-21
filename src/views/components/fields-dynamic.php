@@ -3,10 +3,10 @@
 		<label class="col-sm-2 control-label" v-text="field.title"></label>
 		<div class="col-sm-10">
 			<div v-if="field.type == 'text'">
-				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''" maxlength="191">
 			</div>
 			<div v-else-if="field.type == 'textarea'">
-				<textarea class="form-control" v-model="fields_instance[field.db_title]"></textarea>
+				<textarea v-on:input="change_textarea" :rows="textarea_height" class="form-control" v-model="fields_instance[field.db_title]"></textarea>
 			</div>
 			<div v-else-if="field.type == 'ckeditor'">
 				<ckeditor :config="editorConfig" :editor="editor" class="form-control" v-model="fields_instance[field.db_title]"></ckeditor>
@@ -79,21 +79,27 @@
 <script>
 	Vue.component('template-fields-dynamic',{
 		template: '#template-fields-dynamic',
-		props:['field', 'fields_instance', 'relationships', 'index', 'table_name'],
+		props:['field', 'fields_instance', 'relationships', 'index', 'table_name', 'errors'],
 		components: {
 			// Use the <ckeditor> component in this view.
 			ckeditor: CKEditor.component
 		},
 		data: function () {
 			return {
-				errors: {},
 				editor: ClassicEditor,
 				editorConfig: {
 					extraPlugins: [ MyCustomUploadAdapterPlugin ],
 				},
+				textarea_height: 1,
 			}
 		},
 		methods: {
+			change_textarea: function(){
+
+				let count = (this.fields_instance[this.field.db_title].match(/\n/g) || []).length
+				
+				this.textarea_height = count + 1
+			},
 			add_photo: function(id){
 
 				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
@@ -145,6 +151,24 @@
 			},
 			remove_gallery: function(id, index){
 				this.$parent.fields_instance[id].splice(index, 1)
+				this.$forceUpdate()
+			},
+			add_relationship_field: function(field){
+
+				var relationships = this.relationships[field.relationship_table_name]
+
+				var add = {}
+
+				if (relationships.length > 0)
+					add[field.relationship_table_name] = relationships[0].id
+				else add[field.relationship_table_name] = 0
+
+				this.$parent.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].push(add)
+				this.$forceUpdate()
+			},
+			remove_relationship_field: function(field, id){
+				
+				this.$parent.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].splice(id, 1)
 				this.$forceUpdate()
 			},
 		},

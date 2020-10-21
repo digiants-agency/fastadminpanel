@@ -18,7 +18,7 @@
 				</div>
 				<div class="mb-15" v-for="(instance, i) in fields_instance.editable[field.relationship_table_name]">
 					<div v-for="(f, index) in relationships[field.relationship_table_name]">
-						<template-fields-dynamic :field="f" :index="index" :fields_instance="instance" v-if="f.is_visible && f.type != 'relationship'"></template-fields-dynamic>
+						<template-fields-dynamic :field="f" :index="index" :fields_instance="instance" v-if="f.is_visible && f.type != 'relationship'" :errors="errors"></template-fields-dynamic>
 					</div>
 					<div class="flex justify-end">
 						<div class="btn btn-danger" v-on:click="fields_instance.editable[field.relationship_table_name].splice(i, 1)">Delete</div>
@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			</div>
-			<template-fields-dynamic :field="field" :index="index" :fields_instance="fields_instance" :relationships="relationships" :table_name="menu_item.table_name" v-else></template-fields-dynamic>
+			<template-fields-dynamic :field="field" :index="index" :fields_instance="fields_instance" :relationships="relationships" :table_name="menu_item.table_name" :errors="errors" v-else></template-fields-dynamic>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-2 control-label"></label>
@@ -46,10 +46,6 @@
 	Vue.component('template-edit',{
 		template: '#template-edit',
 		props: [],
-		components: {
-			// Use the <ckeditor> component in this view.
-			ckeditor: CKEditor.component
-		},
 		data: function () {
 			return {
 				id: 0,
@@ -57,11 +53,6 @@
 				menu_item: {fields:[]},
 				fields_instance: {editable: {}},
 				errors: {},
-				is_loading: false,
-				editor: ClassicEditor,
-				editorConfig: {
-					extraPlugins: [ MyCustomUploadAdapterPlugin ],
-				},
 				relationships: {},
 			}
 		},
@@ -242,28 +233,6 @@
 					callback()
 				})
 			},
-			add_relationship_field: function(field){
-
-				var relationships = this.relationships[field.relationship_table_name]
-
-				var add = {}
-
-				if (relationships.length > 0)
-					add[field.relationship_table_name] = relationships[0].id
-				else add[field.relationship_table_name] = 0
-
-				this.fields_instance['$' + this.menu_item.table_name + '_' + field.relationship_table_name].push(add)
-				this.$forceUpdate()
-			},
-			remove_relationship_field: function(field, id){
-				
-				this.fields_instance['$' + this.menu_item.table_name + '_' + field.relationship_table_name].splice(id, 1)
-				this.$forceUpdate()
-			},
-			test: function(param1){
-				console.log(this.fields_instance[param1])
-				console.log(JSON.stringify(this.fields_instance))
-			},
 			refresh: function(){
 
 				var stack = []
@@ -286,8 +255,6 @@
 				this.get_relationships(stack, ()=>{
 					
 					if (this.id != 0) {
-
-						this.is_loading = true
 
 						var rels = []
 						var edits = []
@@ -322,7 +289,6 @@
 							editables: edits,
 							limit: 1,
 						}, (data)=>{
-							this.is_loading = false
 							this.fields_instance = this.unprepare_fields(data[0])
 							this.init_color()
 							this.init_date()
