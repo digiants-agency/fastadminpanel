@@ -235,6 +235,16 @@ h1 {
 	font-weight: 300;
 	margin-bottom: 10px;
 }
+h2 {
+	font-size: 28px;
+	font-weight: 300;
+	margin-bottom: 10px;
+}
+h3 {
+	font-size: 22px;
+	font-weight: 300;
+	margin-bottom: 10px;
+}
 .rem {
 	font-weight: bold;
 	font-size: 33px;
@@ -557,4 +567,16 @@ td.td-content {
 }
 select {
 	padding: 3px 5px;
+}
+.justify-end {
+	justify-content: flex-end;
+}
+.mb-30 {
+	margin-bottom: 30px;
+}
+.mb-15 {
+	margin-bottom: 15px;
+}
+.table {
+	margin-bottom: 1rem;
 }

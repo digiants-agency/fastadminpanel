@@ -9,81 +9,28 @@
 				</router-link>
 			</div>
 		</div>
-		<div v-for="(field, index) in menu_item.fields" class="row form-group" v-if="field.is_visible">
-			<label class="col-sm-2 control-label" v-text="field.title"></label>
-			<div class="col-sm-10">
-				<div v-if="field.type == 'text'">
-					<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
-				</div>
-				<div v-else-if="field.type == 'textarea'">
-					<textarea class="form-control" v-model="fields_instance[field.db_title]"></textarea>
-				</div>
-				<div v-else-if="field.type == 'ckeditor'">
-					<ckeditor :config="editorConfig" :editor="editor" class="form-control" v-model="fields_instance[field.db_title]"></ckeditor>
-				</div>
-				<div v-else-if="field.type == 'checkbox'">
-					<input class="form-control form-control-checkbox" type="checkbox" v-model="fields_instance[field.db_title]">
-				</div>
-				<div v-else-if="field.type == 'color'">
-					<input class="form-control colorpicker" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
-				</div>
-				<div v-else-if="field.type == 'date'">
-					<input class="form-control datepicker" data-init="0" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
-				</div>
-				<div v-else-if="field.type == 'enum'">
-					<select class="form-control" v-model="fields_instance[field.db_title]">
-						<option :value="field.enum[index]" v-for="(item, index) in field.enum" v-text="field.enum[index]"></option>
-					</select>
-				</div>
-				<div v-else-if="field.type == 'relationship'">
-					<select v-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
-						<option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
-					</select>
-					<div v-else>
-						<div class="relationship-many" v-for="(elm, index) in fields_instance['$' + menu_item.table_name + '_' + field.relationship_table_name]">
-							<select class="form-control" v-model="elm[field.relationship_table_name]">
-								<option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
-							</select>
-							<div class="btn btn-danger" v-on:click="remove_relationship_field(field, index)">Delete</div>
-						</div>
-						<div class="btn btn-primary" v-on:click="add_relationship_field(field)">Add</div>
+		<div v-for="(field, index) in menu_item.fields" v-if="field.is_visible">
+			<div class="mb-30" v-if="field.type == 'relationship' && field.relationship_count == 'editable'">
+				<div class="row">
+					<div class="col-sm-10 offset-2">
+						<h3 v-text="field.title"></h3>
 					</div>
 				</div>
-				<div v-else-if="field.type == 'photo'">
-					<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
-					<div class="photo-preview-wrapper">
-						<img :src="fields_instance[field.db_title]" alt="" class="photo-preview-img">
-						<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Add photo</div>
+				<div class="mb-15" v-for="(instance, i) in fields_instance.editable[field.relationship_table_name]">
+					<div v-for="(f, index) in relationships[field.relationship_table_name]">
+						<template-fields-dynamic :field="f" :index="index" :fields_instance="instance" v-if="f.is_visible && f.type != 'relationship'"></template-fields-dynamic>
+					</div>
+					<div class="flex justify-end">
+						<div class="btn btn-danger" v-on:click="fields_instance.editable[field.relationship_table_name].splice(i, 1)">Delete</div>
 					</div>
 				</div>
-				<div v-else-if="field.type == 'file'">
-					<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
-					<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Add file</div>
-				</div>
-				<div v-else-if="field.type == 'gallery'">
-					<template v-for="(item, index) in fields_instance[field.db_title]">
-						<input class="form-control gallery-margin-top" type="text" v-model="fields_instance[field.db_title][index]">
-						<div class="photo-preview-wrapper">
-							<img :src="fields_instance[field.db_title][index]" alt="" class="photo-preview-img">
-							<div class="btn btn-danger" v-on:click="remove_gallery(field.db_title, index)">Delete photo</div>
-						</div>
-					</template>
-					<div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery(field.db_title)">Add photos</div>
-				</div>
-				<div v-else-if="field.type == 'translater'">
-					<div v-for="(value, key, j) in fields_instance[field.db_title]">
-						<h2 v-text="key + ':'" style="margin-bottom: 15px;"></h2>
-						<template v-for="(v, k, i) in fields_instance[field.db_title][key]">
-							<div v-text="k + ':'"></div>
-							<textarea class="form-control translate-field" v-model="fields_instance[field.db_title][key][k]"></textarea>
-						</template>
+				<div class="row">
+					<div class="offset-sm-2 col-sm-10">
+						<div class="btn btn-primary" v-on:click="fields_instance.editable[field.relationship_table_name].push({})">Add</div>
 					</div>
 				</div>
-				<div v-else-if="field.type == 'number' || field.type == 'money'">
-					<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
-				</div>
-				<div class="input-error" v-text="errors[field.db_title]"></div>
 			</div>
+			<template-fields-dynamic :field="field" :index="index" :fields_instance="fields_instance" :relationships="relationships" :table_name="menu_item.table_name" v-else></template-fields-dynamic>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-2 control-label"></label>
@@ -108,7 +55,7 @@
 				id: 0,
 				menu: [],
 				menu_item: {fields:[]},
-				fields_instance: {},
+				fields_instance: {editable: {}},
 				errors: {},
 				is_loading: false,
 				editor: ClassicEditor,
@@ -126,6 +73,7 @@
 					if ((field.type == 'gallery' || field.type == 'translater') && fields[field.db_title]) {
 						
 						fields[field.db_title] = JSON.parse(fields[field.db_title])
+
 					}
 				})
 
@@ -223,59 +171,6 @@
 							errors[field.db_title] = 'Field must be numeric. Use "." instead of ","'
 					}
 				}
-			},
-			add_photo: function(id){
-
-				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
-				window.SetUrl = (items)=>{
-
-					for (var i = 0; i < items.length; i++) {
-
-						var url = items[i].url.replace(document.location.origin, '')
-
-						this.fields_instance[id] = url
-						this.$forceUpdate()
-
-						break;
-					}
-				};
-			},
-			add_file: function(id){
-
-				window.open('/laravel-filemanager?type=file', 'FileManager', 'width=900,height=600');
-				window.SetUrl = (items)=>{
-
-					for (var i = 0; i < items.length; i++) {
-
-						var url = items[i].url.replace(document.location.origin, '')
-
-						this.fields_instance[id] = url
-						this.$forceUpdate()
-
-						break;
-					}
-				};
-			},
-			add_gallery: function(id){
-				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
-				window.SetUrl = (items)=>{
-
-					if (this.fields_instance[id])
-						var arr = this.fields_instance[id]
-					else  var arr = []
-					
-					for (var i = 0; i < items.length; i++) {
-
-						var url = items[i].url.replace(document.location.origin, '')
-						arr.push(url)
-					}
-					this.fields_instance[id] = arr
-					this.$forceUpdate()
-				};
-			},
-			remove_gallery: function(id, index){
-				this.fields_instance[id].splice(index, 1)
-				this.$forceUpdate()
 			},
 			init_date: function(){
 				
@@ -395,19 +290,36 @@
 						this.is_loading = true
 
 						var rels = []
+						var edits = []
 						for (i in this.menu_item.fields) {
 							var field = this.menu_item.fields[i]
-							if (field.relationship_count == 'many')
-								rels.push([this.id, this.menu_item.table_name + '_' + field.relationship_table_name, field.relationship_table_name])
+							if (field.relationship_count == 'many') {
+							
+								rels.push({
+									id: this.id,
+									rel: this.menu_item.table_name + '_' + field.relationship_table_name,
+									table: field.relationship_table_name,
+								})
+
+							} else if (field.relationship_count == 'editable') {
+
+								edits.push({
+									id: this.id,
+									table: field.relationship_table_name,
+								})
+							}
 						}
 						if (rels.length > 0) rels = JSON.stringify(rels)
 						else rels = ''
+						if (edits.length > 0) edits = JSON.stringify(edits)
+						else edits = ''
 						
 						request('/admin/db-select', {
 							table: this.menu_item.table_name,
 							where: 'id=' + this.id,
 							language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
 							relationships: rels,
+							editables: edits,
 							limit: 1,
 						}, (data)=>{
 							this.is_loading = false
@@ -426,6 +338,12 @@
 				for(var i = 0, length = this.menu.length; i < length; i++){
 					if (this.menu[i].table_name == this.$route.params.table_name) {
 						this.menu_item = this.menu[i]
+
+						for (let f of this.menu_item.fields) {
+							if (f.type == 'relationship' && f.relationship_count == 'editable') {
+								Vue.set(this.fields_instance.editable, f.relationship_table_name, [])
+							}
+						}
 						break
 					}
 				}

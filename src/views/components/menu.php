@@ -104,30 +104,31 @@
 						<option value="checkbox">Checkbox</option>
 						<option value="color">Color picker</option>
 						<option value="date">Date picker</option>
-						<option value="datetime">Date and time picker</option>
+						<option value="datetime">Date and time picker (unaviable)</option>
 						<option value="relationship">Relationship</option>
 						<option value="file">File</option>
 						<option value="photo">Photo</option>
 						<option value="gallery">Gallery</option>
-						<option value="password">Password (hashed)</option>
+						<option value="password">Password (hashed) (unaviable)</option>
 						<option value="money">Money</option>
 						<option value="number">Number</option>
 						<option value="enum">Select (ENUM)</option>
-						<option value="repeat">Repeat</option>
-						<option value="translater">Translater</option>
+						<option value="repeat">Repeat (unaviable)</option>
+						<option value="translater">Translater (deprecated)</option>
 					</select>
 				</td>
 				<td>
 					<input v-if="field.type != 'relationship' && field.type != 'enum'" v-model="field.db_title" type="text" class="form-control title" placeholder="Field DB name">
 					<div v-else-if="field.type == 'relationship'">
-						<select v-model="field.relationship_count" class="form-control type">
+						<select v-model="field.relationship_count" class="form-control type" title="One to many require Single relation on other table">
 							<option value="single">Single</option>
 							<option value="many">Many</option>
+							<option value="editable">One to many</option>
 						</select>
 						<select v-model="field.relationship_table_name" class="form-control type">
 							<option :value="item.table_name" v-for="(item, index) in menu" v-text="item.title"></option>
 						</select>
-						<div v-if="field.relationship_table_name">
+						<div v-if="field.relationship_table_name && field.relationship_count != 'editable'">
 							<select v-model="field.relationship_view_field" class="form-control type">
 								<option :value="item.db_title" v-for="(item, index) in get_fields_by_table_name(field.relationship_table_name)" v-text="item.title"></option>
 							</select>

@@ -24,6 +24,7 @@
 	@include($custom_component['path'])
 @endforeach
 @include('fastadminpanel.components.dropdown')
+@include('fastadminpanel.components.fields-dynamic')
 @include('fastadminpanel.components.fields')
 @include('fastadminpanel.components.single')
 @include('fastadminpanel.components.options')

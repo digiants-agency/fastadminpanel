@@ -150,6 +150,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 		$fields = $this->get_val('fields', '*');
 		$where = $this->get_val('where', '');
 		$relationships = $this->get_val('relationships', '');   // many
+		$editables = $this->get_val('editables', '');   // one to many (editable)
 
 		$values = DB::table($this->get_table(
 			$this->get_val('table'),
@@ -170,9 +171,9 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			foreach ($rels as $rel) {
 
-				$rel_id = $rel[0];
-				$rel_table = $rel[1];
-				$rel_connected_table = $rel[2];
+				$rel_id = $rel->id;
+				$rel_table = $rel->rel;
+				$rel_connected_table = $rel->table;
 
 				if ($rel_table == $rel_connected_table.'_'.$rel_connected_table)
 					$rel_connected_table_title = $rel_connected_table.'_other';
@@ -195,6 +196,35 @@ class ApiController extends \App\Http\Controllers\Controller {
 				$values->map(function ($item) use ($val_title, $field) {
 
 					$item->$val_title = $field;
+					return $item;
+				});
+			}
+		}
+
+		if ($editables != '') {
+
+			$values->map(function ($item) {
+
+				$item->editable = [];
+				return $item;
+			});
+
+			$edits = json_decode($editables);
+
+			foreach ($edits as $editable) {
+
+				$tbl = $editable->table;
+
+				$vals = DB::table($this->get_table(
+					$editable->table,
+					$this->get_val('language')
+				))
+				->where("id_$table", $editable->id)
+				->get();
+				
+				$values->map(function ($item) use ($tbl, $vals) {
+
+					$item->editable[$tbl] = $vals;
 					return $item;
 				});
 			}
@@ -496,6 +526,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 		$id = $r->get('id');
 
 		$relationship_many = $this->db_get_and_rm_relationship_many($fields);
+		$editable = $this->db_get_and_rm_editable($fields);
 
 		if ($id == 0) {
 
@@ -505,8 +536,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				$id = DB::table($table)->insertGetId($fields);
 			}
-
-			$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
 
 		} else {
 
@@ -533,9 +562,10 @@ class ApiController extends \App\Http\Controllers\Controller {
 				->where('id', $fields['id'])
 				->update($fields);
 			}
-
-			$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
 		}
+
+		$this->db_add_editable($id, $editable, $r->get('table_name'));
+		$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
 
 		return 'Success';
 	}
@@ -601,6 +631,38 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
+	private function db_add_editable ($id, $editable, $table) {
+
+		foreach ($editable as $table_name => $values) {
+
+			$tables = $this->get_tables($table_name);
+
+			foreach ($tables as $tbl) {
+
+				DB::table($tbl)
+				->where("id_$table", $id)
+				->delete();
+
+				$inserts = [];
+
+				foreach ($values as $vals) {
+
+					$insert = [
+						"id_$table"	=> $id,
+					];
+
+					foreach ($vals as $key => $value) {
+						$insert[$key] = $value;
+					}
+
+					$inserts[] = $insert;
+				}
+
+				DB::table($tbl)->insert($inserts);
+			}
+		}
+	}
+
 	private function db_add_relationship_many ($id_first, $relationship_many, $table) {
 
 		$col_first = 'id_' . $table;
@@ -635,6 +697,21 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
+	private function db_get_and_rm_editable (&$fields) {
+
+		$editable = [];
+
+		foreach ($fields as $title => &$f) {
+			if ($title == 'editable') {
+
+				$editable = $f;
+				unset($fields[$title]);
+			}
+		}
+
+		return $editable;
+	}
+
 	private function db_get_and_rm_relationship_many (&$fields) {
 
 		$data = [];
@@ -648,6 +725,35 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 
 		return $data;
+	}
+
+	private function db_remove_editable ($id, $table) {
+
+		$editable = [];
+
+		$fields = json_decode(DB::table('menu')
+		->select('fields')
+		->where('table_name', $table)
+		->first()
+		->fields);
+
+		foreach ($fields as $field) {
+			if ($field->type == 'relationship' && $field->relationship_count == 'editable') {
+				$editable[] = $field->relationship_table_name;
+			}
+		}
+
+		foreach ($editable as $table_name) {
+
+			$tables = $this->get_tables($table_name);
+
+			foreach ($tables as $tbl) {
+
+				DB::table($tbl)
+				->where("id_$table", $id)
+				->delete();
+			}
+		}
 	}
 
 	private function db_remove_relationship_many ($id, $table_name) {
@@ -686,6 +792,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 			}
 			
 			$this->db_remove_relationship_many($id, $r->get('table_name'));
+			$this->db_remove_editable($id, $r->get('table_name'));
 
 		} else {
 
@@ -716,6 +823,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 				}
 				
 				$this->db_remove_relationship_many($id, $r->get('table_name'));
+				$this->db_remove_editable($id, $r->get('table_name'));
 			}
 		} else {
 
@@ -758,9 +866,20 @@ class ApiController extends \App\Http\Controllers\Controller {
 				$r->get('language')
 			);
 
-			$results[$field->relationship_table_name] = DB::table($table)
-			->select('id', $field->relationship_view_field.' as title')
-			->get();
+			if ($field->relationship_count == 'editable') {
+
+				$results[$field->relationship_table_name] = json_decode(DB::table('menu')
+				->select('fields')
+				->where('table_name', $field->relationship_table_name)
+				->first()
+				->fields);
+
+			} else {
+
+				$results[$field->relationship_table_name] = DB::table($table)
+				->select('id', $field->relationship_view_field.' as title')
+				->get();
+			}
 		}
 
 		return $results;
