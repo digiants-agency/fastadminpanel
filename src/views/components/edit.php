@@ -125,7 +125,7 @@
 
 				function check_required(errors, instance, field) {
 
-					if (instance[field.db_title] == undefined && field.required == 'optional') {
+					if (instance[field.db_title] == undefined /*&& field.required == 'optional'*/) {
 						if (field.type == 'relationship' && field.relationship_count == 'single' && instance['id_' + field.relationship_table_name] == undefined)
 							instance['id_' + field.relationship_table_name] = 0
 						else if (field.type != 'relationship') {
@@ -133,7 +133,7 @@
 						}
 					}
 					
-					if (field.required != 'optional' && instance[field.db_title] == '') {
+					if (field.required != 'optional' && !instance[field.db_title]) {
 						errors[field.db_title] = 'This field is required'
 					} else if (field.required == 'required_once') {
 						// TODO
