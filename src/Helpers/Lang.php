@@ -121,6 +121,8 @@ class Lang {
 				return ($url == '') ? '/' : $url;
 		}
 
+		if ($url == '/')
+			return "/$lang";
 		return "/$lang$url";
 	}
 
