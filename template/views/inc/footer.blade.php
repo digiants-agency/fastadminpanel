@@ -346,6 +346,139 @@
 
 		scroll();
 	}
+
+
+	const Cart = new function () {
+
+		const event_cart_change = (type)=>{
+
+			var event = new CustomEvent('cartchange', { 
+				'detail': {
+					cart: this.cart,
+					count: this.count(),
+					sum: this.sum(),
+					type: type,
+				},
+			})
+			window.dispatchEvent(event)
+		}
+
+		const save_cart = ()=>{
+
+			localStorage.cart = JSON.stringify(Array.from(this.cart.entries()))
+		}
+
+		const get_cart = ()=>{
+
+			var cart = localStorage.cart
+			if (!cart)
+				return new Map()
+			return new Map(JSON.parse(cart))
+		}
+
+		const get_key = (id)=>{
+			let key = id
+			for (let k of this.cart.keys()) {
+				if (JSON.stringify(k) == JSON.stringify(id)) {
+					key = k
+				}
+			}
+			return key
+		}
+
+
+		this.cart = get_cart()
+
+		/**
+		  * @param {int/object} id - you can use {id: 1, attribute: 1} as id
+		  * @param {int} count
+		  * @param {object} data
+		  * @returns {void}
+		  */
+		this.add = (id, count, data = {})=>{
+
+			let key = get_key(id)
+
+			if (this.cart.has(key)) {
+				
+				const new_count = this.cart.get(key).count + count
+
+				if (new_count < 1) {
+
+					this.remove(key)
+
+				} else {
+
+					this.cart.set(key, {
+						count: new_count,
+						data: data,
+					})
+				}
+
+			} else {
+
+				this.cart.set(key, {
+					count: count,
+					data: data,
+				})
+			}
+
+			event_cart_change('add')
+			save_cart()
+		}
+
+		/**
+		  * @param {int/object} id - you can use {id: 1, attribute: 1} as id
+		  * @returns {object} count and data
+		  */
+		this.get = (id)=>{
+
+			return this.cart.get(get_key(id))
+		}
+
+		/** 
+		  * @param {int/object} id - you can use {id: 1, attribute: 1} as id
+		  * @returns {void}
+		  */
+		this.remove = (id)=>{
+
+			this.cart.delete(get_key(id))
+			event_cart_change('remove')
+			save_cart()
+		}
+
+		/** 
+		  * @returns {void}
+		  */
+		this.clear = ()=>{
+
+			this.cart.clear()
+			event_cart_change('clear')
+			save_cart()
+		}
+
+		/**
+		  * @returns {int} number of cart items
+		  */
+		this.count = ()=>{
+
+			return this.cart.size
+		}
+
+		/**
+		  * @returns {int} sum of cart items numbers
+		  */
+		this.sum = ()=>{
+
+			let sum = 0
+
+			for (let [key, value] of this.cart.entries()) {
+				sum += value.count
+			}
+			return sum
+		}
+	}
+	
 // })
 </script>
 <style>
