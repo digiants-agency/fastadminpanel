@@ -18,7 +18,7 @@
 				</div>
 				<div class="mb-15" v-for="(instance, i) in fields_instance.editable[field.relationship_table_name]">
 					<div v-for="(f, index) in relationships[field.relationship_table_name]">
-						<template-fields-dynamic :field="f" :index="index" :fields_instance="instance" v-if="f.is_visible && f.type != 'relationship'" :errors="errors"></template-fields-dynamic>
+						<template-fields-dynamic ref="refield" :field="f" :index="index" :fields_instance="instance" v-if="f.is_visible && f.type != 'relationship'"></template-fields-dynamic>
 					</div>
 					<div class="flex justify-end">
 						<div class="btn btn-danger" v-on:click="fields_instance.editable[field.relationship_table_name].splice(i, 1)">Delete</div>
@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			</div>
-			<template-fields-dynamic :field="field" :index="index" :fields_instance="fields_instance" :relationships="relationships" :table_name="menu_item.table_name" :errors="errors" v-else></template-fields-dynamic>
+			<template-fields-dynamic ref="refield" :field="field" :index="index" :fields_instance="fields_instance" :relationships="relationships" :table_name="menu_item.table_name" v-else></template-fields-dynamic>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-2 control-label"></label>
@@ -52,7 +52,6 @@
 				menu: [],
 				menu_item: {fields:[]},
 				fields_instance: {editable: {}},
-				errors: {},
 				relationships: {},
 			}
 		},
@@ -85,7 +84,7 @@
 			},
 			create_fields_instance: function(){
 
-				this.check_fields(()=>{
+				if (this.check_fields()) {
 
 					var fields = this.prepare_fields(this.fields_instance)
 
@@ -102,66 +101,19 @@
 							location.reload()
 						}
 					})
-				})            
+				}
 			},
 			check_fields: function(callback){
+				
+				let is_valid = true
+				
+				this.$refs.refield.forEach((field)=>{
 
-				this.menu_item.fields.forEach((field)=>{
-
-					check_required(this.errors, this.fields_instance, field)
-					check_type(this.errors, this.fields_instance, field)
-				})
-
-				var is_valid = true
-				this.menu_item.fields.forEach((field)=>{
-
-					if (this.errors[field.db_title] != '')
+					if (!field.check())
 						is_valid = false
 				})
 
-
-				if (is_valid)
-					callback()
-
-				function check_required(errors, instance, field) {
-
-					if (instance[field.db_title] == undefined /*&& field.required == 'optional'*/) {
-						if (field.type == 'relationship' && field.relationship_count == 'single' && instance['id_' + field.relationship_table_name] == undefined)
-							instance['id_' + field.relationship_table_name] = 0
-						else if (field.type != 'relationship') {
-							instance[field.db_title] = get_standart_val(field.type)
-						}
-					}
-					
-					if (field.required != 'optional' && !instance[field.db_title]) {
-						errors[field.db_title] = 'This field is required'
-					} else if (field.required == 'required_once') {
-						// TODO
-					}
-
-					function get_standart_val(type) {
-						// TODO: enum, relationship
-						if (type == 'checkbox' || type == 'money' || type == 'number') return 0
-						if (type == 'color') return '#000000'
-						if (type == 'date') return '2000-00-00'
-						if (type == 'datetime') return '2000-00-00 12:00:00'
-						if (type == 'gallery') return []
-						if (type == 'translater') return {}
-						if (type == 'repeat') return ''
-						return ''
-					}
-				}
-
-				function check_type(errors, instance, field) {
-					
-					if (field.type == 'text') {
-						if (instance[field.db_title].length > 191)
-							errors[field.db_title] = 'More than maxlength (191 symbols)'
-					} else if (field.type == 'number' || field.type == 'money') {
-						if (!$.isNumeric(instance[field.db_title]))
-							errors[field.db_title] = 'Field must be numeric. Use "." instead of ","'
-					}
-				}
+				return is_valid
 			},
 			init_date: function(){
 				
@@ -238,8 +190,6 @@
 				var stack = []
 
 				this.menu_item.fields.forEach((field)=>{
-
-					Vue.set(this.errors, field.db_title, '')
 
 					if (field.type == 'relationship') {
 						

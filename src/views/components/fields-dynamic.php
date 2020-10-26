@@ -3,7 +3,7 @@
 		<label class="col-sm-2 control-label" v-text="field.title"></label>
 		<div class="col-sm-10">
 			<div v-if="field.type == 'text'">
-				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''" maxlength="191">
+				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="error = ''" maxlength="191">
 			</div>
 			<div v-else-if="field.type == 'textarea'">
 				<textarea v-on:input="change_textarea" :rows="textarea_height" class="form-control" v-model="fields_instance[field.db_title]"></textarea>
@@ -15,10 +15,10 @@
 				<input class="form-control form-control-checkbox" type="checkbox" v-model="fields_instance[field.db_title]">
 			</div>
 			<div v-else-if="field.type == 'color'">
-				<input class="form-control colorpicker" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control colorpicker" type="text" :id="field.db_title" v-on:change="error = ''">
 			</div>
 			<div v-else-if="field.type == 'date'">
-				<input class="form-control datepicker" data-init="0" type="text" :id="field.db_title" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control datepicker" data-init="0" type="text" :id="field.db_title" v-on:change="error = ''">
 			</div>
 			<div v-else-if="field.type == 'enum'">
 				<select class="form-control" v-model="fields_instance[field.db_title]">
@@ -26,7 +26,10 @@
 				</select>
 			</div>
 			<div v-else-if="field.type == 'relationship'">
-				<select v-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
+				<select v-if="field.relationship_count == 'single' && field.title == 'Артист'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
+					<option :value="item.id" v-for="item in relationships['artist']" v-text="item.title"></option>
+				</select>
+				<select v-else-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
 					<option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
 				</select>
 				<div v-else-if="field.relationship_count == 'many'">
@@ -40,14 +43,14 @@
 				</div>
 			</div>
 			<div v-else-if="field.type == 'photo'">
-				<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="error = ''">
 				<div class="photo-preview-wrapper">
 					<img :src="fields_instance[field.db_title]" alt="" class="photo-preview-img">
 					<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Add photo</div>
 				</div>
 			</div>
 			<div v-else-if="field.type == 'file'">
-				<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control" type="text" :id="field.db_title" v-model="fields_instance[field.db_title]" v-on:change="error = ''">
 				<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Add file</div>
 			</div>
 			<div v-else-if="field.type == 'gallery'">
@@ -70,22 +73,23 @@
 				</div>
 			</div>
 			<div v-else-if="field.type == 'number' || field.type == 'money'">
-				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="error = ''">
 			</div>
-			<div class="input-error" v-text="errors[field.db_title]"></div>
+			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
 </script>
 <script>
 	Vue.component('template-fields-dynamic',{
 		template: '#template-fields-dynamic',
-		props:['field', 'fields_instance', 'relationships', 'index', 'table_name', 'errors'],
+		props:['field', 'fields_instance', 'relationships', 'index', 'table_name'],
 		components: {
 			// Use the <ckeditor> component in this view.
 			ckeditor: CKEditor.component
 		},
 		data: function () {
 			return {
+				error: '',
 				editor: ClassicEditor,
 				editorConfig: {
 					extraPlugins: [ MyCustomUploadAdapterPlugin ],
@@ -94,6 +98,49 @@
 			}
 		},
 		methods: {
+			check: function(){
+
+				let instance = this.fields_instance
+				let field = this.field
+
+				if (instance[field.db_title] == undefined) {
+					if (field.type == 'relationship' && field.relationship_count == 'single' && instance['id_' + field.relationship_table_name] == undefined)
+						instance['id_' + field.relationship_table_name] = 0
+					else if (field.type != 'relationship') {
+						instance[field.db_title] = this.get_standart_val(field.type)
+					}
+				}
+				
+				if (field.required != 'optional' && !instance[field.db_title]) {
+					this.error = 'This field is required'
+				} else if (field.required == 'required_once') {
+					// TODO
+				}
+				
+					
+				if (field.type == 'text') {
+					if (instance[field.db_title].length > 191)
+						this.error = 'More than maxlength (191 symbols)'
+				} else if (field.type == 'number' || field.type == 'money') {
+					if (!$.isNumeric(instance[field.db_title]))
+						this.error = 'Field must be numeric. Use "." instead of ","'
+				}
+
+				if (this.error == '')
+					return true
+				return false
+			},
+			get_standart_val: function(type){
+				// TODO: enum, relationship
+				if (type == 'checkbox' || type == 'money' || type == 'number') return 0
+				if (type == 'color') return '#000000'
+				if (type == 'date') return '2000-00-00'
+				if (type == 'datetime') return '2000-00-00 12:00:00'
+				if (type == 'gallery') return []
+				if (type == 'translater') return {}
+				if (type == 'repeat') return ''
+				return ''
+			},
 			change_textarea: function(){
 
 				let count = (this.fields_instance[this.field.db_title].match(/\n/g) || []).length
