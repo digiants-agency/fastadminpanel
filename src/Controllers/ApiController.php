@@ -790,9 +790,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 				->where('id', $id)
 				->delete();
 			}
-			
-			$this->db_remove_relationship_many($id, $r->get('table_name'));
-			$this->db_remove_editable($id, $r->get('table_name'));
 
 		} else {
 
@@ -801,6 +798,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 			->delete();
 		}
 		
+		$this->db_remove_relationship_many($id, $r->get('table_name'));
+		$this->db_remove_editable($id, $r->get('table_name'));
 
 		return 'Success';
 	}
@@ -821,15 +820,17 @@ class ApiController extends \App\Http\Controllers\Controller {
 					->where('id', $id)
 					->delete();
 				}
-				
-				$this->db_remove_relationship_many($id, $r->get('table_name'));
-				$this->db_remove_editable($id, $r->get('table_name'));
 			}
 		} else {
 
 			DB::table($r->get('table_name'))
 			->whereIn('id', $ids)
 			->delete();
+		}
+
+		foreach ($ids as $id) {
+			$this->db_remove_relationship_many($id, $r->get('table_name'));
+			$this->db_remove_editable($id, $r->get('table_name'));
 		}
 
 		return 'Success';
