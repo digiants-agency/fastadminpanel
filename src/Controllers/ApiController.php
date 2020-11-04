@@ -869,11 +869,30 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			if ($field->relationship_count == 'editable') {
 
-				$results[$field->relationship_table_name] = json_decode(DB::table('menu')
+				$editable = json_decode(DB::table('menu')
 				->select('fields')
 				->where('table_name', $field->relationship_table_name)
 				->first()
 				->fields);
+
+				$rels = [];
+
+				foreach ($editable as $e) {
+					if ($e->type == 'relationship' && $e->relationship_count != 'editable') {
+
+						$rels[$e->relationship_table_name] = DB::table($this->get_table(
+							$e->relationship_table_name, 
+							$r->get('language')
+						))
+						->select('id', $e->relationship_view_field.' as title')
+						->get();
+					}
+				}
+
+				$results[$field->relationship_table_name] = [
+					'editable'	=> $editable,
+					'rels'		=> $rels,
+				];
 
 			} else {
 
