@@ -655,10 +655,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 						$insert[$key] = $value;
 					}
 
-					$inserts[] = $insert;
+					DB::table($tbl)->insert($insert);
 				}
-
-				DB::table($tbl)->insert($inserts);
 			}
 		}
 	}
