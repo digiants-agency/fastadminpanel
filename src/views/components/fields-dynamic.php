@@ -343,9 +343,10 @@
 			},
 		},
 		created: function(){
-			if (this.field.db_title == 'slug') {
+			if (this.field.db_title == 'slug' && !this.$route.params.edit_id) {
 				this.$root.$on('title_changed', (title)=>{
 					this.fields_instance[this.field.db_title] = this.slugify(title)
+					this.$forceUpdate()
 				})
 			}
 		},
