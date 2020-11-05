@@ -141,7 +141,7 @@
 				if (type == 'repeat') return ''
 				return ''
 			},
-			change_textarea: function(){
+			change_textarea: function(e){
 
 				let count = (this.fields_instance[this.field.db_title].match(/\n/g) || []).length
 				
