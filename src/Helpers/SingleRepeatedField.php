@@ -75,7 +75,7 @@ class SingleRepeatedField {
 					$fields = json_decode($fields_obj->value, true);
 
 				for ($i = 0, $count = count($this->fields); $i < $count; $i++) {
-					if (empty($fields[$i]) || empty($this->fields[$i]) || $fields[$i]['title'] != $this->fields[$i]['title']) {
+					if ($fields[$i] == 1 || empty($fields[$i]) || empty($this->fields[$i]) || $fields[$i]['title'] != $this->fields[$i]['title']) {
 
 						DB::table('single_text'.$ending)
 						->where('field_id', $this->id)
