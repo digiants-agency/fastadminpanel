@@ -3,7 +3,7 @@
 		<label class="col-sm-2 control-label" v-text="field.title"></label>
 		<div class="col-sm-10">
 			<div v-if="field.type == 'text'">
-				<input class="form-control" type="text" v-model="field.value" v-on:change="errors[field.db_title] = ''">
+				<input class="form-control" type="text" v-model="field.value" v-on:change="errors[field.db_title] = ''" maxlength="191">
 			</div>
 			<div v-else-if="field.type == 'textarea'">
 				<textarea class="form-control" v-model="field.value"></textarea>
