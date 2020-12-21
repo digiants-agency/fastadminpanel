@@ -26,10 +26,7 @@
 				</select>
 			</div>
 			<div v-else-if="field.type == 'relationship'">
-				<select v-if="field.relationship_count == 'single' && field.title == 'Артист'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
-					<option :value="item.id" v-for="item in relationships['artist']" v-text="item.title"></option>
-				</select>
-				<select v-else-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
+				<select v-if="field.relationship_count == 'single'" class="form-control" v-model="fields_instance['id_' + field.relationship_table_name]">
 					<option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
 				</select>
 				<div v-else-if="field.relationship_count == 'many'">
