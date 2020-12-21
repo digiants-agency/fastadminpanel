@@ -8,9 +8,11 @@
 
 <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
 
-@if (isset($_GET['utm_']) || isset($_GET['gclid']))
-	<meta name="robots" content="noindex,nofollow"/>
-@endif
+@foreach ($_GET as $param => $val)
+	@if (strncmp($param, 'utm_', 4) === 0 || $param == 'gclid')
+		<meta name="robots" content="noindex,nofollow"/>
+	@endif
+@endforeach
 
 @if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'facebook') !== false)
 	<meta property="og:image" content="{{url('/images/og-fb.jpg')}}">
