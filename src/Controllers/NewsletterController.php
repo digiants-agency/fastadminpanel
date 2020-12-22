@@ -70,6 +70,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		$users = DB::table('newsletter_users')
 		->select('id')
 		->whereIn('id_newsletter_bases', $ids)
+		->where('is_unsubscribe', '0')
 		->orderBy('id', 'ASC')
 		->get();
 
