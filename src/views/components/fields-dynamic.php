@@ -163,7 +163,7 @@
 
 						var url = items[i].url.replace(document.location.origin, '')
 
-						this.$parent.fields_instance[id] = url
+						this.fields_instance[id] = url
 						this.$forceUpdate()
 
 						break;
@@ -179,7 +179,7 @@
 
 						var url = items[i].url.replace(document.location.origin, '')
 
-						this.$parent.fields_instance[id] = url
+						this.fields_instance[id] = url
 						this.$forceUpdate()
 
 						break;
@@ -190,8 +190,8 @@
 				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
 				window.SetUrl = (items)=>{
 
-					if (this.$parent.fields_instance[id])
-						var arr = this.$parent.fields_instance[id]
+					if (this.fields_instance[id])
+						var arr = this.fields_instance[id]
 					else  var arr = []
 					
 					for (var i = 0; i < items.length; i++) {
@@ -199,12 +199,12 @@
 						var url = items[i].url.replace(document.location.origin, '')
 						arr.push(url)
 					}
-					this.$parent.fields_instance[id] = arr
+					this.fields_instance[id] = arr
 					this.$forceUpdate()
 				};
 			},
 			remove_gallery: function(id, index){
-				this.$parent.fields_instance[id].splice(index, 1)
+				this.fields_instance[id].splice(index, 1)
 				this.$forceUpdate()
 			},
 			add_relationship_field: function(field){
@@ -217,12 +217,12 @@
 					add[field.relationship_table_name] = relationships[0].id
 				else add[field.relationship_table_name] = 0
 
-				this.$parent.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].push(add)
+				this.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].push(add)
 				this.$forceUpdate()
 			},
 			remove_relationship_field: function(field, id){
 				
-				this.$parent.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].splice(id, 1)
+				this.fields_instance['$' + this.table_name + '_' + field.relationship_table_name].splice(id, 1)
 				this.$forceUpdate()
 			},
 			slugify: function(s, opt) {
