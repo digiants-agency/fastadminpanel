@@ -46,7 +46,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				Single::prepare_field_to_db($field);
 
-				if ($field['value'] == null) $field['value'] = '';
+				if ($field['value'] === null) $field['value'] = '';
 
 				DB::statement("INSERT INTO $table_name (field_id, value) 
 				VALUES(".$field['id'].", ?) 

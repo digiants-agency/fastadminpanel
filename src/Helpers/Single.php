@@ -169,8 +169,8 @@ class Single {
 	}
 
 	public static function convert_simple_type ($value, $type) {
-		if ($type == 'difficult') {
-
+		if ($type == 'checkbox') {
+			return ($value == 'true') ? 1 : 0;
 		}
 		return $value;
 	}
