@@ -172,6 +172,9 @@ class Single {
 		if ($type == 'checkbox') {
 			return ($value == 'true') ? 1 : 0;
 		}
+		if ($type == 'number' && $value == '') {
+			return 0;
+		}
 		return $value;
 	}
 
