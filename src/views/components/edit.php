@@ -35,8 +35,11 @@
 		<div class="row form-group">
 			<label class="col-sm-2 control-label"></label>
 			<div class="col-sm-10">
-				<button v-if="id == 0" class="btn btn-primary" v-on:click="create_fields_instance()">Create</button>
-				<button v-else class="btn btn-primary" v-on:click="create_fields_instance()">Update</button>
+				<button v-if="id == 0" class="btn btn-primary" v-on:click="create_fields_instance(true)">Create</button>
+				<template v-else>
+					<button class="btn btn-primary" v-on:click="create_fields_instance(false)">Update</button>
+					<button class="btn btn-primary" v-on:click="create_fields_instance(true)">Update and close</button>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -95,7 +98,8 @@
 						id: this.id,
 					}, (data)=>{
 						if (data == 'Success') {
-							this.$router.push('/admin/' + this.menu_item.table_name)
+							if (is_close)
+								this.$router.push('/admin/' + this.menu_item.table_name)
 						} else {
 							alert('Error. Press OK to reload page')
 							location.reload()
