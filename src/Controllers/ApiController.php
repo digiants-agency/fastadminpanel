@@ -635,29 +635,102 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		foreach ($editable as $table_name => $values) {
 
-			$tables = $this->get_tables($table_name);
+			$menu = DB::table('menu')
+			->select('fields', 'multilanguage')
+			->where('table_name', $table_name)
+			->first();
+			$fields = [];
+			foreach (json_decode($menu->fields) as $f) {
+				if ($f->type == 'relationship' && $f->relationship_count == 'single') {
+					
+					$fields['id_' . $f->relationship_table_name] = $f->lang;
 
-			foreach ($tables as $tbl) {
+				} else if ($f->type == 'relationship') {
+					// TODO: handle relations
+				} else {
 
-				DB::table($tbl)
-				->where("id_$table", $id)
-				->delete();
-
-				$inserts = [];
-
-				foreach ($values as $vals) {
-
-					$insert = [
-						"id_$table"	=> $id,
-					];
-
-					foreach ($vals as $key => $value) {
-						$insert[$key] = $value;
-					}
-
-					DB::table($tbl)->insert($insert);
+					$fields[$f->db_title] = $f->lang;
 				}
 			}
+
+			$tables = $this->get_tables($table_name);
+
+			// if ($menu->multilanguage == 0) {
+
+			// 	foreach ($tables as $tbl) {
+
+			// 		DB::table($tbl)
+			// 		->where("id_$table", $id)
+			// 		->delete();
+
+			// 		foreach ($values as $vals) {
+
+			// 			$insert = [
+			// 				"id_$table"	=> $id,
+			// 			];
+
+			// 			foreach ($vals as $key => $value) {
+			// 				$insert[$key] = $value;
+			// 			}
+
+			// 			DB::table($tbl)->insert($insert);
+			// 		}
+			// 	}
+
+			// } else {
+
+				foreach ($tables as $tbl) {
+
+					$exist_ids = DB::table($tbl)
+					->select('id')
+					->where("id_$table", $id)
+					->get()
+					->pluck('id')
+					->all();
+					$request_ids = [];
+					foreach ($values as $vals) {
+						if (!empty($vals->id)) {
+							$request_ids[] = $vals->id;
+						}
+					}
+
+					DB::table($tbl)
+					->whereIn('id', array_diff($exist_ids, $request_ids))
+					->delete();
+
+					foreach ($values as $vals) {
+
+						if (!empty($vals->id)) {
+							
+							$update = ["id_$table"	=> $id];
+
+							if ($menu->multilanguage == 1) {
+								$curr_lang = str_replace($table_name.'_', '', $tbl);
+							} else {
+								$curr_lang = request()->get('language');
+							}
+
+							foreach ($vals as $key => $value) {
+								if (request()->get('language') == $curr_lang || 
+									(!empty($fields[$key]) && $fields[$key] == 0))
+									$update[$key] = $value;
+							}
+
+							DB::table($tbl)->where('id', $vals->id)->update($update);
+
+						} else {
+
+							$insert = ["id_$table"	=> $id];
+
+							foreach ($vals as $key => $value) {
+								$insert[$key] = $value;
+							}
+
+							DB::table($tbl)->insert($insert);
+						}
+					}
+				}
+			// }
 		}
 	}
 
