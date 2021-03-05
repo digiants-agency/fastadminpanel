@@ -85,7 +85,7 @@
 
 				return prepared_field_instance
 			},
-			create_fields_instance: function(){
+			create_fields_instance: function(is_close){
 
 				if (this.check_fields()) {
 
