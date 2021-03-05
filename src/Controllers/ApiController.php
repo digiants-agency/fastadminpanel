@@ -151,14 +151,22 @@ class ApiController extends \App\Http\Controllers\Controller {
 		$where = $this->get_val('where', '');
 		$relationships = $this->get_val('relationships', '');   // many
 		$editables = $this->get_val('editables', '');   // one to many (editable)
+		$join = $this->get_val('join', '');   // one to many (editable)
 
-		$values = DB::table($this->get_table(
+		$full_table = $this->get_table(
 			$this->get_val('table'),
 			$this->get_val('language')
-		))
+		);
+
+		$values = DB::table($full_table)
 		->selectRaw($fields)
 		->when($where != '', function($q) use ($where){
 			$q->whereRaw($where);
+		})
+		->when(!empty($join), function($q) use ($join, $table, $full_table){
+			foreach (json_decode($join) as $tbl) {
+				$q->leftJoin($tbl, "$tbl.id", "$full_table.id_$tbl");
+			}
 		})
 		->offset($offset)
 		->limit($limit)

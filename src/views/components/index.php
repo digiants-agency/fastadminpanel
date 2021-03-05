@@ -42,7 +42,8 @@
 										<input type="checkbox" v-on:change="instance.marked = $event.target.checked" :checked="instance.marked">
 									</td>
 									<td class="td-content" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'">
-										<input class="form-control editable-input" :class="{saving: false, saved: false}" type="text" v-on:change="editable_change($event.target.value, instance, field)" v-model="instance[field.db_title]" v-if="field.show_in_list == 'editable' && (field.type == 'number' || field.type == 'text' || field.type == 'textarea')">
+										<span v-if="field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single'" v-text="instance[field.relationship_table_name + '_' + field.relationship_view_field]"></span>
+										<input class="form-control editable-input" :class="{saving: false, saved: false}" type="text" v-on:change="editable_change($event.target.value, instance, field)" v-model="instance[field.db_title]" v-else-if="field.show_in_list == 'editable' && (field.type == 'number' || field.type == 'text' || field.type == 'textarea')">
 										<span v-text="instance[field.db_title]" v-else></span>
 									</td>
 									<td class="td-actions">
@@ -152,9 +153,25 @@
 					}
 					where = where_arr.join(' OR ')
 				}
+
+				var select = this.menu_item.table_name + '.*'
 				
+				var join = []
+				for (var i = this.menu_item.fields.length - 1; i >= 0; i--) {
+
+					var field = this.menu_item.fields[i]
+
+					if (field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single') {
+						join.push(field.relationship_table_name)
+						select += ', ' + field.relationship_table_name + '.' + field.relationship_view_field + ' AS ' + 
+							field.relationship_table_name + '_' + field.relationship_view_field
+					}
+				}
+
 				request('/admin/db-select', {
 					table: this.menu_item.table_name,
+					fields: select,
+					join: join.length == 0 ? '' : JSON.stringify(join),
 					order: this.order,
 					sort_order: this.sort_order,
 					offset: this.offset,
