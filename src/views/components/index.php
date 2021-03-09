@@ -48,6 +48,7 @@
 									</td>
 									<td class="td-actions">
 										<router-link :to="'/admin/' + menu_item.table_name + '/edit/' + instance.id" class="btn btn-xs btn-info">Edit</router-link>
+										<div class="btn btn-xs btn-info td-actions-delete" v-on:click="copy(instance.id)">Copy</div>
 										<div class="btn btn-xs btn-danger td-actions-delete" v-on:click="remove_row(instance.id)">Delete</div>
 									</td>
 								</tr>
@@ -93,6 +94,15 @@
 			}
 		},
 		methods: {
+			copy: async function(id){
+				request('/admin/db-copy', {
+					id: id,
+					language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
+					table: this.menu_item.table_name,
+				}, (data)=>{
+					this.refresh()
+				})
+			},
 			editable_change: function(val, instance, field){
 
 				var table = this.menu_item.table_name

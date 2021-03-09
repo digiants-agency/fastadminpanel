@@ -522,6 +522,56 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
+	public function db_copy () {
+
+		$input = request()->all();
+
+		if (!empty($input['language'])) {
+
+			$tbl = $input['table'].'_'.$input['language'];
+
+		} else {
+
+			$tbl = $input['table'];
+		}
+
+		$row = DB::table($tbl)
+		->where('id', $input['id'])
+		->first();
+
+		$tables = $this->get_tables($input['table']);
+
+		foreach ($tables as $table) {
+
+			$insert = [];
+
+			foreach ($row as $key => $value) {
+				
+				if ($key == 'id' || $key == 'created_at' || $key == 'updated_at')
+					continue;
+
+				if ($key == 'slug') {
+					preg_match('/-copy-(\d)$/', $value, $matches);
+					if (!empty($matches)) {
+						$value = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $value);
+					} else {
+						$value .= '-copy-1';
+					}
+				}
+
+				if ($key == 'title') {
+					$value .= ' copy';
+				}
+
+				$insert[$key] = $value;
+			}
+
+			DB::table($table)->insert($insert);
+		}
+
+		return 'Success';
+	}
+
 	public function db_insert_or_update_row () {
 
 		$r = request();

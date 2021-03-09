@@ -26,6 +26,7 @@ Route::group([
         Route::post('admin/set-single/{id}', 'ApiController@set_single');
         Route::post('admin/get-single/{id}', 'ApiController@get_single');
 
+        Route::post('admin/db-copy', 'ApiController@db_copy');
         Route::post('admin/db-count', 'ApiController@db_count');
         Route::post('admin/db-select', 'ApiController@db_select');
         Route::post('admin/db-update', 'ApiController@db_update');
