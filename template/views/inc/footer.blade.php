@@ -78,6 +78,7 @@
 	  * 
 	  * @param {int} slides_to_scroll - (default 2)
 	  * @param {int} autoplay - auto swipe in ms, 0/false - disable (default false)
+	  * @param {int} visible_slides
 	  * @param {HTMLelement} arrow_left
 	  * @param {HTMLelement} arrow_right
 	  * @param {HTMLelement} slides
@@ -101,6 +102,12 @@
 
 		if (!params.slides_to_scroll) {
 			params.slides_to_scroll = 1
+		}
+
+		if (!params.visible_slides) {
+			params.visible_slides = 0
+		} else {
+			params.visible_slides--
 		}
 
 		if (params.arrow_left) {
@@ -192,10 +199,10 @@
 
 		function set_next_slide (slide) {
 
-			if (slide >= params.slides.length / params.slides_to_scroll) {
+			if (slide + params.visible_slides >= params.slides.length / params.slides_to_scroll) {
 				curr_slide = 0
 			} else if (slide < 0) {
-				curr_slide = Math.ceil(params.slides.length / params.slides_to_scroll) - 1
+				curr_slide = Math.ceil(params.slides.length / params.slides_to_scroll) - 1 - params.visible_slides
 			} else {
 				curr_slide = slide
 			}
