@@ -5,6 +5,9 @@
 			<div v-if="field.type == 'text'">
 				<input class="form-control" type="text" v-model="fields_instance[field.db_title]" v-on:change="error = ''" v-on:input="change_text" maxlength="191">
 			</div>
+			<div v-else-if="field.type == 'password'">
+				<input class="form-control" type="password" v-model="fields_instance[field.db_title]" v-on:change="error = ''" maxlength="191">
+			</div>
 			<div v-else-if="field.type == 'textarea'">
 				<textarea v-on:input="change_textarea" :rows="textarea_height" class="form-control" v-model="fields_instance[field.db_title]"></textarea>
 			</div>

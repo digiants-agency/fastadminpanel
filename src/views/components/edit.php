@@ -56,6 +56,7 @@
 				menu_item: {fields:[]},
 				fields_instance: {editable: {}},
 				relationships: {},
+				passwords: [],
 			}
 		},
 		methods: {
@@ -67,12 +68,17 @@
 						
 						fields[field.db_title] = JSON.parse(fields[field.db_title])
 
+					} else if (field.type == 'password') {
+
+						delete fields[field.db_title]
 					}
 				})
 
 				return fields
 			},
 			prepare_fields: function(fields_instance){
+
+				this.passwords = []
 				
 				var prepared_field_instance = Object.assign({}, fields_instance)
 
@@ -80,6 +86,8 @@
 
 					if (field.type == 'gallery' || field.type == 'translater') {
 						prepared_field_instance[field.db_title] = JSON.stringify(fields_instance[field.db_title])
+					} else if (field.type == 'password') {
+						this.passwords.push(field.db_title)
 					}
 				})
 
@@ -95,6 +103,7 @@
 						table_name: this.menu_item.table_name,
 						fields: JSON.stringify(fields),
 						language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
+						passwords: JSON.stringify(this.passwords),
 						id: this.id,
 					}, (data)=>{
 						if (data == 'Success') {

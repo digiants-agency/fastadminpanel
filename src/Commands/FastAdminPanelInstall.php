@@ -154,7 +154,7 @@ class FastAdminPanelInstall extends Command {
 			Schema::create('users', function (\Illuminate\Database\Schema\Blueprint $table) {
 				$table->bigIncrements('id');
 				$table->string('name');
-				$table->integer('role_id')->default(1);
+				$table->integer('id_roles')->default(1);
 				$table->string('email')->unique();
 				$table->timestamp('email_verified_at')->nullable();
 				$table->string('password');
@@ -242,7 +242,7 @@ class FastAdminPanelInstall extends Command {
 		$data['name']     = $this->ask('Administrator name');
 		$data['email']    = $this->ask('Administrator email');
 		$data['password'] = bcrypt($this->secret('Administrator password'));
-		$data['role_id']  = 1;
+		$data['id_roles']  = 1;
 		User::create($data);
 		$this->info('User has been created');
 	}
@@ -270,7 +270,7 @@ class FastAdminPanelInstall extends Command {
 		DB::table('menu')->insert([
 			'title'             => 'Users',
 			'table_name'        => 'users',
-			'fields'            => '[{"id":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"name","title":"Name"},{"id":1,"required":"optional","is_visible":true,"show_in_list":"no","type":"number","db_title":"role_id","title":"Role id"},{"id":2,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"email","title":"Email"}]',
+			'fields'            => '[{"id":0,"lang":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"name","title":"Name"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"roles","title":"Role","relationship_view_field":"title"},{"id":2,"lang":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"email","title":"Email"},{"id":3,"lang":0,"required":"optional","is_visible":true,"show_in_list":"no","type":"password","db_title":"password","title":"Password"}]',
 			'is_dev'            => '0',
 			'multilanguage'     => '0',
 			'is_soft_delete'    => '0',

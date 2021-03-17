@@ -18,7 +18,7 @@ class AdminOnly {
     {
         $user = Auth::user();
 
-        if ($user == null || $user->role_id != 1) {
+        if ($user == null || $user->id_roles != 1) {
             return redirect('/login');
         }
 

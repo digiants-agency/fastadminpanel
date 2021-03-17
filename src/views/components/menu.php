@@ -109,7 +109,7 @@
 						<option value="file">File</option>
 						<option value="photo">Photo</option>
 						<option value="gallery">Gallery</option>
-						<option value="password">Password (hashed) (unaviable)</option>
+						<option value="password">Password (hashed)</option>
 						<option value="money">Money</option>
 						<option value="number">Number</option>
 						<option value="enum">Select (ENUM)</option>

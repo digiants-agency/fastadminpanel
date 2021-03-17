@@ -7,6 +7,7 @@ use DB;
 use Schema;
 use Validator;
 use Lang;
+use Hash;
 use Digiants\FastAdminPanel\Helpers\Single;
 
 class ApiController extends \App\Http\Controllers\Controller {
@@ -585,6 +586,15 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		$relationship_many = $this->db_get_and_rm_relationship_many($fields);
 		$editable = $this->db_get_and_rm_editable($fields);
+		$passwords = json_decode($r->get('passwords'));
+
+		foreach ($passwords as $f) {
+			if ($id != 0 && empty($fields[$f])) {
+				unset($fields[$f]);
+			} else if (!empty($fields[$f])) {
+				$fields[$f] = Hash::make($fields[$f]);
+			}
+		}
 
 		if ($id == 0) {
 
