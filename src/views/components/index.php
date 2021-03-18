@@ -158,7 +158,14 @@
 
 						if (field.show_in_list != 'no') {
 							
-							where_arr.push(field.db_title + ' LIKE "%' + this.search + '%"')
+							if (field.type == 'relationship' && field.relationship_count == 'single') {
+								
+								where_arr.push(field.relationship_table_name + '.' + field.relationship_view_field + ' LIKE "%' + this.search + '%"')
+
+							} else {
+
+								where_arr.push(this.menu_item.table_name + '.' + field.db_title + ' LIKE "%' + this.search + '%"')
+							}
 						}
 					}
 					where = where_arr.join(' OR ')
