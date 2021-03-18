@@ -23,6 +23,9 @@
 <link rel="stylesheet" href="/vendor/fastadminpanel/css/jquery.ui.css" />
 <script src="/vendor/fastadminpanel/js/jquery.ui.js"></script>
 
+<link rel="stylesheet" href="/vendor/fastadminpanel/css/jquery.datetimepicker.min.css" />
+<script src="/vendor/fastadminpanel/js/jquery.datetimepicker.full.min.js"></script>
+
 <script src="/vendor/fastadminpanel/js/ckeditor-MyCustomUploadAdapterPlugin.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>

@@ -20,6 +20,9 @@
 			<div v-else-if="field.type == 'color'">
 				<input class="form-control colorpicker" type="text" :id="field.db_title" v-on:change="error = ''">
 			</div>
+			<div v-else-if="field.type == 'datetime'">
+				<input class="form-control datetimepicker" data-init="0" type="text" :id="field.db_title" v-on:change="error = ''">
+			</div>
 			<div v-else-if="field.type == 'date'">
 				<input class="form-control datepicker" data-init="0" type="text" :id="field.db_title" v-on:change="error = ''">
 			</div>

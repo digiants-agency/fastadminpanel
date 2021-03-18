@@ -131,6 +131,34 @@
 			init_date: function(){
 				
 				var app = this
+				$('.datetimepicker').each((i, elm)=>{
+					var id = $(elm).attr('id')
+					var today = new Date()
+					var date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate()+' '+today.getHours()+':'+today.getMinutes()
+
+					if (app.fields_instance[id] != undefined && app.fields_instance[id] != '')
+						date = app.fields_instance[id]
+					else app.fields_instance[id] = date
+
+					if ($(elm).attr('data-init') == "0") {
+
+						$(elm).datetimepicker({
+							format: "Y-m-d H:i",
+							onChangeDateTime: function(d) {
+								var save_date = new Date(d.getTime() - d.getTimezoneOffset() * 60 * 1000);
+								app.fields_instance[id] = save_date.getUTCFullYear() + '-' +
+									('00' + (save_date.getUTCMonth()+1)).slice(-2) + '-' +
+									('00' + save_date.getUTCDate()).slice(-2) + ' ' + 
+									('00' + save_date.getUTCHours()).slice(-2) + ':' + 
+									('00' + save_date.getUTCMinutes()).slice(-2) + ':' + 
+									('00' + save_date.getUTCSeconds()).slice(-2)
+							}
+						})
+						$(elm).attr('data-init', '1')
+					}
+					
+					$(elm).val( date );
+				})
 				$(".datepicker").each((i, elm)=>{
 
 					var id = $(elm).attr('id')

@@ -104,7 +104,7 @@
 						<option value="checkbox">Checkbox</option>
 						<option value="color">Color picker</option>
 						<option value="date">Date picker</option>
-						<option value="datetime">Date and time picker (unaviable)</option>
+						<option value="datetime">Date and time picker</option>
 						<option value="relationship">Relationship</option>
 						<option value="file">File</option>
 						<option value="photo">Photo</option>
