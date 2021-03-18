@@ -7,7 +7,6 @@ use DB;
 use Schema;
 use Validator;
 use Lang;
-use Hash;
 use Digiants\FastAdminPanel\Helpers\Single;
 
 class ApiController extends \App\Http\Controllers\Controller {
@@ -592,7 +591,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 			if ($id != 0 && empty($fields[$f])) {
 				unset($fields[$f]);
 			} else if (!empty($fields[$f])) {
-				$fields[$f] = Hash::make($fields[$f]);
+				$fields[$f] = bcrypt($fields[$f]);
 			}
 		}
 
