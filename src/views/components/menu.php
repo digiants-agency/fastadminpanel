@@ -8,7 +8,7 @@
 			<div class="col-sm-10">
 				<select v-on:change="set_menu_item" class="form-control">
 					<option :value="-1">New</option>
-					<option :value="index" v-for="(item, index) in menu" v-text="item.title"></option>
+					<option :value="index" v-for="(item, index) in menu" v-if="item.type == 'multiple'" v-text="item.title"></option>
 				</select>
 			</div>
 		</div>
