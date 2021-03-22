@@ -238,7 +238,7 @@ class FastAdminPanelInstall extends Command {
             $images = [
                 'about.png',
                 'aboutbanner.jpg',
-                'abouticon.png',
+                'abouticon.svg',
                 'arrow.svg',
                 'banner.jpg',
                 'category.jpg',
@@ -248,7 +248,7 @@ class FastAdminPanelInstall extends Command {
                 'news.jpg',
                 'producslider.jpg',
                 'product.jpg',
-                'sale.jpg',
+                'sale.png',
             ];
 
             foreach ($images as $path) {
