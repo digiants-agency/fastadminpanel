@@ -168,25 +168,6 @@ class FastAdminPanelInstall extends Command {
                 $this->shop_path_package("/script.js"),
                 public_path("/script.js"));
 
-            $css = [
-                'converter-desktop.php',
-                'converter-mobile.php',
-                'desktop-src.css',
-                'mobile-src.css',
-                'desktop.css',
-                'mobile.css',
-            ];
-
-            foreach ($css as $path) {
-                copy(
-                    $this->shop_path_package("/css/$path"),
-                    public_path("/css/$path")
-                );
-            }
-            // add views
-            $this->template_add_folder(base_path('/resources/views/inc'));
-            $this->template_add_folder(base_path('/resources/views/layouts'));
-            $this->template_add_folder(base_path('/resources/views/pages'));
             $views = [
                 'layouts/app.blade.php',
                 'inc/footer.blade.php',
