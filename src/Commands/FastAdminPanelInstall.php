@@ -42,6 +42,7 @@ class FastAdminPanelInstall extends Command {
 		$this->add_user();
 		$this->add_menu();
 		$this->import_default_template();
+		$this->import_default_shop();
 	}
 
 	private function template_add_folder ($path) {
@@ -55,6 +56,10 @@ class FastAdminPanelInstall extends Command {
 
 		return base_path("/vendor/sv-digiants/fastadminpanel/template".$path);
 	}
+
+	private function shop_path_package ($path) {
+        return base_path("/vendor/sv-digiants/fastadminpanel/shoptemplate".$path);
+    }
 
 	private function import_default_template () {
 
@@ -114,14 +119,15 @@ class FastAdminPanelInstall extends Command {
 			);
 			// view composer
 			$composer = 
-		'\\View::composer(["inc.header","inc.footer"], function ($view) {
-		
-			// 
+            '\\View::composer(["inc.header","inc.footer"], function ($view) {
+            
+                // 
+    
+                $view->with([
+    
+                ]);
+            });';
 
-			$view->with([
-
-			]);
-		});';
 			$provider = file_get_contents(base_path("/app/Providers/AppServiceProvider.php"));
 			$pos = strrpos($provider, '//');
 			
@@ -135,6 +141,145 @@ class FastAdminPanelInstall extends Command {
 				unlink(base_path("/resources/views/welcome.blade.php"));
 		}
 	}
+
+	private function import_default_shop(){
+        $answer = $this->ask('Import shop template (if previous been yes) (Y/n)?');
+
+        if ($answer != 'n') {
+
+            $this->info('Here been installation of FAP ecommerce shop.');
+
+            //copy and change styles & js
+
+            if (file_exists(base_path("/css/desktop-src.css")))
+                unlink(base_path("/css/desktop-src.css"));
+            if (file_exists(base_path("/css/mobile-src.css")))
+                unlink(base_path("/css/mobile-src.css"));
+
+            copy(
+                $this->shop_path_package("/css/desctop-src.css"),
+                public_path("/css/desctop-src.css"));
+
+            copy(
+                $this->shop_path_package("/css/mobile-src.css"),
+                public_path("/css/mobile-src.css"));
+
+            copy(
+                $this->shop_path_package("/script.js"),
+                public_path("/script.js"));
+
+            $css = [
+                'converter-desktop.php',
+                'converter-mobile.php',
+                'desktop-src.css',
+                'mobile-src.css',
+                'desktop.css',
+                'mobile.css',
+            ];
+
+            foreach ($css as $path) {
+                copy(
+                    $this->shop_path_package("/css/$path"),
+                    public_path("/css/$path")
+                );
+            }
+            // add views
+            $this->template_add_folder(base_path('/resources/views/inc'));
+            $this->template_add_folder(base_path('/resources/views/layouts'));
+            $this->template_add_folder(base_path('/resources/views/pages'));
+            $views = [
+                'layouts/app.blade.php',
+                'inc/footer.blade.php',
+                'inc/header.blade.php',
+                'inc/horizontal.blade.php',
+                'inc/salebanner.blade.php',
+                'pages/about.blade.php',
+                'pages/article.blade.php',
+                'pages/blog.blade.php',
+                'pages/catalog.blade.php',
+                'pages/contact.blade.php',
+                'pages/delandpay.blade.php',
+                'pages/index.blade.php',
+                'pages/order.blade.php',
+                'pages/product.blade.php',
+                'pages/search.blade.php',
+                'pages/successorder.blade.php',
+                'pages/userinfo.blade.php',
+            ];
+            foreach ($views as $path) {
+                if (file_exists(base_path("/views/$path")))
+                    unlink(base_path("/views/$path"));
+
+                copy(
+                    $this->shop_path_package("/views/$path"),
+                    base_path("/resources/views/$path")
+                );
+            }
+            // routes
+            if (file_exists(base_path("/routes/web.php")))
+                unlink(base_path("/routes/web.php"));
+            copy(
+                $this->shop_path_package("/web.php"),
+                base_path("/routes/web.php")
+            );
+
+            $controllers = [
+                'BlogController.php',
+                'CartController.php',
+                'CatalogController.php',
+                'Controller.php',
+                'PagesController.php',
+                'ProductController.php',
+                'SearchController.php',
+                'SitemapController.php',
+                'UserController.php',
+            ];
+
+            foreach ($controllers as $path) {
+                if (file_exists(base_path("/Controllers/$path")))
+                    unlink(base_path("/app/Http/Controllers/$path"));
+
+                copy(
+                    $this->shop_path_package("/Controllers/$path"),
+                    base_path("/app/Http/Controllers/$path")
+                );
+            }
+
+            if (file_exists(base_path("/app/Providers/AppServiceProvider.php")))
+                unlink(base_path("/app/Providers/AppServiceProvider.php"));
+
+            copy(
+                $this->shop_path_package("/AppServiceProvider.php"),
+                base_path("/app/Providers/AppServiceProvider.php")
+            );
+
+            $this->template_add_folder(public_path('/images'));
+            $images = [
+                'about.png',
+                'aboutbanner.jpg',
+                'abouticon.png',
+                'arrow.svg',
+                'banner.jpg',
+                'category.jpg',
+                'history.jpg',
+                'logo.svg',
+                'lupa.png',
+                'news.jpg',
+                'producslider.jpg',
+                'product.jpg',
+                'sale.jpg',
+            ];
+
+            foreach ($images as $path) {
+                copy(
+                    $this->shop_path_package("/images/$path"),
+                    public_path("/images/$path")
+                );
+            }
+
+            $this->info('All done. Luv u <3');
+        }
+    }
 
 	private function create_db() {
 
