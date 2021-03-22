@@ -157,7 +157,7 @@ class FastAdminPanelInstall extends Command {
                 unlink(public_path("/css/mobile-src.css"));
 
             copy(
-                $this->shop_path_package("/css/desctop-src.css"),
+                $this->shop_path_package("/css/desktop-src.css"),
                 public_path("/css/desktop-src.css"));
 
             copy(
