@@ -158,7 +158,7 @@ class FastAdminPanelInstall extends Command {
 
             copy(
                 $this->shop_path_package("/css/desctop-src.css"),
-                public_path("/css/desctop-src.css"));
+                public_path("/css/desktop-src.css"));
 
             copy(
                 $this->shop_path_package("/css/mobile-src.css"),
