@@ -151,10 +151,10 @@ class FastAdminPanelInstall extends Command {
 
             //copy and change styles & js
 
-            if (file_exists(base_path("/css/desktop-src.css")))
-                unlink(base_path("/css/desktop-src.css"));
-            if (file_exists(base_path("/css/mobile-src.css")))
-                unlink(base_path("/css/mobile-src.css"));
+            if (file_exists(public_path("/css/desktop-src.css")))
+                unlink(public_path("/css/desktop-src.css"));
+            if (file_exists(public_path("/css/mobile-src.css")))
+                unlink(public_path("/css/mobile-src.css"));
 
             copy(
                 $this->shop_path_package("/css/desctop-src.css"),
