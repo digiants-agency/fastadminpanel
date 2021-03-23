@@ -363,10 +363,10 @@ class FastAdminPanelInstall extends Command {
                 $table->integer('id_users');
                 $table->string('slug');
                 $table->text('img');
-                $table->sting('attr');
+                $table->string('attr');
                 $table->decimal('price',15,2);
                 $table->decimal('sale_price',15,2);
-                $table->sting('title');
+                $table->string('title');
                 $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
                 $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             });
