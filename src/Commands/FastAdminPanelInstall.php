@@ -258,8 +258,234 @@ class FastAdminPanelInstall extends Command {
                 );
             }
 
+            $this->create_db_shop();
+
             $this->info('All done. Luv u <3');
         }
+    }
+
+    private function create_db_shop(){
+        //create single language tables
+
+        if (!Schema::hasTable('callback')) {
+            Schema::create('callback', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->datetime('data');
+                $table->string('title')->default('');
+                $table->string('tel')->default('');
+                $table->string('link')->default('');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('callback table has already exist!');
+        }
+
+        if (!Schema::hasTable('custom_user')) {
+            Schema::create('custom_user', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_users')->default('');
+                $table->string('last_name')->default('');
+                $table->string('tel')->default('');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('custom_user table has already exist!');
+        }
+
+
+        if (!Schema::hasTable('orders')) {
+            Schema::create('orders', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->datetime('data');
+                $table->text('name')->default('');
+                $table->text('tel')->default('');
+                $table->text('email')->default('');
+                $table->text('country')->default('');
+                $table->text('region')->default('');
+                $table->text('city')->default('');
+                $table->text('adress')->default('');
+                $table->text('deltype')->default('');
+                $table->text('paytype')->default('');
+                $table->integer('paystatus')->default(0);
+                $table->string('status');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('orders table has already exist!');
+        }
+
+
+        if (!Schema::hasTable('orders_product')) {
+            Schema::create('orders_product', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_orders');
+                $table->text('title')->default('');
+                $table->text('attributes')->default('');
+                $table->integer('price');
+                $table->integer('count');
+                $table->text('img')->default('');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('orders_product table has already exist!');
+        }
+
+
+        if (!Schema::hasTable('product_filter_fields')) {
+            Schema::create('product_filter_fields', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_product');
+                $table->integer('id_filter_fields');
+            });
+        } else {
+            $this->info('product_filter_fields table has already exist!');
+        }
+
+
+        if (!Schema::hasTable('product_mods')) {
+            Schema::create('product_mods', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_product');
+                $table->integer('id_mods');
+            });
+        } else {
+            $this->info('product_mods table has already exist!');
+        }
+
+
+        if (!Schema::hasTable('wishlist')) {
+            Schema::create('wishlist', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_users');
+                $table->string('slug');
+                $table->text('img');
+                $table->sting('attr');
+                $table->decimal('price',15,2);
+                $table->decimal('sale_price',15,2);
+                $table->sting('title');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('wishlist table has already exist!');
+        }
+
+        $langs = DB::table('languages')->get();
+        foreach($langs as $l){
+            //blog
+            $tablename = "blog_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->text('title');
+                    $table->string('img');
+                    $table->text('preview');
+                    $table->string('preview_img');
+                    $table->string('slug');
+                    $table->text('content');
+                    $table->text('meta_title');
+                    $table->text('meda_descr');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+
+            //category
+            $tablename = "category_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('title');
+                    $table->string('slug');
+                    $table->string('img');
+                    $table->text('meta_title');
+                    $table->text('meta_descr');
+                    $table->text('h1');
+                    $table->text('seo_text');
+                    $table->integer('sort');
+                    $table->integer('id_category');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+            //filters
+
+            $tablename = "filters_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('title');
+                    $table->string('slug');
+                    $table->integer('is_attribute');
+                    $table->integer('is_filter');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+            //filter_fields
+
+            $tablename = "filter_fields_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('title');
+                    $table->string('slug');
+                    $table->integer('id_filters');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+            //mods
+
+            $tablename = "mods_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('title_mod');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+            //product
+            $tablename = "product_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->text('title');
+                    $table->text('slug');
+                    $table->decimal('price',15,2);
+                    $table->decimal('sale_price',15,2);
+                    $table->integer('available');
+                    $table->string('title_short_descr');
+                    $table->text('short_descr');
+                    $table->string('image');
+                    $table->text('gallery');
+                    $table->text('description');
+                    $table->text('meta_title');
+                    $table->text('meta_descr');
+                    $table->integer('id_category');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+        }
+
     }
 
 	private function create_db() {
@@ -321,6 +547,7 @@ class FastAdminPanelInstall extends Command {
 		} else {
 			$this->info('Menu table has already exist!');
 		}
+
 
 		$this->info('DB creation complete!');
 	}
