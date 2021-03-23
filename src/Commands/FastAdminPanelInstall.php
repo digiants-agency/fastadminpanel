@@ -284,7 +284,7 @@ class FastAdminPanelInstall extends Command {
         if (!Schema::hasTable('custom_user')) {
             Schema::create('custom_user', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->integer('id_users')->default('');
+                $table->integer('id_users');
                 $table->string('last_name')->default('');
                 $table->string('tel')->default('');
                 $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
