@@ -569,6 +569,18 @@ class FastAdminPanelInstall extends Command {
             'sort'            => '10',
             'parent'            => '1',
         ]);
+        DB::table('single_page')->insert([
+            'id'             => '12',
+            'title'        => 'Баннер со скидкой',
+            'sort'            => '10',
+            'parent'            => '1',
+        ]);
+        DB::table('single_page')->insert([
+            'id'             => '13',
+            'title'        => 'Горизонтальная форма',
+            'sort'            => '10',
+            'parent'            => '1',
+        ]);
 
 
         //menu
@@ -787,7 +799,11 @@ class FastAdminPanelInstall extends Command {
     (102, 1, 'photo', 'Картинка', 'Акция', 13, 1),
     (103, 1, 'photo', 'Картинка моб', 'Акция', 13, 2),
     (104, 1, 'text', 'Ссылка', 'Акция', 13, 3),
-    (105, 1, 'text', 'Кнопка', 'Акция', 13, 4);");
+    (105, 1, 'text', 'Кнопка', 'Акция', 13, 4),
+    (106, 1, 'photo', 'Картинка', 'Акция', 12, 1),
+    (107, 1, 'photo', 'Картинка моб', 'Акция', 12, 2),
+    (108, 1, 'text', 'Ссылка', 'Акция', 12, 3),
+    (109, 1, 'text', 'Кнопка', 'Акция', 12, 4);");
 
         //single_text WITH LANGUAGES
 
@@ -805,7 +821,8 @@ class FastAdminPanelInstall extends Command {
 (81, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
 (83, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
 (85, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
-(93, '[{\"title\":\"Заголовок\",\"type\":\"text\",\"default\":null,\"values\":[\"Оплата\",\"Приват\"]}]');");
+(93, '[{\"title\":\"Заголовок\",\"type\":\"text\",\"default\":null,\"values\":[\"Оплата\",\"Приват\"]}]'),
+(98, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Изображение\",\"type\":\"photo\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]');");
         }
 
         $this->info('All data copied.');
