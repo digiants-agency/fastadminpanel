@@ -791,6 +791,22 @@ class FastAdminPanelInstall extends Command {
 
         //single_text WITH LANGUAGES
 
+        $langs = DB::table('languages')->get();
+        foreach($langs as $l){
+            $tablename = 'single_text_'.$l->tag;
+            DB::statement("INSERT INTO `{$tablename}` (`field_id`, `value`) VALUES
+(2, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":null,\"values\":[\"about\",\"delandpay\",\"blog\",\"contact\"]},{\"title\":\"Заголовок\",\"type\":\"text\",\"default\":null,\"values\":[\"О компании\",\"Оплата и доставка\",\"Новости\",\"Контакты\"]}]'),
+(60, '[{\"title\":\"Заголовок\",\"type\":\"text\",\"default\":null,\"values\":[\"Стандартная доставка\",\"УкрПошта\"]},{\"title\":\"Сроки\",\"type\":\"text\",\"default\":\"5-7 рабочих дней\",\"values\":[\"Доставим сегодня\",\"Не доставим\"]},{\"title\":\"Цена\",\"type\":\"text\",\"default\":\"300 грн\",\"values\":[\"300\",\"200\"]}]'),
+(61, 'null'),
+(62, ''),
+(63, ''),
+(64, ''),
+(79, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
+(81, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
+(83, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
+(85, '[{\"title\":\"Ссылка\",\"type\":\"text\",\"default\":\"\",\"values\":[]},{\"title\":\"Название\",\"type\":\"text\",\"default\":\"\",\"values\":[]}]'),
+(93, '[{\"title\":\"Заголовок\",\"type\":\"text\",\"default\":null,\"values\":[\"Оплата\",\"Приват\"]}]');");
+        }
 
         $this->info('All data copied.');
     }
@@ -938,6 +954,8 @@ class FastAdminPanelInstall extends Command {
 			'is_soft_delete'    => '0',
 			'sort'              => '2',
 		]);
+
+
 		$this->info('Menu has been created');
 	}
 }
