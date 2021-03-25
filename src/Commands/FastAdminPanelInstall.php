@@ -257,7 +257,7 @@ class FastAdminPanelInstall extends Command {
             }
 
             $this->create_db_shop();
-
+            $this->copyshopdata();
             $this->info('All done. Luv u <3');
         }
     }
