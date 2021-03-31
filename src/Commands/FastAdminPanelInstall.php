@@ -297,15 +297,15 @@ class FastAdminPanelInstall extends Command {
             Schema::create('orders', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->datetime('data');
-                $table->text('name')->default('');
-                $table->text('tel')->default('');
-                $table->text('email')->default('');
-                $table->text('country')->default('');
-                $table->text('region')->default('');
-                $table->text('city')->default('');
-                $table->text('adress')->default('');
-                $table->text('deltype')->default('');
-                $table->text('paytype')->default('');
+                $table->text('name');
+                $table->text('tel');
+                $table->text('email');
+                $table->text('country');
+                $table->text('region');
+                $table->text('city');
+                $table->text('adress');
+                $table->text('deltype');
+                $table->text('paytype');
                 $table->integer('paystatus')->default(0);
                 $table->string('status');
                 $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
@@ -320,11 +320,11 @@ class FastAdminPanelInstall extends Command {
             Schema::create('orders_product', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('id_orders');
-                $table->text('title')->default('');
-                $table->text('attributes')->default('');
+                $table->text('title');
+                $table->text('attributes');
                 $table->integer('price');
                 $table->integer('count');
-                $table->text('img')->default('');
+                $table->text('img');
                 $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
                 $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             });
