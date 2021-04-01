@@ -191,7 +191,7 @@ class Single {
 			if (!empty($field['repeat'])) {
 				for ($i = 0, $count = count($field['repeat']); $i < $count; $i++) {
 					for ($j = 0, $c = count($field['repeat'][$i]); $j < $c; $j++) {
-						$field['value'][$j]['values'][$i] = Single::convert_simple_type($field['repeat'][$i][$j]['value'], $field['type']);
+						$field['value'][$j]['values'][$i] = Single::convert_simple_type($field['repeat'][$i][$j]['value'], $field['repeat'][$i][$j]['type']);
 					}
 				}
 			}
