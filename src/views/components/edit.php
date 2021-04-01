@@ -18,7 +18,7 @@
 				</div>
 				<div class="mb-15" v-for="(instance, i) in fields_instance.editable[field.relationship_table_name]">
 					<div v-for="(f, index) in relationships[field.relationship_table_name]">
-						<template-fields-dynamic ref="refield" :field="f" :index="index" :fields_instance="instance" :relationships="relationships" v-if="f.is_visible && (f.type != 'relationship' || (f.type == 'relationship' && f.relationship_count == 'single' && f.title != 'relation'))"></template-fields-dynamic>
+						<template-fields-dynamic ref="refield" :field="f" :index="index" :fields_instance="instance" :relationships="relationships" v-if="f.is_visible && (f.type != 'relationship' || (f.type == 'relationship' && f.relationship_count == 'single')) && menu_item.table_name != f.relationship_table_name"></template-fields-dynamic>
 					</div>
 					<div class="flex justify-end">
 						<div class="btn btn-danger" v-on:click="fields_instance.editable[field.relationship_table_name].splice(i, 1)">Delete</div>

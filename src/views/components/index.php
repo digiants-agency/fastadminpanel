@@ -171,7 +171,9 @@
 					where = where_arr.join(' OR ')
 				}
 
-				var select = this.menu_item.table_name + '.*'
+				if (this.menu_item.multilanguage == 0)
+					var select = this.menu_item.table_name + '.*'
+				else var select = this.menu_item.table_name + '_' + app.get_language().tag + '.*'
 				
 				var join = []
 				for (var i = this.menu_item.fields.length - 1; i >= 0; i--) {
@@ -179,8 +181,21 @@
 					var field = this.menu_item.fields[i]
 
 					if (field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single') {
-						join.push(field.relationship_table_name)
-						select += ', ' + field.relationship_table_name + '.' + field.relationship_view_field + ' AS ' + 
+
+						let field_relationship_table_name = field.relationship_table_name
+						for (var j = 0; j < this.menu.length; j++) {
+							if (this.menu[j].table_name == field.relationship_table_name) {
+								if (this.menu[j].multilanguage == 1)
+									field_relationship_table_name += '_' + app.get_language().tag
+								break
+							}
+						}
+
+						join.push({
+							short: field.relationship_table_name,
+							full: field_relationship_table_name,
+						})
+						select += ', ' + field_relationship_table_name + '.' + field.relationship_view_field + ' AS ' + 
 							field.relationship_table_name + '_' + field.relationship_view_field
 					}
 				}

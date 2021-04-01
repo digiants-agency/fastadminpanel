@@ -165,7 +165,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 		})
 		->when(!empty($join), function($q) use ($join, $table, $full_table){
 			foreach (json_decode($join) as $tbl) {
-				$q->leftJoin($tbl, "$tbl.id", "$full_table.id_$tbl");
+				$q->leftJoin($tbl->full, "{$tbl->full}.id", "$full_table.id_{$tbl->short}");
 			}
 		})
 		->offset($offset)
