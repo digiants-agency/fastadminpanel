@@ -1184,3 +1184,13 @@ if(is_mobile){
         $('.mobilemenu').removeClass('active');
     })
 }
+
+$('.mobfilter').on('click',function(){
+    $('.catalogpage .sidebar_mob').addClass('active');
+    mySlider.onResize();
+    return false;
+})
+
+$('.priceslider .textslider input').on('input', function () {
+mySlider.setValues(parseInt($('#pricelower').val()), parseInt($('#pricehight').val()));
+});
