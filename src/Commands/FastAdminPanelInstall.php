@@ -639,7 +639,7 @@ class FastAdminPanelInstall extends Command {
             'table_name'        => 'orders',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"textarea","db_title":"name","title":"Имя"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"tel","title":"Телефон"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"email","title":"email"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"country","title":"Страна"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"region","title":"Область"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"city","title":"Город"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"adress","title":"Адрес","type":"textarea"},{"id":7,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"deltype","title":"Способ доставки","type":"textarea"},{"id":8,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"paytype","title":"Тип оплаты","type":"textarea"},{"id":9,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"paystatus","title":"Статус оплаты","type":"checkbox"},{"id":11,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"enum","enum":["Новый","В дороге","В ожидании","Отменен"],"db_title":"status","title":"Статус"},{"id":12,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"editable","relationship_table_name":"orders_product","title":"Товары"}]',
             'is_dev'            => '0',
-            'multilanguage'     => '1',
+            'multilanguage'     => '0',
             'is_soft_delete'    => '0',
             'sort'              => '10',
         ]);
@@ -649,7 +649,7 @@ class FastAdminPanelInstall extends Command {
             'table_name'        => 'orders_product',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"orders","relationship_view_field":"name","title":"Заказ"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","title":"Название","db_title":"title","type":"textarea"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","title":"Атрибуты","db_title":"attributes","type":"textarea"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","title":"Цена","db_title":"price","type":"number"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","title":"Количество","db_title":"count","type":"number"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","title":"Ссылка в магазине","db_title":"link","type":"textarea"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"img","type":"photo","title":"Изображение"}]',
             'is_dev'            => '0',
-            'multilanguage'     => '1',
+            'multilanguage'     => '0',
             'is_soft_delete'    => '0',
             'sort'              => '10',
         ]);
@@ -659,7 +659,7 @@ class FastAdminPanelInstall extends Command {
             'table_name'        => 'callback',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"title","title":"Имя"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"tel","title":"Номер телефона"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"link","title":"Ссылка заказа"}]',
             'is_dev'            => '0',
-            'multilanguage'     => '1',
+            'multilanguage'     => '0',
             'is_soft_delete'    => '0',
             'sort'              => '10',
         ]);
@@ -679,7 +679,7 @@ class FastAdminPanelInstall extends Command {
             'table_name'        => 'custom_user',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"users","relationship_view_field":"email","title":"Email"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"last_name","title":"Фамилия"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"tel","type":"text","title":"Телефон"}]',
             'is_dev'            => '0',
-            'multilanguage'     => '1',
+            'multilanguage'     => '0',
             'is_soft_delete'    => '0',
             'sort'              => '10',
         ]);
@@ -689,7 +689,7 @@ class FastAdminPanelInstall extends Command {
             'table_name'        => 'wishlist',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"relationship","relationship_count":"single","relationship_table_name":"users","relationship_view_field":"email","title":"user"},{"id":7,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"title","title":"Товар"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ссылка"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"photo","db_title":"img","title":"Изображение"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"attr","title":"Атрибут"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"money","db_title":"price","title":"Цена"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"sale_price","type":"money","title":"Цена со скидкой"}]',
             'is_dev'            => '0',
-            'multilanguage'     => '1',
+            'multilanguage'     => '0',
             'is_soft_delete'    => '0',
             'sort'              => '10',
         ]);
