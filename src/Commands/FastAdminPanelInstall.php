@@ -117,6 +117,12 @@ class FastAdminPanelInstall extends Command {
 				$this->template_path_package("/PagesController.php"),
 				base_path("/app/Http/Controllers/PagesController.php")
 			);
+			if (file_exists(base_path("/app/Http/Controllers/Controller.php")))
+				unlink(base_path("/app/Http/Controllers/Controller.php"));
+			copy(
+				$this->template_path_package("/Controller.php"),
+				base_path("/app/Http/Controllers/Controller.php")
+			);
 			// view composer
 			$composer = 
             '\\View::composer(["inc.header","inc.footer"], function ($view) {

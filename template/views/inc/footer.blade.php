@@ -2,6 +2,20 @@
 
 </footer>
 
+<div id="loader">
+	<svg  width="40" height="40" viewBox="0 0 50 50">
+		<path fill="#black" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+			<animateTransform attributeType="xml"
+				attributeName="transform"
+				type="rotate"
+				from="0 25 25"
+				to="360 25 25"
+				dur="0.6s"
+				repeatCount="indefinite"/>
+		</path>
+	</svg>
+</div>
+
 <script>
 // document.addEventListener('DOMContentLoaded', function(){
 	// slide toggle START
@@ -485,6 +499,108 @@
 			return sum
 		}
 	}
+
+	// ajax request START
+	let load_count = 0
+	const loader = document.getElementById('loader')
+
+	const serialize = function(obj, prefix) {
+		var str = [], p;
+		for (p in obj) {
+			if (obj.hasOwnProperty(p)) {
+			var k = prefix ? prefix + "[" + p + "]" : p,
+				v = obj[p];
+				str.push((v !== null && typeof v === "object") ?
+				serialize(v, k) :
+				encodeURIComponent(k) + "=" + encodeURIComponent(v));
+			}
+		}
+		return str.join("&");
+	}
+
+	const formdata = function(obj) {
+
+		let formData = new FormData()
+
+		for (const i in obj) {
+
+			formData.append(i, obj[i])
+		}
+
+		return formData
+	}
+
+	async function post(endpoint, obj, is_file = false, is_loader = true) {
+
+		try {
+
+			if (is_loader && loader) {
+				load_count++
+				loader.classList.add('active')
+				// document.dispatchEvent(new CustomEvent('loading', { 'detail': load_count }))
+			}
+
+			const url = endpoint
+
+			let headers = {
+				'Accept': 'application/json',
+				'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+			}
+
+			if (!is_file) {
+
+				// headers['Content-Type'] = 'multipart/form-data'
+
+				var response = await fetch(url, {
+					method: 'POST',
+					headers: headers,
+					body: formdata(obj)
+				})
+
+			} else {
+
+				headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+				var response = await fetch(url, {
+					method: 'POST',
+					headers: headers,
+					body: serialize(obj)
+				})
+			}
+			
+			let json = []
+
+			try {
+
+				json = await response.json()
+
+			} catch (error) {}
+
+			if (is_loader && loader) {
+				load_count--
+				if (load_count == 0)
+					loader.classList.remove('active')
+				// document.dispatchEvent(new CustomEvent('loading', { 'detail': load_count }))
+			}
+
+			if (!json.data) {
+				return {
+					success: false,
+					message: "Fatal error",
+					data: json,
+				}
+			}
+
+			return json
+
+		} catch (error) {
+
+			console.error(error)
+		}
+
+		return {success: false, message: "Fatal error", data: {}}
+	}
+	// ajax request END
 	
 // })
 </script>
@@ -495,5 +611,24 @@
 		background-size: auto !important;
 		background-position: center !important;
 		background-repeat: no-repeat !important;
+	}
+	#loader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background-color: rgba(255, 255, 255, 0.7);
+		z-index: 100;
+		opacity: 0;
+		pointer-events: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: opacity 0.3s;
+	}
+	#loader.active {
+		opacity: 1;
+		pointer-events: auto;
 	}
 </style>
