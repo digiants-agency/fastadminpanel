@@ -159,21 +159,19 @@
 						if (field.show_in_list != 'no') {
 							
 							if (field.type == 'relationship' && field.relationship_count == 'single') {
-								
-								where_arr.push(field.relationship_table_name + '.' + field.relationship_view_field + ' LIKE "%' + this.search + '%"')
+
+								where_arr.push(this.get_search_table_relation(field.relationship_table_name) + '.' + field.relationship_view_field + ' LIKE "%' + this.search + '%"')
 
 							} else {
-
-								where_arr.push(this.menu_item.table_name + '.' + field.db_title + ' LIKE "%' + this.search + '%"')
+								
+								where_arr.push(this.get_search_table_menu() + '.' + field.db_title + ' LIKE "%' + this.search + '%"')
 							}
 						}
 					}
 					where = where_arr.join(' OR ')
 				}
 
-				if (this.menu_item.multilanguage == 0)
-					var select = this.menu_item.table_name + '.*'
-				else var select = this.menu_item.table_name + '_' + app.get_language().tag + '.*'
+				var select = this.get_search_table_menu() + '.*'
 				
 				var join = []
 				for (var i = this.menu_item.fields.length - 1; i >= 0; i--) {
@@ -182,14 +180,7 @@
 
 					if (field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single') {
 
-						let field_relationship_table_name = field.relationship_table_name
-						for (var j = 0; j < this.menu.length; j++) {
-							if (this.menu[j].table_name == field.relationship_table_name) {
-								if (this.menu[j].multilanguage == 1)
-									field_relationship_table_name += '_' + app.get_language().tag
-								break
-							}
-						}
+						let field_relationship_table_name = this.get_search_table_relation(field.relationship_table_name)
 
 						join.push({
 							short: field.relationship_table_name,
@@ -218,6 +209,24 @@
 
 					this.instances = data
 				})
+			},
+			get_search_table_menu: function(){
+				if (this.menu_item.multilanguage == 0) {
+					return this.menu_item.table_name
+				} else {
+					return this.menu_item.table_name + '_' + app.get_language().tag
+				}
+			},
+			get_search_table_relation: function(relation_table){
+				let table = relation_table
+				for (var j = 0; j < this.menu.length; j++) {
+					if (this.menu[j].table_name == relation_table) {
+						if (this.menu[j].multilanguage == 1)
+							table += '_' + app.get_language().tag
+						break
+					}
+				}
+				return table
 			},
 			get_count: function(){
 				request('/admin/db-count', {
