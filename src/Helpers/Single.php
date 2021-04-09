@@ -200,6 +200,9 @@ class Single {
 
 		} else {
 
+			if (!array_key_exists('value', $field)) { // hotfix
+				$field['value'] = null;
+			}
 			$field['value'] = Single::convert_simple_type($field['value'], $field['type']);
 		}
 	}
