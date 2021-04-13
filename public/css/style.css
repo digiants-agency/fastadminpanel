@@ -529,6 +529,9 @@ td.td-content {
     z-index: 1;
     user-select: none;
 }
+.editable-checkbox {
+	width: auto;
+}
 .editable-input {
 	max-width: 85px;
 }

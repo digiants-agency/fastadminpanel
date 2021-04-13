@@ -44,6 +44,7 @@
 									<td class="td-content" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'">
 										<span v-if="field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single'" v-text="instance[field.relationship_table_name + '_' + field.relationship_view_field]"></span>
 										<input class="form-control editable-input" :class="{saving: false, saved: false}" type="text" v-on:change="editable_change($event.target.value, instance, field)" v-model="instance[field.db_title]" v-else-if="field.show_in_list == 'editable' && (field.type == 'number' || field.type == 'text' || field.type == 'textarea')">
+										<input class="form-control editable-checkbox" :class="{saving: false, saved: false}" type="checkbox" v-on:change="editable_change($event.target.checked, instance, field)" v-model="instance[field.db_title]" v-else-if="field.show_in_list == 'editable' && field.type == 'checkbox'">
 										<span v-text="instance[field.db_title]" v-else></span>
 									</td>
 									<td class="td-actions">
@@ -114,6 +115,8 @@
 				var value = val
 				if (field.type == 'number')
 					value = parseInt(value)
+				else if (field.type == 'checkbox')
+					value = value ? 1 : 0
 
 				request('/admin/db-update', {
 					table: table,
