@@ -170,7 +170,7 @@ class Single {
 
 	public static function convert_simple_type ($value, $type) {
 		if ($type == 'checkbox') {
-			return ($value == 'true') ? 1 : 0;
+			return ($value == 'true' || $value == 1) ? 1 : 0;
 		}
 		if ($type == 'number' && $value == '') {
 			return 0;
