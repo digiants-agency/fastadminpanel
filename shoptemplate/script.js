@@ -222,7 +222,9 @@ var mySlider = new rSlider({
     }
 });
 
-
+$( document ).ready(function() {
+mySlider.onResize();
+});
 
 function setLocation(curLoc){
     try {

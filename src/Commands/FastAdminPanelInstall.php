@@ -378,6 +378,24 @@ class FastAdminPanelInstall extends Command {
             $this->info('wishlist table has already exist!');
         }
 
+        if (!Schema::hasTable('reviews')) {
+            Schema::create('reviews', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_product');
+                $table->string('name');
+                $table->string('tel');
+                $table->string('email');
+                $table->text('note');
+                $table->integer('status');
+                $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                $table->text('answer');
+                $table->date('date');
+            });
+        } else {
+            $this->info('reviews table has already exist!');
+        }
+
         $langs = DB::table('languages')->get();
         foreach($langs as $l){
             //blog
@@ -603,7 +621,7 @@ class FastAdminPanelInstall extends Command {
         DB::table('menu')->insert([
             'title'             => 'Товары',
             'table_name'        => 'product',
-            'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"textarea","db_title":"title","title":"Название"},{"id":14,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ссылка"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"money","db_title":"price","title":"Цена"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"money","db_title":"sale_price","title":"Цена со скидкой"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"checkbox","db_title":"available","title":"Наличие"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"title_short_descr","title":"Заголовок краткого описания"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"short_descr","title":"Краткое описание"},{"id":6,"required":"optional","is_visible":true,"lang":"0","show_in_list":"no","type":"photo","db_title":"image","title":"Изображение"},{"id":7,"required":"optional","is_visible":true,"lang":"0","show_in_list":"no","type":"gallery","db_title":"gallery","title":"Галерея"},{"id":8,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"ckeditor","db_title":"description","title":"Описание"},{"id":9,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_title","title":"Meta title"},{"id":10,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_descr","title":"Meta descr"},{"id":11,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"many","relationship_table_name":"filter_fields","relationship_view_field":"title","title":"Фильтр \\ аттрибут"},{"id":12,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"category","relationship_view_field":"title","title":"Категория"},{"id":13,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"many","relationship_table_name":"mods","relationship_view_field":"title_mod","title":"Модификации (размеры)"}]',
+            'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"textarea","db_title":"title","title":"Название"},{"id":14,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ссылка"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"money","db_title":"price","title":"Цена"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"money","db_title":"sale_price","title":"Цена со скидкой"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"checkbox","db_title":"available","title":"Наличие"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"title_short_descr","title":"Заголовок краткого описания"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"short_descr","title":"Краткое описание"},{"id":6,"required":"optional","is_visible":true,"lang":"0","show_in_list":"no","type":"photo","db_title":"image","title":"Изображение"},{"id":7,"required":"optional","is_visible":true,"lang":"0","show_in_list":"no","type":"gallery","db_title":"gallery","title":"Галерея"},{"id":8,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"ckeditor","db_title":"description","title":"Описание"},{"id":9,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_title","title":"Meta title"},{"id":10,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_descr","title":"Meta descr"},{"id":11,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"many","relationship_table_name":"filter_fields","relationship_view_field":"title","title":"Фильтр или аттрибут"},{"id":12,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"category","relationship_view_field":"title","title":"Категория"},{"id":13,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"many","relationship_table_name":"mods","relationship_view_field":"title_mod","title":"Модификации (размеры)"}]',
             'is_dev'            => '0',
             'multilanguage'     => '1',
             'is_soft_delete'    => '0',
@@ -694,6 +712,16 @@ class FastAdminPanelInstall extends Command {
             'title'             => 'wishlist',
             'table_name'        => 'wishlist',
             'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"relationship","relationship_count":"single","relationship_table_name":"users","relationship_view_field":"email","title":"user"},{"id":7,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"title","title":"Товар"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ссылка"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"photo","db_title":"img","title":"Изображение"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"attr","title":"Атрибут"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"money","db_title":"price","title":"Цена"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","db_title":"sale_price","type":"money","title":"Цена со скидкой"}]',
+            'is_dev'            => '0',
+            'multilanguage'     => '0',
+            'is_soft_delete'    => '0',
+            'sort'              => '10',
+        ]);
+
+        DB::table('menu')->insert([
+            'title'             => 'Отзывы',
+            'table_name'        => 'reviews',
+            'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"product","relationship_view_field":"title","title":"Товар"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"name","title":"ФИО"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"tel","title":"Телефон"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"email","title":"email"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"textarea","db_title":"note","title":"Текст"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"checkbox","db_title":"status","title":"status"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"textarea","db_title":"answer","title":"Ответ на отзыв"},{"id":7,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"date","db_title":"date","title":"Дата"}]',
             'is_dev'            => '0',
             'multilanguage'     => '0',
             'is_soft_delete'    => '0',
