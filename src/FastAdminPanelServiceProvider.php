@@ -46,7 +46,6 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 			$loader->alias('JSAssembler', \Digiants\FastAdminPanel\Helpers\JSAssembler::class);
 			$loader->alias('Lang', \Digiants\FastAdminPanel\Helpers\Lang::class);
 			$loader->alias('ResizeImg', \Digiants\FastAdminPanel\Helpers\ResizeImg::class);
-			$loader->alias('Tr', \Digiants\FastAdminPanel\Helpers\Translater::class);
 			$loader->alias('Single', \Digiants\FastAdminPanel\Helpers\Single::class);
 			$loader->alias('Field', \Digiants\FastAdminPanel\Helpers\Field::class);
 		});
