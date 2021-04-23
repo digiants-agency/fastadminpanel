@@ -23,7 +23,7 @@ class Lang {
 
 			$tag = $l->tag;
 
-			if (strpos($url, "/$tag") == strlen($url) - 3) {
+			if (strpos($url, "/$tag") == mb_strlen($url) - 3) {
 
 				$url = str_replace("$host/$tag", $host, $url);
 
