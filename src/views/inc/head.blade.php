@@ -27,7 +27,7 @@
 <script src="/vendor/fastadminpanel/js/jquery.datetimepicker.full.min.js"></script>
 
 <script src="/vendor/fastadminpanel/js/ckeditor-MyCustomUploadAdapterPlugin.js"></script>
-<script src="/vendor/fastadminpanel/js/ckeditor.js"></script>
+<script src="/vendor/fastadminpanel/ckeditor/ckeditor.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>
 
 <title>Admin panel</title>

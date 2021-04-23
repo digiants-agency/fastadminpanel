@@ -95,7 +95,13 @@
 				error: '',
 				editor: ClassicEditor,
 				editorConfig: {
-					extraPlugins: [ MyCustomUploadAdapterPlugin ],
+					extraPlugins: [ MyCustomUploadAdapterPlugin],
+					toolbar: {
+						items: [
+							'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'fontSize', 'fontColor', 'fontBackgroundColor', '|', 'bulletedList', 'numberedList', 'code', 'blockQuote', '|', 'indent', 'outdent', 'alignment', '|', 'link', 'imageUpload', 'imageTextAlternative', 'insertTable', 'mediaEmbed', 'htmlEmbed', 'undo', 'redo',
+						],
+						shouldNotGroupWhenFull: true,
+					},
 				},
 				textarea_height: 1,
 			}
