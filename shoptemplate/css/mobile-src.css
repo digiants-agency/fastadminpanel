@@ -1,109 +1,58 @@
 @font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewMedium-Obl.ttf') format('truetype');
-	font-weight: 500;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New Demi';
-	src: url('fonts/FuturaNew/FuturaNewDemi-Obl.ttf') format('truetype');
-	font-weight: normal;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewMedium-Reg.ttf') format('truetype');
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewHeavy-Reg.ttf') format('truetype');
+	font-family: 'Klein';
+	src: url('fonts/Klein-Black.eot');
+	src: local('Klein Black'), local('Klein-Black'),
+	url('fonts/Klein-Black.eot?#iefix') format('embedded-opentype'),
+	url('fonts/Klein-Black.woff2') format('woff2'),
+	url('fonts/Klein-Black.woff') format('woff'),
+	url('fonts/Klein-Black.ttf') format('truetype');
 	font-weight: 900;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewLight-Obl.ttf') format('truetype');
-	font-weight: 300;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New Book';
-	src: url('fonts/FuturaNew/FuturaNewBook-Obl.ttf') format('truetype');
-	font-weight: normal;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewExtraBold-Obl.ttf') format('truetype');
-	font-weight: 800;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New Book';
-	src: url('fonts/FuturaNew/FuturaNewBook-Reg.ttf') format('truetype');
-	font-weight: normal;
+	font-family: 'Klein';
+	src: url('fonts/Klein-Medium.eot');
+	src: local('Klein Medium'), local('Klein-Medium'),
+	url('fonts/Klein-Medium.eot?#iefix') format('embedded-opentype'),
+	url('fonts/Klein-Medium.woff2') format('woff2'),
+	url('fonts/Klein-Medium.woff') format('woff'),
+	url('fonts/Klein-Medium.ttf') format('truetype');
+	font-weight: 500;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewBold-Obl.ttf') format('truetype');
-	font-weight: bold;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewExtraBold-Reg.ttf') format('truetype');
-	font-weight: 800;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewLight-Reg.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Futura New Demi';
-	src: url('fonts/FuturaNew/FuturaNewDemi-Reg.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewBold-Reg.ttf') format('truetype');
+	font-family: 'Klein';
+	src: url('fonts/Klein-Bold.eot');
+	src: local('Klein Bold'), local('Klein-Bold'),
+	url('fonts/Klein-Bold.eot?#iefix') format('embedded-opentype'),
+	url('fonts/Klein-Bold.woff2') format('woff2'),
+	url('fonts/Klein-Bold.woff') format('woff'),
+	url('fonts/Klein-Bold.ttf') format('truetype');
 	font-weight: bold;
 	font-style: normal;
 }
 
+
 @font-face {
-	font-family: 'Futura New';
-	src: url('fonts/FuturaNew/FuturaNewHeavy-Obl.ttf') format('truetype');
-	font-weight: 900;
-	font-style: italic;
+	font-family: 'Klein';
+	src: url('fonts/Klein-Regular.eot');
+	src: local('Klein Regular'), local('Klein-Regular'),
+	url('fonts/Klein-Regular.eot?#iefix') format('embedded-opentype'),
+	url('fonts/Klein-Regular.woff2') format('woff2'),
+	url('fonts/Klein-Regular.woff') format('woff'),
+	url('fonts/Klein-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
 }
-
-
 
 :root {
-	--main-color: #5C155A;
-	--secondary-color: #5C155A;
-	--hover-color: #774676;
-	--main-font: 'Futura New';
-	--secondary-font: 'Futura New';
+	--main-color: #4F5C41;
+	--secondary-color: #97A38A;
+	--hover-color: #97A38A;
+	--main-font: 'Klein';
+	--secondary-font: 'Philosopher';
 	--light-back-color: #F7F1EC;
 	--light-back-main-color: #FBFBFB;
 }
