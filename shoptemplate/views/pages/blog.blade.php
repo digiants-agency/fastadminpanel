@@ -31,6 +31,7 @@
                 </div>
                 @endforeach
             </div>
+            @include('inc.pagination', ['pagination' => $pagination])
         </div>
     </section>
 

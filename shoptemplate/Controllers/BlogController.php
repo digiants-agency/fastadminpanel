@@ -40,11 +40,22 @@ class BlogController extends Controller
 
     public function index () {
 	    $blogtable = 'blog_'.Lang::get();
+        $page_size = 15;
+        $page = (!empty(request()->get('page'))) ? request()->get('page') : 1;
+
         $blog = DB::table($blogtable)
+            ->skip(($page - 1) * $page_size)
+            ->limit($page_size)
             ->get();
+
+        $count = DB::table($blogtable)
+            ->count();
+
+        $pagination = $this->pagination($count, $page_size, $page, '/blog/');
 
         return view('pages.blog', [
             'blog' => $blog,
+            'pagination' => $pagination
         ]);
     }
 }

@@ -16,12 +16,24 @@ class SearchController extends Controller
 
         $productstable = 'product_'.Lang::get();
 
+        $page_size = 15;
+        $page = (!empty(request()->get('page'))) ? request()->get('page') : 1;
+
         $products = DB::table($productstable)
             ->where('title','LIKE',"%{$req}%")
+            ->skip(($page - 1) * $page_size)
+            ->limit($page_size)
             ->get();
 
+        $count = DB::table($productstable)
+            ->where('title','LIKE',"%{$req}%")
+            ->count();
+
+        $pagination = $this->pagination($count, $page_size, $page, '/search?s='.$req);
+
         return view('pages.search', [
-            'products' => $products
+            'products' => $products,
+            'pagination' => $pagination,
         ]);
     }
 

@@ -61,10 +61,13 @@ class CatalogController extends Controller
                     'product_filter_fields',
                     'product_filter_fields.id_product',
                     $producttable.'.id'
-                )->whereIn('product_filter_fields.id',$filterids);
+                )->whereIn('product_filter_fields.id_filter_fields',$filterids);
             })
-            ->when(isset($filterprice), function ($q) use ($filterprice){
-                return $q->where('price','>',$filterprice[1])->where('price','<',$filterprice[2]);
+            ->where(function($query) use($filterprice){
+                $query->when(isset($filterprice), function ($q) use ($filterprice){
+                    return $q->where([['sale_price','=',0],['price','>=',$filterprice[1]],['price','<=',$filterprice[2]]])
+                        ->orWhere([['sale_price','!=',0],['sale_price','>=',$filterprice[1]],['sale_price','<=',$filterprice[2]]]);
+                });
             })
             ->skip(($page - 1) * $page_size)
             ->limit($page_size)
