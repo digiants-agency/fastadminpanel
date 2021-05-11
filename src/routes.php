@@ -26,6 +26,9 @@ Route::group([
         Route::post('admin/set-single/{id}', 'ApiController@set_single');
         Route::post('admin/get-single/{id}', 'ApiController@get_single');
 
+        Route::post('admin/get-dynamic', 'ApiController@get_dynamic');
+        Route::post('admin/set-dynamic', 'ApiController@set_dynamic');
+
         Route::post('admin/db-copy', 'ApiController@db_copy');
         Route::post('admin/db-count', 'ApiController@db_count');
         Route::post('admin/db-select', 'ApiController@db_select');
@@ -33,11 +36,8 @@ Route::group([
         Route::post('admin/db-create-table', 'ApiController@db_create_table');
         Route::post('admin/db-remove-table', 'ApiController@db_remove_table');
         Route::post('admin/db-update-table', 'ApiController@db_update_table');
-        Route::post('admin/db-insert-or-update-row', 'ApiController@db_insert_or_update_row');
         Route::post('admin/db-remove-row', 'ApiController@db_remove_row');
         Route::post('admin/db-remove-rows', 'ApiController@db_remove_rows');
-        Route::post('admin/db-relationship', 'ApiController@db_relationship');
-        Route::post('admin/db-relationships', 'ApiController@db_relationships');
 
         Route::post('admin/upload-image', 'ApiController@upload_image');
         Route::post('admin/remove-language/{tag}', 'ApiController@remove_language');

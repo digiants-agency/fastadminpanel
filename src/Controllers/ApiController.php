@@ -572,71 +572,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return 'Success';
 	}
 
-	public function db_insert_or_update_row () {
-
-		$r = request();
-
-		$fields = (array)json_decode($r->get('fields'));
-		// unset($fields['id']);
-		unset($fields['created_at']);
-		unset($fields['updated_at']);
-
-		$id = $r->get('id');
-
-		$relationship_many = $this->db_get_and_rm_relationship_many($fields);
-		$editable = $this->db_get_and_rm_editable($fields);
-		$passwords = json_decode($r->get('passwords'));
-
-		foreach ($passwords as $f) {
-			if ($id != 0 && empty($fields[$f])) {
-				unset($fields[$f]);
-			} else if (!empty($fields[$f])) {
-				$fields[$f] = bcrypt($fields[$f]);
-			}
-		}
-
-		if ($id == 0) {
-
-			$tables = $this->get_tables($r->get('table_name'));
-
-			foreach ($tables as $table) {
-
-				$id = DB::table($table)->insertGetId($fields);
-			}
-
-		} else {
-
-			$element = DB::table('menu')
-			->select('multilanguage')
-			->where('table_name', $r->get('table_name'))
-			->first();
-
-			if ($element->multilanguage == 1) {
-
-				$table = $r->get('table_name').'_'.$r->get('language');
-
-				$row = DB::table($table)
-				->where('id', $fields['id'])
-				->update($fields);
-
-				$this->db_update_languages($id, $r->get('table_name'), $table);
-
-			} else {
-
-				$table = $r->get('table_name');
-
-				$row = DB::table($table)
-				->where('id', $fields['id'])
-				->update($fields);
-			}
-		}
-
-		$this->db_add_editable($id, $editable, $r->get('table_name'));
-		$this->db_add_relationship_many($id, $relationship_many, $r->get('table_name'));
-
-		return 'Success';
-	}
-
 	public function db_update () {
 
 		$r = request();
@@ -646,223 +581,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		->update([
 			$r->get('field') => $r->get('value')
 		]);
-	}
-
-	private function db_update_languages ($id, $table_name, $table_name_curr) {
-
-		$langs = DB::table('languages')->get();
-
-		$field_properties = json_decode(DB::table('menu')
-		->select('fields')
-		->where('table_name', $table_name)
-		->first()
-		->fields);
-
-		$row = DB::table($table_name_curr)
-		->where('id', $id)
-		->first();
-
-		$update = [];
-
-		foreach ($langs as $l) {
-			foreach ($field_properties as $properties) {
-				if ($properties->lang == 0) {
-					if ($properties->type == 'relationship' && $properties->relationship_count == 'single') {
-
-						$title = 'id_' . $properties->relationship_table_name;
-						$update[$title] = $row->$title;
-
-					} else if ($properties->type != 'relationship') {
-
-						$title = $properties->db_title;
-						$update[$title] = $row->$title;
-					} else {
-						// TODO: 
-					}
-				}
-			}
-		}
-
-		if (count($update) > 0) {
-			$tables = $this->get_tables($table_name);
-
-			foreach ($tables as $table) {
-
-				if ($table_name_curr == $table)
-					continue;
-
-				DB::table($table)
-				->where('id', $row->id)
-				->update($update);
-			}
-		}
-	}
-
-	private function db_add_editable ($id, $editable, $table) {
-
-		foreach ($editable as $table_name => $values) {
-
-			$menu = DB::table('menu')
-			->select('fields', 'multilanguage')
-			->where('table_name', $table_name)
-			->first();
-			$fields = [];
-			foreach (json_decode($menu->fields) as $f) {
-				if ($f->type == 'relationship' && $f->relationship_count == 'single') {
-					
-					$fields['id_' . $f->relationship_table_name] = $f->lang;
-
-				} else if ($f->type == 'relationship') {
-					// TODO: handle relations
-				} else {
-
-					$fields[$f->db_title] = $f->lang;
-				}
-			}
-
-			$tables = $this->get_tables($table_name);
-
-			// if ($menu->multilanguage == 0) {
-
-			// 	foreach ($tables as $tbl) {
-
-			// 		DB::table($tbl)
-			// 		->where("id_$table", $id)
-			// 		->delete();
-
-			// 		foreach ($values as $vals) {
-
-			// 			$insert = [
-			// 				"id_$table"	=> $id,
-			// 			];
-
-			// 			foreach ($vals as $key => $value) {
-			// 				$insert[$key] = $value;
-			// 			}
-
-			// 			DB::table($tbl)->insert($insert);
-			// 		}
-			// 	}
-
-			// } else {
-
-				foreach ($tables as $tbl) {
-
-					$exist_ids = DB::table($tbl)
-					->select('id')
-					->where("id_$table", $id)
-					->get()
-					->pluck('id')
-					->all();
-					$request_ids = [];
-					foreach ($values as $vals) {
-						if (!empty($vals->id)) {
-							$request_ids[] = $vals->id;
-						}
-					}
-
-					DB::table($tbl)
-					->whereIn('id', array_diff($exist_ids, $request_ids))
-					->delete();
-
-					foreach ($values as $vals) {
-
-						if (!empty($vals->id)) {
-							
-							$update = ["id_$table"	=> $id];
-
-							if ($menu->multilanguage == 1) {
-								$curr_lang = str_replace($table_name.'_', '', $tbl);
-							} else {
-								$curr_lang = request()->get('language');
-							}
-
-							foreach ($vals as $key => $value) {
-								if (request()->get('language') == $curr_lang || 
-									(!empty($fields[$key]) && $fields[$key] == 0))
-									$update[$key] = $value;
-							}
-
-							DB::table($tbl)->where('id', $vals->id)->update($update);
-
-						} else {
-
-							$insert = ["id_$table"	=> $id];
-
-							foreach ($vals as $key => $value) {
-								$insert[$key] = $value;
-							}
-
-							DB::table($tbl)->insert($insert);
-						}
-					}
-				}
-			// }
-		}
-	}
-
-	private function db_add_relationship_many ($id_first, $relationship_many, $table) {
-
-		$col_first = 'id_' . $table;
-
-		foreach ($relationship_many as $rel) {
-
-			foreach ($rel as $table_name_many => $elm) {
-				
-				DB::table($table_name_many)
-				->where($col_first, $id_first)
-				->delete();
-
-				$data = [];
-
-				foreach ($elm as $obj) {
-					
-					$table_name_last = key((array)$obj);
-
-					$id_last = $obj->$table_name_last;
-					$col_last = 'id_' . $table_name_last;
-
-					if ($col_first == $col_last)
-						$col_last = $col_last.'_other';
-
-					$data[] = [
-						$col_last => $id_last,
-						$col_first => $id_first,
-					];
-				}
-				DB::table($table_name_many)->insert($data);
-			}
-		}
-	}
-
-	private function db_get_and_rm_editable (&$fields) {
-
-		$editable = [];
-
-		foreach ($fields as $title => &$f) {
-			if ($title == 'editable') {
-
-				$editable = $f;
-				unset($fields[$title]);
-			}
-		}
-
-		return $editable;
-	}
-
-	private function db_get_and_rm_relationship_many (&$fields) {
-
-		$data = [];
-
-		foreach ($fields as $table_name => &$f) {
-			if ($table_name[0] == '$') {
-
-				$data[] = [substr($table_name, 1) => $f];
-				unset($fields[$table_name]);
-			}
-		}
-
-		return $data;
 	}
 
 	private function db_remove_editable ($id, $table) {
@@ -885,12 +603,19 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			$tables = $this->get_tables($table_name);
 
+			$parent = DB::table($tables[0])
+			->select('id')
+			->where("id_$table", $id)
+			->first();
+
 			foreach ($tables as $tbl) {
 
 				DB::table($tbl)
 				->where("id_$table", $id)
 				->delete();
 			}
+
+			$this->db_remove_editable($parent->id, $table_name);
 		}
 	}
 
@@ -972,75 +697,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 
 		return 'Success';
-	}
-
-	public function db_relationship () {
-
-		$r = request();
-
-		$field = json_decode($r->get('field'));
-
-		$table = $this->get_table(
-			$field->relationship_table_name, 
-			$r->get('language')
-		);
-
-		return DB::table($table)
-		->select('id', $field->relationship_view_field.' as title')
-		->get();
-	}
-
-	public function db_relationships () {
-
-		$r = request();
-
-		$fields = json_decode($r->get('fields'));
-
-		$results = [];
-
-		foreach ($fields as $field) {
-
-			$table = $this->get_table(
-				$field->relationship_table_name, 
-				$r->get('language')
-			);
-
-			if ($field->relationship_count == 'editable') {
-
-				$editable = json_decode(DB::table('menu')
-				->select('fields')
-				->where('table_name', $field->relationship_table_name)
-				->first()
-				->fields);
-
-				$rels = [];
-
-				foreach ($editable as $e) {
-					if ($e->type == 'relationship' && $e->relationship_count != 'editable') {
-
-						$rels[$e->relationship_table_name] = DB::table($this->get_table(
-							$e->relationship_table_name, 
-							$r->get('language')
-						))
-						->select('id', $e->relationship_view_field.' as title')
-						->get();
-					}
-				}
-
-				$results[$field->relationship_table_name] = [
-					'editable'	=> $editable,
-					'rels'		=> $rels,
-				];
-
-			} else {
-
-				$results[$field->relationship_table_name] = DB::table($table)
-				->select('id', $field->relationship_view_field.' as title')
-				->get();
-			}
-		}
-
-		return $results;
 	}
 	
 	public function upload_image () {
@@ -1134,5 +790,390 @@ class ApiController extends \App\Http\Controllers\Controller {
 		Single::add_db($tag, $main_tag);
 
 		return 'Success';
+	}
+
+	public function set_dynamic () {
+
+		$input = request()->all();
+
+		$input['fields'] = json_decode($input['fields']);
+
+
+		$this->set_dynamic_fields($input);
+
+		return $this->response();
+	}
+
+	private function set_dynamic_fields ($input, $parent_table = false, $parent_id = false) {
+
+		$menu = DB::table('menu')
+		->select('multilanguage')
+		->where('table_name', $input['table'])
+		->first();
+
+		$update = [];
+		$update_multilanguage = [];
+
+		foreach ($input['fields'] as $field) {
+			
+			if ($field->type == 'relationship') {
+
+				if ($field->relationship_count == 'single') {
+
+					if ($menu->multilanguage == 1 && $field->lang == 0) {
+
+						$update_multilanguage['id_'.$field->relationship_table_name] = $field->value;
+					}
+
+					$update['id_'.$field->relationship_table_name] = $field->value;
+				} // other rels are below
+
+			} else if ($field->type == 'gallery') {
+
+				if ($menu->multilanguage == 1 && $field->lang == 0) {
+
+					$update_multilanguage[$field->db_title] = json_encode($field->value, JSON_UNESCAPED_UNICODE);
+				}
+
+				$update[$field->db_title] = json_encode($field->value, JSON_UNESCAPED_UNICODE);
+
+
+			} else if ($field->type == 'password') {
+
+				if ($input['id'] == 0) {
+
+					if (empty($field->value)) {
+					
+						$update[$field->db_title] = '';
+					
+					} else {
+
+						$update[$field->db_title] = bcrypt($field->value);
+					}
+
+				} else {
+
+					if (!empty($field->value)) {
+
+						if ($menu->multilanguage == 1 && $field->lang == 0) {
+
+							$update_multilanguage[$field->db_title] = bcrypt($field->value);
+						}
+
+						$update[$field->db_title] = bcrypt($field->value);
+					}
+				}
+
+			} else {
+
+				if ($menu->multilanguage == 1 && $field->lang == 0) {
+
+					$update_multilanguage[$field->db_title] = $field->value;
+				}
+
+				$update[$field->db_title] = $field->value;
+			}
+		}
+
+		if (!empty($update)) {
+
+			if ($input['id'] == 0) {
+
+				$tables = $this->get_tables($input['table']);
+
+				foreach ($tables as $table) {
+					
+					$update['id'] = DB::table($table)->insertGetId($update);
+					$input['id'] = $update['id'];
+
+					if ($parent_table) {
+						DB::table($table)
+						->where('id', $input['id'])
+						->update([
+							"id_$parent_table" => $parent_id,
+						]);
+					}
+				}
+
+			} else {
+
+				$table_main = $this->get_table(
+					$input['table'],
+					$input['language']
+				);
+
+				DB::table($table_main)
+				->where('id', $input['id'])
+				->update($update);
+
+				if ($menu->multilanguage == 1 && !empty($update_multilanguage)) {
+
+					foreach ($this->get_tables($input['table']) as $table) {
+
+						if ($table_main == $table)
+							continue;
+						
+						DB::table($table)
+						->where('id', $input['id'])
+						->update($update_multilanguage);
+					}
+				}
+			}
+		}
+
+		// editable and many relations START
+		foreach ($input['fields'] as $field) {
+			
+			if ($field->type == 'relationship') {
+
+				if ($field->relationship_count == 'many') {
+
+					$table_relationship = $input['table'].'_'.$field->relationship_table_name;
+					$col_first = 'id_'.$input['table'];
+					$col_last = 'id_'.$field->relationship_table_name;
+
+					if ($col_first == $col_last)
+						$col_last = $col_last.'_other';
+
+					DB::table($table_relationship)
+					->where($col_first, $input['id'])
+					->delete();
+
+					$many_insert = [];
+
+					foreach ($field->value as $id) {
+						$many_insert[] = [
+							$col_first	=> $input['id'],
+							$col_last	=> $id,
+						];
+					}
+
+					DB::table($table_relationship)
+					->insert($many_insert);
+
+				} else if ($field->relationship_count == 'editable') {
+
+					$editable_ids = DB::table($this->get_table(
+						$field->relationship_table_name,
+						$input['language']
+					))
+					->select('id')
+					->where('id_'.$input['table'], $input['id'])
+					->get()
+					->pluck('id');
+
+					foreach ($field->value as $group) {
+
+						foreach ($group->fields as &$f) {
+							if ($f->type == 'relationship' && $f->relationship_count == 'single' && $f->relationship_table_name == $input['table']) {
+
+								$field_title = 'id_'.$input['table'];
+								$f->$field_title = $input['id'];
+							}
+						}
+
+						$this->set_dynamic_fields([
+							'fields'	=> $group->fields,
+							'language'	=> $input['language'],
+							'table'		=> $field->relationship_table_name,
+							'id'		=> $group->id,
+						], $input['table'], $input['id']);
+					}
+				}
+			}
+		}
+		// editable and many relations END
+	}
+
+	public function get_dynamic () {
+
+		$input = request()->all();
+
+		$fields = $this->get_dynamic_fields($input);
+
+		return $this->response($fields);
+	}
+
+	private function get_dynamic_fields ($input) {
+
+		$menu = DB::table('menu')
+		->where('table_name', $input['table'])
+		->first();
+
+		$instance = DB::table($this->get_table(
+			$input['table'],
+			$input['language']
+		))
+		->where('id', $input['id'])
+		->first();
+
+		$fields = [];
+
+		foreach (json_decode($menu->fields) as $field) {
+
+			// TODO: date/datetime?
+			if ($field->type == 'relationship') {
+
+				if ($field->relationship_count != 'editable') {
+
+					$field->values = DB::table($this->get_table(
+						$field->relationship_table_name, 
+						$input['language']
+					))
+					->select('id', $field->relationship_view_field.' as title')
+					->get();
+
+					if ($field->relationship_count == 'single') {
+
+						if ($input['id'] == 0) {
+
+							$field->value = 0;
+
+						} else {
+
+							$field_title = 'id_' . $field->relationship_table_name;
+							$field->value = $instance->$field_title;
+						}
+
+					} else if ($field->relationship_count == 'many') {
+
+						if ($input['id'] == 0) {
+
+							$field->value = [];
+
+						} else {
+
+							$rel_table = $input['table'].'_'.$field->relationship_table_name;
+							$rel_connected_table = $field->relationship_table_name;
+
+							if ($rel_table == $input['table'].'_'.$input['table'])
+								$rel_connected_table .= '_other';
+
+							$field->value = DB::table($rel_table)
+							->select('id_'.$rel_connected_table.' AS id')
+							->where('id_'.$input['table'], $input['id'])
+							->orderBy('id', 'ASC')
+							->get()
+							->pluck('id');
+						}
+
+					}
+				} else if ($field->relationship_count == 'editable') {
+
+					$editable_ids = DB::table($this->get_table(
+						$field->relationship_table_name,
+						$input['language']
+					))
+					->select('id')
+					->where('id_'.$input['table'], $input['id'])
+					->get()
+					->pluck('id');
+
+					$field->value = [];
+
+					foreach ($editable_ids as $editable_id) {
+						
+						$field->value[] = [
+							'fields'	=> $this->get_dynamic_fields([
+								'table'		=> $field->relationship_table_name,
+								'language'	=> $input['language'],
+								'id'		=> $editable_id,
+							]),
+							'id'		=> $editable_id,
+						];
+					}
+
+					$field->values = $this->get_dynamic_fields([
+						'table'		=> $field->relationship_table_name,
+						'language'	=> $input['language'],
+						'id'		=> 0,
+					]);
+				}
+
+			} else if ($field->type == 'gallery') {
+
+				if ($input['id'] == 0) {
+
+					$field->value = [];
+
+				} else {
+
+					$field_title = $field->db_title;
+					$field->value = json_decode($instance->$field_title);
+				}
+
+			} else if ($field->type == 'password') {
+
+				$field->value = '';
+
+			} else if ($field->type == 'checkbox' || $field->type == 'money' || $field->type == 'number') {
+
+				if ($input['id'] == 0) {
+
+					$field->value = 0;
+				} else {
+
+					$field_title = $field->db_title;
+					$field->value = $instance->$field_title;
+				}
+
+			} else if ($field->type == 'date') {
+
+				if ($input['id'] == 0) {
+
+					$field->value = date('Y-m-d');
+
+				} else {
+
+					$field_title = $field->db_title;
+					$field->value = $instance->$field_title;
+				}
+			} else if ($field->type == 'datetime') {
+
+				if ($input['id'] == 0) {
+
+					$field->value = date('Y-m-d H:i');
+					
+				} else {
+
+					$field_title = $field->db_title;
+					$field->value = $instance->$field_title;
+				}
+			} else {
+
+				if ($input['id'] == 0) {
+
+					$field->value = '';
+				} else {
+
+					$field_title = $field->db_title;
+					$field->value = $instance->$field_title;
+				}
+			}
+
+			$fields[] = $field;
+		}
+
+		return $fields;
+	}
+
+	protected function response($result = []) {
+		
+		$response = [
+			'success' => true,
+			'data'    => $result,
+		];
+		
+		return response()->json($response, 200);
+	}
+
+	protected function error($error_messages = [], $code = 418) {
+
+		$response = [
+			'success'	=> false,
+			'data'		=> $error_messages,
+		];
+
+		return response()->json($response, $code);
 	}
 }

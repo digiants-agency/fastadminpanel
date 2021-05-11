@@ -583,3 +583,9 @@ select {
 .table {
 	margin-bottom: 1rem;
 }
+.ml-50 {
+	margin-left: 50px;
+}
+.ck-editor {
+	overflow: hidden;
+}
