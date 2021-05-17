@@ -44,7 +44,7 @@
 					const response = await post('/admin/set-dynamic', {
 						table: this.menu_item.table_name,
 						fields: JSON.stringify(this.fields),
-						language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
+						language: app.get_language().tag,
 						id: this.id,
 					})
 
@@ -72,7 +72,7 @@
 			refresh: async function(){
 
 				const response = await post('/admin/get-dynamic', {
-					language: (this.menu_item.multilanguage == 0) ? '' : app.get_language().tag,
+					language: app.get_language().tag,
 					table: this.menu_item.table_name,
 					id: this.id,
 				})
