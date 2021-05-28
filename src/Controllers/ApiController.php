@@ -994,6 +994,37 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return $this->response($fields);
 	}
 
+	public function delete_single () {
+		
+		$databases = [];
+		$input = request()->all();
+		$id = $input['id'];
+		$langs = Lang::get_langs(); 
+		
+		$field = DB::table('single_field')
+		->where('id', $id)
+		->first();
+
+		$type_table = Single::$type_table[$field->type];
+		$databases[] = $type_table;
+		foreach ($langs as $lang) {
+			$databases[] = $type_table.'_'.$lang->tag;
+		}
+		
+		DB::table('single_field')
+		->where('id', $id)
+		->delete();
+
+		foreach ($databases as $database) {
+			
+			DB::table($database)
+			->where('field_id', $id)
+			->delete();	
+		}
+		
+		return $this->response();
+	}
+
 	private function get_dynamic_fields ($input) {
 
 		$menu = DB::table('menu')

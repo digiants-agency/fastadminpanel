@@ -3,7 +3,12 @@
 		<div class="single-block" v-for="(block, title) in blocks">
 			<div class="single-block-title" v-text="title"></div>
 			<div v-for="(field, field_title) in block">
-				<template-fields v-if="field.type != 'repeat'" :field="field"></template-fields>
+				<div v-if="field.type != 'repeat'" class="d-flex">
+					<template-fields  :field="field"></template-fields>
+					<?php if(isset($_GET['dev'])): ?>
+					<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Delete</div>
+					<?php endif; ?>
+				</div>
 				<div class="single-repeat" v-else>
 					<div class="single-repeat-title" v-text="field.title"></div>
 					<div class="single-repeat-group" v-for="(repeat, index) in field.repeat">
@@ -14,6 +19,10 @@
 					<div class="single-repeat-btns">
 						<div class="btn btn-xs btn-info" v-on:click="repeat_add(field)">Add</div>
 					</div>
+					
+					<?php if(isset($_GET['dev'])): ?>
+					<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Delete</div>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -86,6 +95,22 @@
 				
 				this.$forceUpdate()
 			},
+			delete_single: async function(id){
+				if (!confirm('Are you sure?')) {
+					return
+				}
+
+				const response = await post('/admin/delete-single', {
+					id: id,
+				})
+				
+				if (!response.success) {
+					alert('Error')
+					return
+				}
+				
+				location.reload()
+			}
 		},
 		watch: {
 			'$route.params.single_id': function(){

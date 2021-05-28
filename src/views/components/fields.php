@@ -1,7 +1,7 @@
 <script type="text/x-template" id="template-fields">
-	<div class="row form-group">
+	<div class="row form-group w-100">
 		<label class="col-sm-2 control-label" v-text="field.title"></label>
-		<div class="col-sm-10">
+		<div class="<?php if(isset($_GET['dev'])) echo 'col-sm-9'; else echo 'col-sm-10'?>">
 			<div v-if="field.type == 'text'">
 				<input class="form-control" type="text" v-model="field.value" v-on:change="errors[field.db_title] = ''" maxlength="191">
 			</div>

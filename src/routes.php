@@ -25,6 +25,7 @@ Route::group([
         Route::post('admin/get-menu', 'ApiController@get_menu');
         Route::post('admin/set-single/{id}', 'ApiController@set_single');
         Route::post('admin/get-single/{id}', 'ApiController@get_single');
+        Route::post('admin/delete-single', 'ApiController@delete_single');
 
         Route::post('admin/get-dynamic', 'ApiController@get_dynamic');
         Route::post('admin/set-dynamic', 'ApiController@set_dynamic');
