@@ -962,6 +962,17 @@ class ApiController extends \App\Http\Controllers\Controller {
 					->get()
 					->pluck('id');
 
+					
+					$current_ids = array_column($field->value, 'id');
+					$diff_ids = array_diff($editable_ids->all(), $current_ids);
+
+					DB::table($this->get_table(
+						$field->relationship_table_name,
+						$input['language']
+					))
+					->whereIn('id', $diff_ids)
+					->delete();					
+
 					foreach ($field->value as $group) {
 
 						foreach ($group->fields as &$f) {
