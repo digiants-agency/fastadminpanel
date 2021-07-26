@@ -30,7 +30,7 @@
 					<option :value="item.id" v-for="item in relationships[field.relationship_table_name]" v-text="item.title"></option>
 				</select>
 			</div>
-			<div v-else-if="field.type == 'photo'">
+			<div v-else-if="field.type == 'photo'" v-on:dragenter="dragenter" v-on:dragleave="dragleave" v-on:dragover="dragover" v-on:drop="drop">
 				<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="errors[field.db_title] = ''">
 				<div class="photo-preview-wrapper">
 					<img :src="field.value" alt="" class="photo-preview-img">
@@ -83,6 +83,50 @@
 			}
 		},
 		methods: {
+			dragenter: function(e){
+				e.preventDefault()
+				e.stopPropagation()
+			},
+			dragleave: function(e){
+				e.preventDefault()
+				e.stopPropagation()
+			},
+			dragover: function(e){
+				e.preventDefault()
+				e.stopPropagation()
+			},
+			drop: async function(e){
+				e.preventDefault()
+				e.stopPropagation()
+				
+				if (e.buttons == 0 && e.dataTransfer.items.length > 0) {
+
+					const img = e.dataTransfer.items[0]
+
+					if (img.type.match(/image.*/)) {
+
+						const image_file = img.getAsFile()
+
+						const response = await post('/admin/upload-image', {
+							upload: image_file,
+						}, true)
+
+						const obj = JSON.parse(response.data)
+
+						if (obj.url) {
+
+							this.field.value = '/' + obj.url
+
+						} else {
+
+							alert('Error')
+						}
+
+					} else {
+						alert('File have to be image')
+					}
+				}
+			},
 			add_photo: function(id){
 
 				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
