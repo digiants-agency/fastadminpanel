@@ -2,6 +2,32 @@
 
 </footer>
 
+<style>
+	img[srcset] {
+		object-fit: scale-down !important;
+		object-position: center !important;
+	}
+	#loader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background-color: rgba(255, 255, 255, 0.7);
+		z-index: 100;
+		opacity: 0;
+		pointer-events: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: opacity 0.3s;
+	}
+	#loader.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+</style>
+
 <div id="loader">
 	<svg  width="40" height="40" viewBox="0 0 50 50">
 		<path fill="#black" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
@@ -285,31 +311,30 @@
 
 	// lazy load START
 	/**
-	  * 
-	  * Usage: <img src="/images/lazy.svg" data-lazy="/images/original.png" class="lazy-img" alt="">
-	  */
-	function check_lazy () {
-		for (var i = lazy_imgs.length - 1; i >= 0; i--) {
-			var img = lazy_imgs[i]
-			if (img.src == location.origin + '/images/lazy.svg' && img.getBoundingClientRect().top - 100 < window.innerHeight) {
-				(function(img){
-					img.onload = ()=>{
-						img.classList.remove('lazy-img')
-					}
-				})(img)
-				img.src = img.dataset.lazy
-			}
-		}
+	 * Usage: <img srcset="/images/lazy.svg" src="/images/original.png" alt="">
+	 */
+	function check_lazy() {
+	    for (var i = lazy_imgs.length - 1; i >= 0; i--) {
+	        var img = lazy_imgs[i]
+	        if (img.srcset == '/images/lazy.svg' && img.getBoundingClientRect().top - 100 < window.innerHeight) {
+	            (function(img) {
+	                img.onload = () => {
+	                    img.removeAttribute('srcset')
+	                }
+	            })(img)
+	            img.srcset = img.src
+	        }
+	    }
 	}
 	var lazy_imgs = []
-	window.addEventListener('DOMContentLoaded', ()=>{
-		lazy_imgs = Array.prototype.slice.call(document.querySelectorAll('img[data-lazy]'))
-		setTimeout(()=>{
-			check_lazy()
-		}, 200)
+	window.addEventListener('DOMContentLoaded', () => {
+	    lazy_imgs = Array.prototype.slice.call(document.querySelectorAll('img[srcset]'))
+	    setTimeout(() => {
+	        check_lazy()
+	    }, 200)
 	})
-	window.addEventListener('scroll', ()=>{
-		check_lazy()
+	window.addEventListener('scroll', () => {
+	    check_lazy()
 	})
 	// lazy load END
 
@@ -604,31 +629,3 @@
 	
 // })
 </script>
-<style>
-	.lazy-img {
-		object-fit: scale-down !important;
-		object-position: center !important;
-		background-size: auto !important;
-		background-position: center !important;
-		background-repeat: no-repeat !important;
-	}
-	#loader {
-		position: fixed;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		background-color: rgba(255, 255, 255, 0.7);
-		z-index: 100;
-		opacity: 0;
-		pointer-events: none;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: opacity 0.3s;
-	}
-	#loader.active {
-		opacity: 1;
-		pointer-events: auto;
-	}
-</style>
