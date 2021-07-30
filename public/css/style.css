@@ -589,3 +589,47 @@ select {
 .ck-editor {
 	overflow: hidden;
 }
+
+
+.relationship_block {
+    border: 1px solid #50467b;
+    padding: 20px;
+}
+
+.reletionship_title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.reletionship_title:after {
+    display: block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 1px solid #50467b;
+    transform: rotate(45deg);
+    border-left: none;
+    border-top: none;
+}
+
+.relationship_block.active>.reletionship_title:after {
+    transform: rotate(-135deg);
+}
+
+.reletionship_inner {
+    display: none;
+}
+
+.relationship_block.active>.reletionship_inner {
+    display: block;
+}
+
+.relationship_block.active>.reletionship_title {
+    padding-bottom: 20px;
+}
+
+.relationships_block_title {
+    margin: 10px 0 20px;
+}

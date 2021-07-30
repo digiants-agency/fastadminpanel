@@ -3,15 +3,18 @@
 		<div class="mb-30 ml-50" v-if="field.relationship_count == 'editable'">
 			<div class="row">
 				<div class="col-sm-10 offset-2">
-					<h3 v-text="field.title"></h3>
+					<h3 class="relationships_block_title" v-text="field.title"></h3>
 				</div>
 			</div>
-			<div class="mb-15" v-for="(group, i) in field.value">
-				<div v-for="(f, index) in group.fields" v-if="f.is_visible">
-					<component <?php /*:name="f.db_table"*/ ?> :is="'template-field-' + f.type" ref="refield" :field="f" v-if="table_name != f.relationship_table_name" :table_name="field.relationship_table_name"></component>
-				</div>
-				<div class="flex justify-end">
-					<div class="btn btn-danger" v-on:click="field.value.splice(i, 1)">Delete</div>
+			<div class="mb-15 relationship_block" v-for="(group, i) in field.value" >
+				<div class="reletionship_title" v-text="group.fields[0].value" @click="e => e.target.parentElement.classList.toggle('active')"></div>
+				<div class="reletionship_inner" >
+					<div v-for="(f, index) in group.fields" v-if="f.is_visible" >
+						<component <?php /*:name="f.db_table"*/ ?> :is="'template-field-' + f.type" ref="refield" :field="f" v-if="table_name != f.relationship_table_name" :table_name="field.relationship_table_name"></component>
+					</div>
+					<div class="flex justify-end">
+						<div class="btn btn-danger" v-on:click="field.value.splice(i, 1)">Delete</div>
+					</div>
 				</div>
 			</div>
 			<div class="row">
@@ -55,6 +58,7 @@
 
 				return true
 			},
+
 		},
 	})
 </script>
