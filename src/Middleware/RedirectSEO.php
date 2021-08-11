@@ -9,24 +9,36 @@ class RedirectSEO
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!env('APP_DEBUG')) {
+        $domain = parse_url(env('APP_URL'), PHP_URL_HOST);
+        
+        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-            $domain = parse_url(env('APP_URL'), PHP_URL_HOST);
-            $url = url()->full();
+        $filtered_url = preg_replace('/\/+/', '/', $url);
+        
+        if (mb_strpos($filtered_url, '%') === false)
+            $filtered_url = mb_strtolower($filtered_url);
+        
+        if ($_SERVER['REQUEST_URI'] != '/')
+            $filtered_url = rtrim($filtered_url, '/');
+        
+        $filtered_url = str_replace(
+            [
+                $domain.'/index.php',
+                'http:/',
+                'https:/',
+                'https://www.',
+            ], 
+            [
+                $domain,
+                'https:/',
+                'https://',
+                'https://'
+            ], 
+            $filtered_url
+        );
 
-            $filtered_url = preg_replace('/\/+/', '/', $url);
-            if (strpos($filtered_url, '%') === false) {
-                $filtered_url = mb_strtolower($filtered_url);
-            }
-            $filtered_url = str_replace($domain.'/index.php', $domain, $filtered_url);
-            $filtered_url = str_replace('http:/', 'https:/', $filtered_url);
-            $filtered_url = str_replace('https:/', 'https://', $filtered_url);
-            $filtered_url = str_replace('https://www.', 'https://', $filtered_url);
-
-            if ($filtered_url != $url) {
-
-                return redirect($filtered_url, 301);
-            }
+        if ($filtered_url != $url) {
+            return redirect($filtered_url, 301);
         }
 
         return $next($request);

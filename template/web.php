@@ -19,7 +19,7 @@ Route::group([
 	'prefix' => Lang::prefix(),
 	'middleware' => [
 		\Digiants\FastAdminPanel\Middleware\Lang::class,
-		\Digiants\FastAdminPanel\Middleware\RedirectSEO::class,
+		//\Digiants\FastAdminPanel\Middleware\RedirectSEO::class,
 	]
 ], function(){
 
