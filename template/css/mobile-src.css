@@ -1,9 +1,13 @@
+:root {
+	--column-width: 290px;
+	--offset: 15px;
+}
 body, input, textarea, select {
 	font-family: 'Arial', sans-serif;
 	font-size: 16px;
 	-webkit-text-size-adjust: none;
 }
-img, svg, iframe {
+img, svg {
 	max-width: 100%;
 	display: block;
 }
@@ -38,7 +42,12 @@ body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, 
 	opacity: 1;
 	pointer-events: auto;
 }
-.column {
-	width: 290px;
-	margin: 0 auto;
+.container {
+	padding-left: var(--offset);
+	padding-right: var(--offset);
+}
+.container-offset {
+	width: var(--column-width);
+	margin-left: auto;
+	margin-right: auto;
 }
