@@ -37,13 +37,59 @@
 			}
 		},
 		methods: {
+			filter_fields: function(fields){
+				const filtered_fields = []
+				for (let field of fields){
+					if (field.type == "relationship" && field.relationship_count != "editable") {
+
+						filtered_fields.push({
+							type: field.type,
+							relationship_count: field.relationship_count,
+							relationship_table_name: field.relationship_table_name,
+							lang: field.lang,
+							db_title: field.db_title,
+							value: field.value,
+						})
+
+					} else if (field.type == "relationship" && field.relationship_count == "editable") {
+
+						const fields_editable = []
+						for (let values of field.value){
+							fields_editable.push({
+								fields: this.filter_fields(values.fields), 
+								id: values.id
+							})
+						}
+
+						filtered_fields.push({
+							type: field.type,
+							relationship_count: field.relationship_count,
+							lang: field.lang,
+							relationship_table_name: field.relationship_table_name,
+							db_title: field.db_title,
+							value: fields_editable,
+						})
+
+					} else {
+
+						filtered_fields.push({
+							type: field.type,
+							lang: field.lang,
+							db_title: field.db_title,
+							value: field.value,
+						})
+					}	
+				}
+
+				return filtered_fields
+			},
 			save: async function(is_close){
 
 				if (this.check_fields()) {
 
 					const response = await post('/admin/set-dynamic', {
 						table: this.menu_item.table_name,
-						fields: JSON.stringify(this.fields),
+						fields: JSON.stringify(this.filter_fields(this.fields)),
 						language: app.get_language().tag,
 						id: this.id,
 					})
