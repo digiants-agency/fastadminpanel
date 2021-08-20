@@ -26,7 +26,7 @@
 			},
 		},
 		mounted: function(){
-			if (this.field.enum.length > 0) {
+			if (!this.field.value && this.field.enum.length > 0) {
 				this.field.value = this.field.enum[0]
 			}
 		},
