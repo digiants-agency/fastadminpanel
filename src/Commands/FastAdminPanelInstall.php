@@ -133,7 +133,7 @@ class FastAdminPanelInstall extends Command {
 		// register provider
 		$provider = file_get_contents(base_path("/config/app.php"));
 		
-		if (strpos($provider, 'FAPServiceProvider::class') !== false) {
+		if (strpos($provider, 'FAPServiceProvider::class') === false) {
 
 			$pos = strpos($provider, 'Package Service Providers...');
 			$pos = strpos($provider, '*/', $pos);
