@@ -2,7 +2,7 @@
 
 namespace Digiants\FastAdminPanel\Commands;
 
-use Digiants\FastAdminPanel\Helpers\Single;
+use App\FastAdminPanel\Helpers\Single;
 use App\User;
 use Illuminate\Console\Command;
 use Schema;
@@ -35,13 +35,13 @@ class FastAdminPanelInstall extends Command {
 	 * Execute the console command.
 	 */
 	public function handle() {
-		$this->info('Please note: FastAdminPanel requires fresh Laravel installation! If you failed installation just clear your DB.');
+		$this->info('Please note: FastAdminPanel requires fresh Laravel installation!');
+		$this->publish_parts();
 		$this->add_languages();
 		$this->create_db();
 		$this->add_roles();
 		$this->add_user();
 		$this->add_menu();
-		$this->publish_parts();
 		$this->import_default_template();
 		$this->import_default_shop();
 	}
@@ -53,7 +53,7 @@ class FastAdminPanelInstall extends Command {
 		}
 	}
 
-	private function path_package () {
+	private function path_package ($path) {
 
 		return base_path("/vendor/sv-digiants/fastadminpanel" . $path);
 	}
@@ -75,6 +75,9 @@ class FastAdminPanelInstall extends Command {
 		$files = scandir($source);
 
 		foreach ($files as $file) {
+
+			if ($file == '.' || $file == '..')
+				continue;
 
 			if (is_dir($source . '/' . $file)) {
 
@@ -112,6 +115,11 @@ class FastAdminPanelInstall extends Command {
 			base_path('/resources/views/fastadminpanel')
 		);
 
+		$this->publish_parts_folder(
+			$this->path_package('/public'),
+			public_path('/vendor/fastadminpanel')
+		);
+
 		copy(
 			$this->path_package('/core/FAPServiceProvider.php'),
 			base_path('/app/Providers/FAPServiceProvider.php')
@@ -124,13 +132,17 @@ class FastAdminPanelInstall extends Command {
 
 		// register provider
 		$provider = file_get_contents(base_path("/config/app.php"));
-		$pos = strrpos($provider, 'Package Service Providers...');
-		$pos = strrpos($provider, '*/', $pos);
 		
-		file_put_contents(
-			base_path("/config/app.php"),
-			substr_replace($provider, 'App\Providers\FAPServiceProvider::class,', $pos + 2)
-		);
+		if (strpos($provider, 'FAPServiceProvider::class') !== false) {
+
+			$pos = strpos($provider, 'Package Service Providers...');
+			$pos = strpos($provider, '*/', $pos);
+			
+			file_put_contents(
+				base_path("/config/app.php"),
+				substr_replace($provider, '*/ App\Providers\FAPServiceProvider::class,', $pos, 2)
+			);
+		}
 	}
 
 	private function import_default_template () {

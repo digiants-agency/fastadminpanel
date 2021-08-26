@@ -1,6 +1,6 @@
 <?php
 
-namespace App\FastAdminPanel;
+namespace App\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;

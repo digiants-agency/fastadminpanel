@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Digiants\FastAdminPanel\Helpers\Lang;
-use Digiants\FastAdminPanel\Helpers\Single;
+use App\FastAdminPanel\Helpers\Lang;
+use App\FastAdminPanel\Helpers\Single;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Auth;

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Digiants\FastAdminPanel\Helpers\Lang;
+use App\FastAdminPanel\Helpers\Lang;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use DB;
