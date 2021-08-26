@@ -2,7 +2,7 @@
 
 namespace Digiants\FastAdminPanel\Commands;
 
-use Digiants\FastAdminPanel\Helpers\Single;
+use App\FastAdminPanel\Helpers\Single;
 use App\User;
 use Illuminate\Console\Command;
 use Schema;
@@ -109,7 +109,7 @@ class NewsletterSend extends Command {
 			$template = str_replace("{{{$key}}}", $val, $template);
 		}
 
-		$secret = \Digiants\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
+		$secret = \App\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
 
 		$template = str_replace("{{unsubscribe}}", url('/')."/admin/newsletter/unsubscribe?id=$user_id&_id=".md5($user_id.$secret.$user_id), $template);
 

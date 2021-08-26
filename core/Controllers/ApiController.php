@@ -1,13 +1,13 @@
 <?php 
 
-namespace Digiants\FastAdminPanel\Controllers;
+namespace App\FastAdminPanel\Controllers;
 
 use App\User;
 use DB;
 use Schema;
 use Validator;
 use Lang;
-use Digiants\FastAdminPanel\Helpers\Single;
+use App\FastAdminPanel\Helpers\Single;
 
 class ApiController extends \App\Http\Controllers\Controller {
 

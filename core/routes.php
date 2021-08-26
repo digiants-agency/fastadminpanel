@@ -1,7 +1,7 @@
 <?php
 
 Route::group([
-    'namespace'     => 'Digiants\FastAdminPanel\Controllers',
+    'namespace'     => 'App\FastAdminPanel\Controllers',
     'middleware'    => 'web'
 ], function() {
 
@@ -12,7 +12,7 @@ Route::group([
     Route::get('login', 'FAPController@login');
     
     Route::group([
-        'middleware'    => [\Digiants\FastAdminPanel\Middleware\AdminOnly::class],
+        'middleware'    => [\App\FastAdminPanel\Middleware\AdminOnly::class],
     ], function() {
 
         Route::group(['prefix' => 'laravel-filemanager'], function () {

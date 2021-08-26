@@ -1,6 +1,6 @@
 <?php
 
-namespace Digiants\FastAdminPanel\Middleware;
+namespace App\FastAdminPanel\Middleware;
 
 use Closure;
 use App;
@@ -12,7 +12,7 @@ class Lang
     */
     public function handle($request, Closure $next)
     {
-        $locale = \Digiants\FastAdminPanel\Helpers\Lang::get();
+        $locale = \App\FastAdminPanel\Helpers\Lang::get();
 
         App::setLocale($locale);
 

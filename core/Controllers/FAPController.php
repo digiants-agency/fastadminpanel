@@ -1,6 +1,6 @@
 <?php 
 
-namespace Digiants\FastAdminPanel\Controllers;
+namespace App\FastAdminPanel\Controllers;
 
 use App\User;
 use Auth;

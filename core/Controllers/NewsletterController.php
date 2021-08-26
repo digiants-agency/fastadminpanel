@@ -1,6 +1,6 @@
 <?php 
 
-namespace Digiants\FastAdminPanel\Controllers;
+namespace App\FastAdminPanel\Controllers;
 
 use App\User;
 use DB;
@@ -225,10 +225,10 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 
 		$id = request()->get('id');
 		$password = request()->get('password');
-		$secret = \Digiants\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
+		$secret = \App\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
 		$filename = md5($secret);
 
-		if (\Digiants\FastAdminPanel\Helpers\FAPOptions::$password != $password)
+		if (\App\FastAdminPanel\Helpers\FAPOptions::$password != $password)
 			return response('Error: invalid password', 418);
 
 		$users = DB::table('newsletter_users')
@@ -257,7 +257,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		if (!isset($_GET['id']) && !isset($_GET['_id']))
 			die();
 
-		$secret = \Digiants\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
+		$secret = \App\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
 
 		if (md5($_GET['id'].$secret.$_GET['id']) == $_GET['_id']) {
 
@@ -272,7 +272,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		if (!isset($_GET['id']) && !isset($_GET['_id']))
 			die();
 
-		$secret = \Digiants\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
+		$secret = \App\FastAdminPanel\Helpers\FAPOptions::$secret_phrase;
 
 		if (md5($_GET['id'].$secret.$_GET['id']) == $_GET['_id']) {
 

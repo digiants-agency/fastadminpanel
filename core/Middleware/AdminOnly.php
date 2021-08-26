@@ -1,6 +1,6 @@
 <?php
 
-namespace Digiants\FastAdminPanel\Middleware;
+namespace App\FastAdminPanel\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;

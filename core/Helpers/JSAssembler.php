@@ -1,6 +1,6 @@
 <?php 
 
-namespace Digiants\FastAdminPanel\Helpers;
+namespace App\FastAdminPanel\Helpers;
 
 use Route;
 

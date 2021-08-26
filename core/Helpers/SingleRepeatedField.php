@@ -1,13 +1,13 @@
 <?php 
 
-namespace Digiants\FastAdminPanel\Helpers;
+namespace App\FastAdminPanel\Helpers;
 
 use DB;
 use App;
 use Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Lang;
-use Digiants\FastAdminPanel\Helpers\SingleRepeatedFieldResult;
+use App\FastAdminPanel\Helpers\SingleRepeatedFieldResult;
 
 class SingleRepeatedField {
 
