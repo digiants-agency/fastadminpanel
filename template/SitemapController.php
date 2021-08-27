@@ -5,76 +5,63 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use App\FastAdminPanel\Helpers\Lang;
+use Digiants\FastAdminPanel\Helpers\Lang;
 
 class SitemapController extends Controller
 {
-	private $domain = env('APP_URL');
+	private $domain;
+	private $sitemap = [];
+
+	public function __construct()
+	{
+		$this->domain = env('APP_URL');
+	}
 
 	public function index() {
 
-		$sitemap = $this->set_header();
 
-		$this->add_url($sitemap, '', '1.0');
+		$this->add_url('', '1.0');
 
-		// $blog = DB::table('blog_ru')->select('slug')->get();
+		/* add url like this */
 
-		// foreach ($blog as $elm)
-		// 	$this->add_url($sitemap, '/blog/'.$elm->slug, '0.5');
+		// $this->add_url('/about', '1.0');
+		// $this->add_url('/contacts', '1.0');
+		// $this->add_url('/products', '1.0');
+		// $this->add_url('/projects', '1.0');
 		
-		$this->set_footer($sitemap);
+		// $products = DB::table('products_en')->select('slug')->get();
+		// foreach ($products as $elm)
+		// 	$this->add_url('/product/'.$elm->slug, '0.5');
+		
+		// $products_category = DB::table('category_products_en')->select('slug')->get();
+		// foreach ($products_category as $elm)
+		// 	$this->add_url('/products/'.$elm->slug, '0.5');
 
-		$response = Response::make($sitemap);
+		// $projects = DB::table('projects_en')->select('slug')->get();
+		// foreach ($projects as $elm)
+		// 	$this->add_url('/project/'.$elm->slug, '0.5');
+		
+		// $projects_category = DB::table('category_projects_en')->select('slug')->get();
+		// foreach ($projects_category as $elm)
+		// 	$this->add_url('/projects/'.$elm->slug, '0.5');
+			
+		
+		$response = Response::make(view('pages.sitemap', 
+		[
+			'sitemap' => $this->sitemap,
+		])->render());
 		$response->header('Content-Type', 'text/xhtml+xml; charset=utf-8');
 		return $response;
+
 	}
 
-	private function add_url(&$map, $url, $priority) {
+	private function add_url($url, $priority, $is_multilanguage = true) {
 
-		if (Lang::get_langs()->count() > 1) {
-
-			foreach (Lang::get_langs() as $l) {
-				$map .= '<url>
-							<loc>'.Lang::get_url($l->tag, $this->domain.$url).'</loc>
-							<priority>'.$priority.'</priority>';
-
-				foreach (Lang::get_langs() as $lang) {
-					
-					$map .= '<xhtml:link 
-								rel="alternate"
-								hreflang="'.$lang->tag.'"
-								href="'.Lang::get_url($lang->tag, $this->domain.$url).'"/>';
-				}
-				$map .= '</url>';
-			}
-
-		} else {
-
-			$map .= '<url>
-						<loc>'.Lang::get_url($l->tag, $this->domain.$url).'</loc>
-						<priority>'.$priority.'</priority>'.
-					'</url>';
-		}
+		$this->sitemap[] = [
+			'slug' 					=> $this->domain.$url, 
+			'priority' 				=> $priority, 
+			'is_multilanguage' 		=> $is_multilanguage && Lang::get_langs()->count() > 1,
+		]; 
 	}
 
-	private function add_doc(&$map, $url, $priority) {
-		$map .= '<url>
-					<loc>'.$this->domain.$url.'</loc>
-					<priority>'.$priority.'</priority>
-				</url>';
-	}
-
-	private function set_header() {
-		return '<?xml version="1.0" encoding="UTF-8"?>
-				<urlset
-					  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-					  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-					  xmlns:xhtml="http://www.w3.org/1999/xhtml"
-					  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-							http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';
-	}
-
-	private function set_footer(&$sitemap) {
-		$sitemap .= '</urlset>';
-	}
 }
