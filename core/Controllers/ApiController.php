@@ -471,6 +471,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 							$r = request();
 							Schema::dropIfExists($r->get('table_name').'_'.$field->relationship_table_name);
 
+						} else if ($field->type == 'relationship' && $field->relationship_count == 'editable') {
+
 						} else {
 
 							$table->dropColumn($field->db_title);
