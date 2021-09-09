@@ -1,6 +1,7 @@
 <script type="text/x-template" id="template-sidebar">
 	<div class="sidebar">
 		<div class="sidebar-menu">
+			<router-link to="/admin" class="sidebar-menu-item">Admin</router-link>
 			<router-link to="/admin/dropdown" class="sidebar-menu-item" v-if="is_dev">Dropdown</router-link>
 			<router-link to="/admin/options" class="sidebar-menu-item" v-if="is_dev">Options</router-link>
 			<!-- <template v-for="item in menu">

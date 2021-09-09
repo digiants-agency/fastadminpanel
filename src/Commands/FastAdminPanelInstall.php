@@ -256,6 +256,8 @@ class FastAdminPanelInstall extends Command {
 				'pages/search.blade.php',
 				'pages/successorder.blade.php',
 				'pages/userinfo.blade.php',
+				'fastadminpanel/components/main.php',
+				'fastadminpanel/components/custom/vigruzka.php',
 			];
 			foreach ($views as $path) {
 				if (file_exists(base_path("/views/$path")))

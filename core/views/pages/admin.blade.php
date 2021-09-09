@@ -45,6 +45,7 @@
 @include('fastadminpanel.components.sidebar')
 @include('fastadminpanel.components.menu')
 @include('fastadminpanel.components.edit')
+@include('fastadminpanel.components.main')
 @include('fastadminpanel.components.index')
 <script>
 	const router = new VueRouter({
@@ -85,6 +86,10 @@
 				path: '/admin/:table_name/edit/:edit_id',
 				name: 'edit',
 				component: Vue.options.components['template-edit'],
+			},{
+				path: '/admin',
+				name: 'main',
+				component: Vue.options.components['template-main'],
 			},
 		],
 	})
