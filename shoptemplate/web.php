@@ -29,10 +29,11 @@ Route::group([
     Route::get('/delandpay', 'PagesController@delandpay');
     Route::get('/successorder', 'PagesController@successorder');
     Route::get('/privacypolicy', 'PagesController@privacypolicy');
+    Route::get('/page/{slug}', 'PageController@defaultpage');
+
     Route::get('/search', 'SearchController@index');
     Route::post('/search/ajaxsearch', 'SearchController@ajaxsearch');
     Route::post('/product/addtestim', 'ProductController@addtestim');
-
 
     Route::get('/blog/{slug}', 'BlogController@view');
     Route::get('/blog', 'BlogController@index');
@@ -41,7 +42,6 @@ Route::group([
     Route::get('/products', 'CatalogController@index');
 
     Route::any('/admin/getdata', 'PagesController@getadmindata');
-
 
     Route::get('/order', 'CartController@order');
     Route::post('/cart/order', 'CartController@createorder');

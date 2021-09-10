@@ -486,6 +486,25 @@ class FastAdminPanelInstall extends Command {
 				$this->info($tablename.' table has already exist!');
 			}
 
+            //blog
+            $tablename = "page_".$l->tag;
+            if (!Schema::hasTable($tablename)) {
+                Schema::create($tablename, function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('title');
+                    $table->string('slug');
+                    $table->text('content');
+                    $table->text('content');
+                    $table->text('meta_title');
+                    $table->text('meda_description');
+                    $table->text('meta_keywords');
+                    $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+                    $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                });
+            } else {
+                $this->info($tablename.' table has already exist!');
+            }
+
 			//category
 			$tablename = "category_".$l->tag;
 			if (!Schema::hasTable($tablename)) {
@@ -680,6 +699,16 @@ class FastAdminPanelInstall extends Command {
 			'title'             => 'Категории',
 			'table_name'        => 'category',
 			'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"title","title":"Название"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ccылка"},{"id":8,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_table_name":"category","relationship_count":"single","title":"Родительская категория","relationship_view_field":"title"},{"id":2,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"photo","db_title":"img","title":"Изображение"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_title","title":"Meta Title"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_descr","title":"Meta Descr"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"h1","title":"h1 заголовок"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"ckeditor","db_title":"seo_text","title":"SEO текст"},{"id":7,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"number","db_title":"sort","title":"Номер сортировки"}]',
+			'is_dev'            => '0',
+			'multilanguage'     => '1',
+			'is_soft_delete'    => '0',
+			'sort'              => '10',
+		]);
+
+		DB::table('menu')->insert([
+			'title'             => 'Страницы',
+			'table_name'        => 'page',
+			'fields'            => '[{"id":0,"required":"optional","is_visible":true,"lang":1,"show_in_list":"yes","type":"text","db_title":"title","title":"Название"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"text","db_title":"slug","title":"Ccылка"},{"id":3,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_title","title":"Meta Title"},{"id":4,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_description","title":"Meta Descr"},{"id":5,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"textarea","db_title":"meta_keywords","title":"Meta keys"},{"id":6,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"ckeditor","db_title":"seo_text","content":"Контент"}]',
 			'is_dev'            => '0',
 			'multilanguage'     => '1',
 			'is_soft_delete'    => '0',

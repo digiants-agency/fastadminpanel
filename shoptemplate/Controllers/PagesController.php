@@ -53,6 +53,14 @@ class PagesController extends Controller
         return view('pages.successorder', []);
     }
 
+    public function defaultpage($slug){
+        $page = DB::table('page_'.Lang::get())->where('slug',$slug)->first();
+        if(empty($page)) abort(404);
+        return view('pages.default', [
+            'page'=>$page
+        ]);
+    }
+
     public function getadmindata(){
 	    $popproducts =  DB::select('SELECT product_ru.title, product_ru.slug, product_ru.image, orders_product.link, COUNT(*) as countorders FROM orders_product INNER JOIN product_ru ON product_ru.slug = orders_product.link GROUP BY orders_product.title  ORDER BY countorders DESC LIMIT 5');
         $thismonth = date("Y-m-00 00:00:00");
