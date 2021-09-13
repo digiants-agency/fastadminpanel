@@ -43,6 +43,112 @@
 </div>
 
 <script>
+
+	const $ = function(selector) {
+		if (! (this instanceof $) ) {
+			return new $(selector);
+		}
+		if(typeof selector=="object") this.el = [selector]; else this.el = document.querySelectorAll(selector);
+		return this;
+	}
+
+	$.prototype.css = function(prop, val) {
+		this.el.forEach(function(element) {
+			element.style[prop] = val;
+		});
+		return this;
+	}
+
+	$.prototype.display = function (name){
+		this.el.forEach(function(el){
+			el.style.display = name
+		});
+		return this;
+	}
+
+	$.prototype.on = function (event, f){
+		this.el.forEach(function(el){
+			el.addEventListener(event, f)
+		});
+		return this;
+	}
+
+	$.prototype.fadein = function (){
+		this.el.forEach(function(el){
+			el.classList.add('active')
+		});
+		return this;
+	}
+
+	$.prototype.fadeout = function (){
+		this.el.forEach(function(el){
+			el.classList.remove('active')
+		});
+		return this;
+	}
+
+	$.prototype.toggle = function (classname){
+		this.el.forEach(function(el){
+			el.classList.toggle(classname)
+		});
+		return this;
+	}
+
+	$.prototype.slideUp = function (){
+		this.el.forEach(function(el){
+			el.style.transition = "all .5s ease-in-out"
+			el.style.height = "0px"
+			el.setAttribute('data-height',el.offsetHeight)
+		});
+		return this;
+	}
+
+	$.prototype.slideDown = function (){
+		this.el.forEach(function(el){
+			el.style.transition = "all .5s ease-in-out"
+			el.style.height = el.getAttribute('data-height') ?? 'auto'
+		});
+		return this;
+	}
+
+	$.prototype.toggleSlide = function (){
+		this.el.forEach(function(el,index){
+			el.style.transition = "all 1s ease-in-out"
+			console.log(el.offsetHeight);
+			if(el.offsetHeight==0) {
+				el.style.height = el.getAttribute('data-height') ?? 'auto'
+			} else {
+				el.style.height = "0px"
+				el.setAttribute('data-height',el.offsetHeight)
+			}
+		});
+		return this;
+	}
+
+	$.prototype.parent = function (){
+		var els = this.el;
+		els.forEach(function(el,index) {
+			els[index] = el.parentElement
+		})
+		return els;
+	}
+
+	$.prototype.child = function (){
+		var els = this.el;
+		els.forEach(function(el,index) {
+			els[index] = el.firstElementChild
+		})
+		return els;
+	}
+
+	$.prototype.value = function(){
+		return this.el[0].value;
+	}
+
+	$.prototype.text = function(){
+		return this.el[0].innerText;
+	}
+	
 // document.addEventListener('DOMContentLoaded', function(){
 	// slide toggle START
 	let slideUp = (target, duration=500) => {
