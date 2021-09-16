@@ -94,6 +94,20 @@
 		return this;
 	}
 
+	$.prototype.add = function (classname){
+		this.el.forEach(function(el){
+			el.classList.add(classname)
+		});
+		return this;
+	}
+
+	$.prototype.remove = function (classname){
+		this.el.forEach(function(el){
+			el.classList.remove(classname)
+		});
+		return this;
+	}
+
 	$.prototype.slideUp = function (){
 		this.el.forEach(function(el){
 			el.style.transition = "all .5s ease-in-out"
@@ -145,10 +159,14 @@
 		return this.el[0].value;
 	}
 
+	$.prototype.html = function(){
+		return this.el[0].innerHTML;
+	}
+
 	$.prototype.text = function(){
 		return this.el[0].innerText;
 	}
-	
+
 // document.addEventListener('DOMContentLoaded', function(){
 	// slide toggle START
 	let slideUp = (target, duration=500) => {
