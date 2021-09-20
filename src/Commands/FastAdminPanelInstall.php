@@ -268,6 +268,24 @@ class FastAdminPanelInstall extends Command {
 					base_path("/resources/views/$path")
 				);
 			}
+
+            $shop = [
+                'Shop/Cart.php',
+                'Shop/CartDB.php',
+                'Shop/CartSession.php',
+                'Shop/Saved.php',
+                'CartHandler.php',
+                'SavedHandler.php',
+            ];
+            foreach ($views as $path) {
+                if (file_exists(base_path("/app/$path")))
+                    unlink(base_path("/app/$path"));
+
+                copy(
+                    $this->shop_path_package("$path"),
+                    base_path("/app/$path")
+                );
+            }
 			// routes
 			if (file_exists(base_path("/routes/web.php")))
 				unlink(base_path("/routes/web.php"));
@@ -338,6 +356,19 @@ class FastAdminPanelInstall extends Command {
 
 	private function create_db_shop(){
 		//create single language tables
+
+        if (!Schema::hasTable('cart')) {
+            Schema::create('cart', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('id_users');
+                $table->integer('id_product')->default('');
+                $table->integer('count');
+                $table->text('meta')->default('');
+                $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            });
+        } else {
+            $this->info('callback table has already exist!');
+        }
 
 		if (!Schema::hasTable('callback')) {
 			Schema::create('callback', function (\Illuminate\Database\Schema\Blueprint $table) {
