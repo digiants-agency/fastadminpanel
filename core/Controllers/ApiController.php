@@ -574,15 +574,50 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return 'Success';
 	}
 
-	public function db_update () {
+	public function save_editable () {
 
-		$r = request();
+		$input = request()->all();
 
-		DB::table($r->get('table'))
-		->where('id', $r->get('id'))
-		->update([
-			$r->get('field') => $r->get('value')
-		]);
+		$menu = DB::table('menu')
+		->select('multilanguage', 'fields')
+		->where('table_name', $input['table'])
+		->first();
+
+		$fields = collect(json_decode($menu->fields));
+
+		$field = $fields->first(function($v, $k) use($input, $fields){
+			return ($v->db_title ?? '') == $input['field'];
+		});
+
+		if ($menu->multilanguage == 0) {
+
+			DB::table($input['table'])
+			->where('id', $input['id'])
+			->update([
+				$input['field'] => $input['value'],
+			]);
+
+		} else if ($menu->multilanguage == 1 && $field->lang == 0) {
+
+			foreach ($this->get_tables($input['table']) as $tbl) {
+
+				DB::table($tbl)
+				->where('id', $input['id'])
+				->update([
+					$input['field'] => $input['value'],
+				]);
+			}
+
+		} else if ($menu->multilanguage == 1 && $field->lang == 1) {
+
+			DB::table($input['table'] . '_' . $_COOKIE['lang'])
+			->where('id', $input['id'])
+			->update([
+				$input['field'] => $input['value'],
+			]);
+		}
+
+		return $this->response();
 	}
 
 	private function db_remove_editable ($id, $table) {

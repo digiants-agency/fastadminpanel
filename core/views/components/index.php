@@ -104,13 +104,7 @@
 					this.refresh()
 				})
 			},
-			editable_change: function(val, instance, field){
-
-				var table = this.menu_item.table_name
-
-				if (this.menu_item.multilanguage == 1) {
-					table += '_' + app.get_language().tag
-				}
+			editable_change: async function(val, instance, field){
 				
 				var value = val
 				if (field.type == 'number')
@@ -118,15 +112,11 @@
 				else if (field.type == 'checkbox')
 					value = value ? 1 : 0
 
-				request('/admin/db-update', {
-					table: table,
+				await post('/admin/save-editable', {
+					table: this.menu_item.table_name,
 					id: instance.id,
 					field: field.db_title,
 					value: value,
-				}, (data)=>{
-					
-				}, (data)=>{
-
 				})
 			},
 			remove_row: function(id){

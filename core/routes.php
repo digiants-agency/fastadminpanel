@@ -29,11 +29,11 @@ Route::group([
 
         Route::post('admin/get-dynamic', 'ApiController@get_dynamic');
         Route::post('admin/set-dynamic', 'ApiController@set_dynamic');
+        Route::post('admin/save-editable', 'ApiController@save_editable');
 
         Route::post('admin/db-copy', 'ApiController@db_copy');
         Route::post('admin/db-count', 'ApiController@db_count');
         Route::post('admin/db-select', 'ApiController@db_select');
-        Route::post('admin/db-update', 'ApiController@db_update');
         Route::post('admin/db-create-table', 'ApiController@db_create_table');
         Route::post('admin/db-remove-table', 'ApiController@db_remove_table');
         Route::post('admin/db-update-table', 'ApiController@db_update_table');
