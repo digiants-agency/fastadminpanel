@@ -9,7 +9,7 @@
         template: '#template-main',
         props: [],
         data: function () {
-            return
+            return {}
         },
         created: function(){
 
