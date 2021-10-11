@@ -11,6 +11,10 @@ class Field {
 ', '<br>', $str));
 	}
 
+	public static function bracket_to_span ($str) {
+		return str_replace("[", '<span>', str_replace(']', '</span>', $str));
+	}
+
 	public static function phone ($phone) {
 		return preg_replace('/[^0-9\+]/', '', $phone);
 	}

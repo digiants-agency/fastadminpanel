@@ -107,8 +107,8 @@ class Single {
 
 			if (empty($field)) {
 
-				DB::table('single_field')
-				->insert([
+				$id_field = DB::table('single_field')
+				->insertGetId([
 					'is_multilanguage'	=> $is_multilanguage,
 					'type'				=> $type,
 					'title'				=> $field_title,
@@ -116,6 +116,27 @@ class Single {
 					'single_page_id'	=> $this->page->id,
 					'sort'				=> $this->sorts[$field_block],
 				]);
+
+				if ($type != 'repeat') {
+					if ($is_multilanguage) {
+
+						foreach (Lang::get_langs() as $lang) { 
+
+							DB::table(self::$type_table[$type].'_'.$lang->tag)
+							->insert([
+								'field_id'	=> $id_field,
+								'value'		=> $default_val,
+							]);
+						}
+					} else {
+
+						DB::table(self::$type_table[$type])
+						->insert([
+							'field_id'	=> $id_field,
+							'value'		=> $default_val,
+						]);
+					}
+				}
 
 			} else {
 

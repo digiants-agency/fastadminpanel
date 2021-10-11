@@ -98,6 +98,11 @@ class Lang {
 		return Lang::$langs;
 	}
 
+	public static function all () {
+		
+		return self::get_langs();
+	}
+
 	public static function link ($url) {
 
 		if (mb_strpos($url, '#') === 0)
