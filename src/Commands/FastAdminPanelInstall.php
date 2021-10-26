@@ -282,7 +282,7 @@ class FastAdminPanelInstall extends Command {
                     unlink(base_path("/app/$path"));
 
                 copy(
-                    $this->shop_path_package("/app/$path"),
+                    $this->shop_path_package("$path"),
                     base_path("/app/$path")
                 );
             }
