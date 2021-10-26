@@ -289,6 +289,7 @@ class FastAdminPanelInstall extends Command {
 			// routes
 			if (file_exists(base_path("/routes/web.php")))
 				unlink(base_path("/routes/web.php"));
+				
 			copy(
 				$this->shop_path_package("/web.php"),
 				base_path("/routes/web.php")
