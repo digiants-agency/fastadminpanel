@@ -1139,27 +1139,30 @@ class ApiController extends \App\Http\Controllers\Controller {
 					}
 				} else if ($field->relationship_count == 'editable') {
 
-					$editable_ids = DB::table($this->get_table(
-						$field->relationship_table_name,
-						$input['language']
-					))
-					->select('id')
-					->where('id_'.$input['table'], $input['id'])
-					->get()
-					->pluck('id');
-
 					$field->value = [];
 
-					foreach ($editable_ids as $editable_id) {
-						
-						$field->value[] = [
-							'fields'	=> $this->get_dynamic_fields([
-								'table'		=> $field->relationship_table_name,
-								'language'	=> $input['language'],
+					if ($input['id'] != 0) {
+
+						$editable_ids = DB::table($this->get_table(
+							$field->relationship_table_name,
+							$input['language']
+						))
+						->select('id')
+						->where('id_'.$input['table'], $input['id'])
+						->get()
+						->pluck('id');
+
+						foreach ($editable_ids as $editable_id) {
+							
+							$field->value[] = [
+								'fields'	=> $this->get_dynamic_fields([
+									'table'		=> $field->relationship_table_name,
+									'language'	=> $input['language'],
+									'id'		=> $editable_id,
+								]),
 								'id'		=> $editable_id,
-							]),
-							'id'		=> $editable_id,
-						];
+							];
+						}
 					}
 
 					$field->values = $this->get_dynamic_fields([
