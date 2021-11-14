@@ -277,6 +277,7 @@ class FastAdminPanelInstall extends Command {
                 'CartHandler.php',
                 'SavedHandler.php',
             ];
+            mkdir(base_path("/app/Shop"));
             foreach ($shop as $path) {
                 if (file_exists(base_path("/app/$path")))
                     unlink(base_path("/app/$path"));
