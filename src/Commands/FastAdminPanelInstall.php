@@ -527,7 +527,6 @@ class FastAdminPanelInstall extends Command {
                     $table->string('title');
                     $table->string('slug');
                     $table->text('content');
-                    $table->text('content');
                     $table->text('meta_title');
                     $table->text('meda_description');
                     $table->text('meta_keywords');
