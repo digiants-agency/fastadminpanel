@@ -363,7 +363,7 @@ class FastAdminPanelInstall extends Command {
             Schema::create('cart', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('id_users');
-                $table->integer('id_product')->default('');
+                $table->integer('id_product');
                 $table->integer('count');
                 $table->string('meta')->default('');
                 $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
