@@ -196,11 +196,12 @@
 					limit: 10,
 				}, (data)=>{
 
-					data.forEach((elm)=>{
+					data.instances.forEach((elm)=>{
 						elm.marked = false
 					})
 
-					this.instances = data
+					this.instances = data.instances
+					this.count = data.count
 				})
 			},
 			get_search_table_menu: function(){
@@ -220,15 +221,6 @@
 					}
 				}
 				return table
-			},
-			get_count: function(){
-				request('/admin/db-count', {
-					table: this.menu_item.table_name,
-					language: (this.menu_item.multilanguage == 0) ? '' : '_' + app.get_language().tag,
-				}, (data)=>{
-					this.count = data
-					this.get_fields_instances()
-				})
 			},
 			prev_page: function(){
 				if (this.curr_page != 1 && this.pages_count > 1)
@@ -269,14 +261,14 @@
 				})
 			},
 			refresh: function(){
-				// TODO: make only one request
-				this.get_count()
+				this.get_fields_instances()
+
 			},
 			init: function(menu_item){
 				this.menu_item = menu_item
 				this.order = this.get_order()
 				this.offset = 0
-				this.get_count()
+				this.get_fields_instances()
 			},
 			get_order: function(){
 				var order = ''
@@ -328,8 +320,8 @@
 				if (this.search_timeout != null) clearTimeout(this.search_timeout)
 
 				this.search_timeout = setTimeout(()=>{
-					
-					this.refresh()
+					this.curr_page = 1
+					// this.refresh()
 				}, 500)
 			},
 		},

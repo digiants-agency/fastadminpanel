@@ -172,6 +172,18 @@ class ApiController extends \App\Http\Controllers\Controller {
 		->limit($limit)
 		->orderBy(DB::raw($order), $sort_order)
 		->get();
+
+		$count = DB::table($full_table)
+		->selectRaw($fields)
+		->when($where != '', function($q) use ($where){
+			$q->whereRaw($where);
+		})
+		->when(!empty($join), function($q) use ($join, $table, $full_table){
+			foreach (json_decode($join) as $tbl) {
+				$q->leftJoin($tbl->full, "{$tbl->full}.id", "$full_table.id_{$tbl->short}");
+			}
+		})
+		->count();
 		
 		if ($relationships != '') {
 
@@ -238,7 +250,10 @@ class ApiController extends \App\Http\Controllers\Controller {
 			}
 		}
 
-		return $values;
+		return [
+			'instances'	=> $values,
+			'count'		=> $count,
+		];
 	}
 
 	public function db_count () {
