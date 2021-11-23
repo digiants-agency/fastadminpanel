@@ -86,9 +86,9 @@
 
 					for (var i = 0; i < items.length; i++) {
 
-						var url = items[i].url.replace(document.location.origin, '')
-
-						this.field.value = url
+						var url = new URL(items[i].url.replace(document.location.origin, ''))
+						
+						this.field.value = decodeURIComponent(url.pathname)
 
 						break;
 					}

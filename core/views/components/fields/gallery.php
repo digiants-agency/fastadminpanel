@@ -41,8 +41,9 @@
 					else  var arr = []
 					
 					for (var i = 0; i < items.length; i++) {
-
-						var url = items[i].url.replace(document.location.origin, '')
+						var url = new URL(items[i].url.replace(document.location.origin, ''))
+						url = decodeURIComponent(url.pathname)
+						
 						arr.push(url)
 					}
 					this.field.value = arr
