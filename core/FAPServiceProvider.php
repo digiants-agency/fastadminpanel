@@ -34,6 +34,7 @@ class FAPServiceProvider extends ServiceProvider
 			$loader->alias('ResizeImg', \App\FastAdminPanel\Helpers\ResizeImg::class);
 			$loader->alias('Single', \App\FastAdminPanel\Helpers\Single::class);
 			$loader->alias('Field', \App\FastAdminPanel\Helpers\Field::class);
+			$loader->alias('Platform', \App\FastAdminPanel\Helpers\Platform::class);
 		});
 	}
 }
