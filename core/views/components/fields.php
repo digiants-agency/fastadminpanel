@@ -137,7 +137,7 @@
 
 					for (var i = 0; i < items.length; i++) {
 
-						var url = items[i].url.replace(document.location.origin, '')
+						var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
 
 						this.field.value = url
 						this.$forceUpdate()
@@ -153,7 +153,7 @@
 
                     for (var i = 0; i < items.length; i++) {
 
-                        var url = items[i].url.replace(document.location.origin, '')
+                        var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
 
                         this.field.value = url
                         this.$forceUpdate()
@@ -172,7 +172,7 @@
                     
                     for (var i = 0; i < items.length; i++) {
 
-                        var url = items[i].url.replace(document.location.origin, '')
+                        var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
                         arr.push(url)
                     }
                     this.field.value = arr

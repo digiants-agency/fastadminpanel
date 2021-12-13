@@ -41,7 +41,7 @@
 					else  var arr = []
 					
 					for (var i = 0; i < items.length; i++) {
-						var url = new URL(items[i].url.replace(document.location.origin, ''))
+						var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
 						url = decodeURIComponent(url.pathname)
 						
 						arr.push(url)

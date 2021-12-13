@@ -39,8 +39,8 @@
 
 					for (var i = 0; i < items.length; i++) {
 
-						var url = new URL(items[i].url.replace(document.location.origin, ''))						
-						this.field.value = decodeURIComponent(url.pathname)
+						var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
+						this.field.value = decodeURIComponent(url)
 
 						break;
 					}
