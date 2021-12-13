@@ -79,6 +79,9 @@
 						],
 						shouldNotGroupWhenFull: true,
 					},
+					table: {
+						contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
+					},
 				},
 			}
 		},
