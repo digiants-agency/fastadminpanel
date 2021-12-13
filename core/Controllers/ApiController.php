@@ -667,7 +667,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 				->delete();
 			}
 
-			$this->db_remove_editable($parent->id, $table_name);
+			if (!empty($parent))
+				$this->db_remove_editable($parent->id, $table_name);
 		}
 	}
 
