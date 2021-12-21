@@ -77,7 +77,7 @@
 				table: 'dropdown',
 				limit: 0,
 			}, (data)=>{
-				this.dropdown = data
+				this.dropdown = data.instances
 			})
 		},
 		beforeDestroy: function(){
