@@ -21,7 +21,7 @@ class SingleRepeatedField {
 		$this->is_multilanguage = $is_multilanguage;
 		$this->fields = $fields;
 
-		// if (isset($_GET['update']) && env('APP_DEBUG')) {
+		// if (isset($_GET['update']) && config('app.debug')) {
 		// } else {
 
 		// 	$this->fields = json_decode(
@@ -35,7 +35,7 @@ class SingleRepeatedField {
 
 	public function field ($title, $type, $default_value = '') {
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 			$this->fields[] = [
 				'title' 	=> $title,
@@ -51,7 +51,7 @@ class SingleRepeatedField {
 
 	public function end () {
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 			$endings = [''];
 

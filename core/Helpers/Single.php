@@ -38,7 +38,7 @@ class Single {
 
 	public function __construct ($title, $sort, $parent = 0) {
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 			$this->page = DB::table('single_page')
 			->where('title', $title)
@@ -91,7 +91,7 @@ class Single {
 		if ($type == 'repeat')
 			$default_val = [];
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 			$field = DB::table('single_field')
 			->select('id')

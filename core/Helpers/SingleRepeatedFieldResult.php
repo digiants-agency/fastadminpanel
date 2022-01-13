@@ -27,7 +27,7 @@ class SingleRepeatedFieldResult {
 
 	public function field ($title, $type, $default_value = '') {
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 		} else {
 
@@ -48,7 +48,7 @@ class SingleRepeatedFieldResult {
 
 	public function end () {
 
-		if (isset($_GET['update']) && env('APP_DEBUG')) {
+		if (isset($_GET['update']) && config('app.debug')) {
 
 		} else {
 			
