@@ -9,7 +9,7 @@ class RedirectSEO
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        $domain = parse_url(env('APP_URL'), PHP_URL_HOST);
+        $domain = $_SERVER['SERVER_NAME'] ?? parse_url(config('app.url'), PHP_URL_HOST);
         
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$domain$_SERVER[REQUEST_URI]";
 
