@@ -9,6 +9,7 @@ Route::group([
     Route::get('admin/newsletter/hit', 'NewsletterController@hit');
 
     Route::post('sign-in', 'FAPController@sign_in');
+    Route::post('admin/logout', 'FAPController@logout');
     Route::get('login', 'FAPController@login');
     
     Route::group([
@@ -53,6 +54,8 @@ Route::group([
         Route::post('admin/newsletter/base/add', 'NewsletterController@base_add');
         Route::post('admin/newsletter/base/rm', 'NewsletterController@base_rm');
         Route::post('admin/newsletter/base/download', 'NewsletterController@base_download');
+
+        Route::post('/admin/get-mainpage', 'ApiController@get_mainpage');
 
         Route::get('admin/{any}', 'FAPController@admin')->where('any', '.*');
         
