@@ -32,6 +32,7 @@ class TemplateComponents extends Template{
 		$this->template_add_folder(base_path('/resources/views/inc'));
 		$this->template_add_folder(base_path('/resources/views/pages'));
 		$this->template_add_folder(base_path('/resources/views/components'));
+		$this->template_add_folder(base_path('/resources/views/components/inc'));
 
 		$views = [
 			'inc/head.blade.php',
