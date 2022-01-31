@@ -3,7 +3,7 @@
 namespace Digiants\FastAdminPanel\Commands;
 
 use App\FastAdminPanel\Helpers\Single;
-use App\User;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Schema;
 use DB;
