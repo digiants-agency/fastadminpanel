@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateBahroma;
+use Digiants\FastAdminPanel\Templates\TemplateDefault;
 
 class FastAdminPanelInstall extends Command {
 
@@ -57,11 +58,6 @@ class FastAdminPanelInstall extends Command {
 	private function path_package ($path) {
 
 		return base_path("/vendor/sv-digiants/fastadminpanel" . $path);
-	}
-
-	private function template_path_package ($path) {
-
-		return base_path("/vendor/sv-digiants/fastadminpanel/template" . $path);
 	}
 
 	private function publish_parts_folder ($source, $destination) {
@@ -152,69 +148,10 @@ class FastAdminPanelInstall extends Command {
 
 		if ($answer != 'n') {
 
-			// add converter
-			$this->template_add_folder(public_path('/css'));
-			$css = [
-				'converter-desktop.php', 
-				'converter-mobile.php',
-				'desktop-src.css',
-				'mobile-src.css',
-				'desktop.css',
-				'mobile.css',
-			];
-			foreach ($css as $path) {
-				copy(
-					$this->template_path_package("/css/$path"),
-					public_path("/css/$path")
-				);
-			}
+			$template = new TemplateDefault();
 
-			// add views
-			$this->template_add_folder(base_path('/resources/views/inc'));
-			$this->template_add_folder(base_path('/resources/views/layouts'));
-			$this->template_add_folder(base_path('/resources/views/pages'));
-			$views = [
-				'layouts/app.blade.php',
-				'inc/footer.blade.php',
-				'inc/header.blade.php',
-				'inc/head.blade.php',
-				'inc/pagination.blade.php',
-				'pages/index.blade.php',
-			];
-			foreach ($views as $path) {
-				copy(
-					$this->template_path_package("/views/$path"),
-					base_path("/resources/views/$path")
-				);
-			}
-
-			// routes
-			if (file_exists(base_path("/routes/web.php")))
-				unlink(base_path("/routes/web.php"));
-			copy(
-				$this->template_path_package("/web.php"),
-				base_path("/routes/web.php")
-			);
-
-			// controllers
-			copy(
-				$this->template_path_package("/SitemapController.php"),
-				base_path("/app/Http/Controllers/SitemapController.php")
-			);
-			copy(
-				$this->template_path_package("/PagesController.php"),
-				base_path("/app/Http/Controllers/PagesController.php")
-			);
-			if (file_exists(base_path("/app/Http/Controllers/Controller.php")))
-				unlink(base_path("/app/Http/Controllers/Controller.php"));
-			copy(
-				$this->template_path_package("/Controller.php"),
-				base_path("/app/Http/Controllers/Controller.php")
-			);
+			$template->import_default_template();
 			
-			// rm default view
-			if (file_exists(base_path("/resources/views/welcome.blade.php")))
-				unlink(base_path("/resources/views/welcome.blade.php"));
 		}
 	}
 
@@ -224,9 +161,9 @@ class FastAdminPanelInstall extends Command {
 
 		if ($answer != 'n') {
 
-			$template = new ShopTemplateBahroma();
+			$shop_template = new ShopTemplateBahroma();
 
-			$status = $template->import_default_shop();
+			$status = $shop_template->import_default_shop();
 
 			$this->info($status);
 		}
