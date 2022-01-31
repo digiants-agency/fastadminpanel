@@ -1,7 +1,17 @@
 <script type="text/x-template" id="template-fields">
-	<div class="row form-group w-100">
-		<label class="col-sm-2 control-label" v-text="field.title"></label>
-		<div class="<?php if(isset($_GET['dev'])) echo 'col-sm-9'; else echo 'col-sm-10'?>">
+	<div class="form-group w-100">
+		
+		<div class="field-title">
+			<label class="edit-field-title control-label" v-text="field.title"></label>
+			
+			<div class="field-remark" v-if="field.remark">
+				i
+				<div class="field-remark-modal" v-text="field.remark"></div>
+			</div>
+		</div>
+
+
+		<div class="edit-field-inner">
 			<div v-if="field.type == 'text'">
 				<input class="form-control" type="text" v-model="field.value" v-on:change="errors[field.db_title] = ''" maxlength="191">
 			</div>
@@ -34,22 +44,22 @@
 				<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="errors[field.db_title] = ''">
 				<div class="photo-preview-wrapper">
 					<img :src="field.value" alt="" class="photo-preview-img">
-					<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Add photo</div>
+					<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Добавить</div>
 				</div>
 			</div>
 			<div v-else-if="field.type == 'file'">
 				<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="errors[field.db_title] = ''">
-				<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Add file</div>
+				<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Добавить</div>
 			</div>
 			<div v-else-if="field.type == 'gallery'">
 				<template v-for="(item, index) in field.value">
 					<input class="form-control gallery-margin-top" type="text" v-model="field.value[index]">
 					<div class="photo-preview-wrapper">
 						<img :src="field.value[index]" alt="" class="photo-preview-img">
-						<div class="btn btn-danger" v-on:click="remove_gallery(field.db_title, index)">Delete photo</div>
+						<div class="btn btn-danger" v-on:click="remove_gallery(field.db_title, index)">Удалить</div>
 					</div>
 				</template>
-				<div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery(field.db_title)">Add photos</div>
+				<div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery(field.db_title)">Добавить</div>
 			</div>
 			<div v-else-if="field.type == 'number' || field.type == 'money'">
 				<input class="form-control" type="text" v-model="field.value" v-on:change="errors[field.db_title] = ''">

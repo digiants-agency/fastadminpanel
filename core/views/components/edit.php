@@ -1,26 +1,41 @@
 <script type="text/x-template" id="template-edit">
 	<div class="edit">
-		<div class="col-sm-10 offset-sm-2">
+		<div class="">
+			<router-link :to="'/admin/' + menu_item.table_name" class="btn btn-primary align-self-flex-start btn-edit">
+				<svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M0.54038 4.54038C0.28654 4.79422 0.28654 5.20578 0.540381 5.45962L4.67696 9.59619C4.9308 9.85004 5.34235 9.85004 5.59619 9.59619C5.85004 9.34235 5.85004 8.9308 5.59619 8.67696L1.91924 5L5.59619 1.32305C5.85003 1.0692 5.85003 0.657647 5.59619 0.403807C5.34235 0.149966 4.9308 0.149966 4.67695 0.403807L0.54038 4.54038ZM9 4.35L1 4.35L1 5.65L9 5.65L9 4.35Z" fill="white"/>
+				</svg>
+				Назад
+			</router-link>
+			
 			<div class="space-between">
-				<h1 v-if="id == 0">Add new</h1>
-				<h1 v-else>Edit</h1>
-				<router-link :to="'/admin/' + menu_item.table_name" class="btn btn-primary align-self-flex-start">
-					Back
-				</router-link>
+				
+				<h1 v-if="id == 0">Добавить новый</h1>
+				<h1 v-else-if="menu_item.table_name == 'orders'">Данные клиента</h1> <!-- for tim -->
+				<h1 v-else>Редактировать</h1>
 			</div>
 		</div>
-		<div v-for="(field, index) in fields" v-if="field.is_visible">
-			<component <?php /*:name="field.db_table"*/ ?> :is="'template-field-' + field.type" ref="refield" :field="field" :table_name="menu_item.table_name"></component>
-		</div>
-		<div class="row form-group">
-			<label class="col-sm-2 control-label"></label>
-			<div class="col-sm-10">
-				<button v-if="id == 0" class="btn btn-primary" v-on:click="save(true)">Create</button>
-				<template v-else>
-					<button class="btn btn-primary" v-on:click="save(false)">Update</button>
-					<button class="btn btn-primary" v-on:click="save(true)">Update and close</button>
-				</template>
+
+		<div class="edit-fields" :class="menu_item.table_name">
+			<div v-for="(field, index) in fields" v-if="field.is_visible && field.relationship_count != 'editable'" :class="'field-'+field.type">
+				<component :is="'template-field-' + field.type" ref="refield" :field="field" :table_name="menu_item.table_name" :parent_hash="hash"></component>
 			</div>
+		</div>
+
+		<div :class="'editable-' + menu_item.table_name" v-for="(field, index) in fields" v-if="field.is_visible && field.relationship_count == 'editable'">
+			<h1 v-text="field.title"></h1>
+			<div class="edit-fields edit-fields-editable">
+				<component :is="'template-field-' + field.type" ref="refield" :field="field" :table_name="menu_item.table_name" ></component>
+			</div>
+		</div>
+
+
+		<div class="edit-fields-btns">
+			<button v-if="id == 0" class="btn btn-primary" v-on:click="save(true)">Создать</button>
+			<template v-else>
+				<button class="btn btn-primary" v-on:click="save(false)">Сохранить изменения</button>
+				<button class="btn btn-primary" v-on:click="save(true)">Сохранить и закрыть</button>
+			</template>
 		</div>
 	</div>
 </script>
@@ -34,6 +49,7 @@
 				menu: [],
 				menu_item: {table_name: ''},
 				fields: [],
+				hash: Math.random() * Date.now(),
 			}
 		},
 		methods: {
