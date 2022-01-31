@@ -1707,6 +1707,7 @@ select:focus {
     line-height: 20px;
     color: #7F7F7F;
     padding-top: 14px;
+    cursor: pointer;
 }
 
 .logout svg {
