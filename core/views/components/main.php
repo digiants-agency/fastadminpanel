@@ -1,7 +1,7 @@
 <script type="text/x-template" id="template-main">
     <div class="row">
 
-        <div class="blocks-wrapper" v-if="allproducts && productsale && callbackall && allorders && orderstoday && ordersmonth">
+        <div class="blocks-wrapper" v-if="allproducts || productsale || callbackall || allorders || orderstoday || ordersmonth">
 
             <h1>Общая информация</h1>
             <div class="blocks">
