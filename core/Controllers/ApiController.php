@@ -25,6 +25,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 					'id'	=> $elm['id'],
 					'title'	=> $elm['title'],
 					'sort'	=> $elm['sort'],
+					'icon'	=> $elm['icon'],
 				];
 			}
 		}
@@ -91,6 +92,35 @@ class ApiController extends \App\Http\Controllers\Controller {
 			if (empty($blocks[$field->block_title]))
 				$blocks[$field->block_title] = [];
 
+
+			$remark = '';
+			if ($field->type == 'repeat'){
+				foreach ($field->repeat as $key_field_value => $field_value){
+					$remark = null;
+					
+					foreach ($field_value as $key_field_repeat_value => &$field_repeat_value){
+
+						preg_match('/{(.*)}/', $field_repeat_value['title'], $remark);
+						if ($remark){
+	
+							$field->repeat[$key_field_value][$key_field_repeat_value]['title'] = str_replace($remark[0], '', $field_repeat_value['title']);
+							$field->repeat[$key_field_value][$key_field_repeat_value]['remark'] = $remark[1];
+						}
+	
+					}
+					
+				}
+			} else {
+				
+				preg_match('/{(.*)}/', $field->title, $remark);
+				if ($remark){
+
+					$field->title = str_replace($remark[0], '', $field->title);
+					$field->remark = $remark[1];
+	
+				}
+			}
+			
 			$blocks[$field->block_title][$field->title] = $field;
 		}
 
@@ -110,6 +140,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 			'is_soft_delete',
 			'sort',
 			'parent',
+			'icon',
 			DB::raw('"multiple" AS type')
 		)->get();
 
@@ -117,6 +148,27 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		foreach ($menu as &$elm) {
 			$elm->fields = json_decode($elm->fields);
+		}
+		
+		$tables = ['orders', 'callback_modal', 'callback_contacts', 'callback_horizontal']; //name tables for count in sidebar
+		foreach ($tables as $table) {
+
+			if ($menu->where('table_name', $table)->first()){
+
+				$table = $table;
+				if ($menu->where('table_name', $table)->first()->multilanguage == 1){
+					$table = $table.'_'.Lang::get();
+				}
+
+				$count = DB::table($table)
+				->count();
+
+				$menu->where('table_name', $table)->first()->count = $count;
+			}
+		}
+
+		foreach ($dropdown as &$dd){
+			$dd->count = $menu->where('parent', $dd->id)->sum('count');
 		}
 
 		return response()->json(
@@ -360,6 +412,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 			'is_soft_delete'    => $r->get('is_soft_delete'),
 			'sort'              => $r->get('sort'),
 			'parent'            => (empty($r->get('parent'))) ? 0 : $r->get('parent'),
+			'icon'				=> $r->get('icon'),
 		]);
 
 		return 'Success';
@@ -464,7 +517,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 				'is_dev'            => $r->get('is_dev'),
 				'is_soft_delete'    => $r->get('is_soft_delete'),
 				'sort'              => $r->get('sort'),
-				'parent'             => $r->get('parent'),
+				'parent'            => $r->get('parent'),
+				'icon'             	=> $r->get('icon'),
 			]);
 		}
 
@@ -543,22 +597,20 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		$input = request()->all();
 
-		if (!empty($input['language'])) {
+		$this->db_copy_fields ($input['id'], $input['table']);
 
-			$tbl = $input['table'].'_'.$input['language'];
+		return 'Success';
+	}
 
-		} else {
+	private function db_copy_fields ($input_id, $input_table) {
 
-			$tbl = $input['table'];
-		}
-
-		$row = DB::table($tbl)
-		->where('id', $input['id'])
-		->first();
-
-		$tables = $this->get_tables($input['table']);
+		$tables = $this->get_tables($input_table);
 
 		foreach ($tables as $table) {
+
+			$row = DB::table($table)
+			->where('id', $input_id)
+			->first();
 
 			$insert = [];
 
@@ -583,10 +635,133 @@ class ApiController extends \App\Http\Controllers\Controller {
 				$insert[$key] = $value;
 			}
 
-			DB::table($table)->insert($insert);
+			$new_id = DB::table($table)->insertGetId($insert);
 		}
 
-		return 'Success';
+		
+		$this->db_copy_many($input_id, $input_table, $new_id);
+		$this->db_copy_editable($input_id, $input_table, $new_id);
+	}
+
+	private function db_copy_many ($id, $table, $new_id) {
+
+		$field_properties = DB::table('menu')
+		->select('fields')
+		->where('table_name', $table)
+		->first();
+
+		if (!empty($field_properties)){
+			
+			$field_properties = json_decode($field_properties->fields);
+
+			foreach ($field_properties as $properties) {
+				if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
+					
+					$many_items = DB::table($table . '_' . $properties->relationship_table_name)
+					->where('id_' . $table, $id)
+					->get()->all();
+
+					foreach ($many_items as $key => &$many_item){
+						$many_item = (array)$many_item;
+
+						unset($many_items[$key]['id']);
+						$many_item['id_' . $table] = $new_id;
+					}
+
+					DB::table($table . '_' . $properties->relationship_table_name)
+					->insert($many_items);
+				}
+			}	
+		}
+		
+	}
+
+	private function db_copy_editable ($id, $table, $new_id) {
+
+		$editable = [];
+
+		$fields = DB::table('menu')
+		->select('fields')
+		->where('table_name', $table)
+		->first();
+
+		if ($fields){
+
+			$fields = json_decode($fields->fields);
+
+			foreach ($fields as $field) {
+				if ($field->type == 'relationship' && $field->relationship_count == 'editable') {
+					$editable[] = $field->relationship_table_name;
+				}
+			}
+
+			foreach ($editable as $table_name) {
+
+				$tables = $this->get_tables($table_name);
+
+				$parents = [];
+
+				$item_table = explode('_', $tables[0])[0]; 
+
+				foreach ($tables as $tbl_index => $tbl){
+
+					$editable_items = DB::table($tbl)
+					->where("id_$table", $id)
+					->get()->all();
+	
+					foreach ($editable_items as $key => &$editable_item){
+						$editable_item = (array)$editable_item;
+	
+						$item_id = $editable_item['id'];
+	
+						unset($editable_items[$key]['id']);
+						unset($editable_items[$key]['created_at']);
+						unset($editable_items[$key]['updated_at']);
+	
+						foreach ($editable_item as $key_item => &$item){
+	
+							if ($key_item == 'slug') {
+								preg_match('/-copy-(\d)$/', $item, $matches);
+								if (!empty($matches)) {
+									$item = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $item);
+								} else {
+									$item .= '-copy-1';
+								}
+							}
+			
+							if ($key_item == 'title') {
+								$item .= ' copy';
+							}
+						}
+						
+						$editable_item['id_' . $table] = $new_id;
+	
+						$new_editable_id = DB::table($tbl)
+						->insertGetId($editable_item);
+	
+						if ($tbl_index == 0){
+							$parents[] = [
+								'id'		=> $item_id,
+								'table'		=> $item_table,
+								'new_id'	=> $new_editable_id,
+							];
+						}
+					}
+				}
+				
+
+				if ($parents) {
+
+					foreach ($parents as $parent) {
+
+						$this->db_copy_many($parent['id'], $parent['table'], $parent['new_id']);
+						$this->db_copy_editable($parent['id'], $parent['table'], $parent['new_id']);
+		
+					}
+				}
+
+			}
+		}
 	}
 
 	public function save_editable () {
@@ -639,56 +814,85 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		$editable = [];
 
-		$fields = json_decode(DB::table('menu')
+		$fields = DB::table('menu')
 		->select('fields')
 		->where('table_name', $table)
-		->first()
-		->fields);
+		->first();
 
-		foreach ($fields as $field) {
-			if ($field->type == 'relationship' && $field->relationship_count == 'editable') {
-				$editable[] = $field->relationship_table_name;
+		if ($fields){
+			
+			$fields = json_decode($fields->fields);
+			
+			foreach ($fields as $field) {
+				if ($field->type == 'relationship' && $field->relationship_count == 'editable') {
+					$editable[] = $field->relationship_table_name;
+				}
 			}
-		}
+	
+			foreach ($editable as $table_name) {
+	
+				$tables = $this->get_tables($table_name);
+	
+				$parents = []; 
+	
+				$parents_table = explode('_', $tables[0])[0]; 
+	
+				foreach ($tables as $table_index => $tbl){
 
-		foreach ($editable as $table_name) {
+					$editable_items = DB::table($tbl)
+					->where("id_$table", $id)
+					->get()->all();
+		
+					foreach ($editable_items as $editable_item) {
+		
+						if ($table_index == 0){
 
-			$tables = $this->get_tables($table_name);
-
-			$parent = DB::table($tables[0])
-			->select('id')
-			->where("id_$table", $id)
-			->first();
-
-			foreach ($tables as $tbl) {
-
-				DB::table($tbl)
-				->where("id_$table", $id)
-				->delete();
+							$parents[] = [
+								'id'	=> $editable_item->id,
+								'table' => $parents_table,
+							];
+						}
+		
+						DB::table($tbl)
+						->where('id', $editable_item->id)
+						->delete();
+					}
+				}
+				
+	
+				if ($parents) {
+					foreach ($parents as $parent) {
+	
+						$this->db_remove_relationship_many($parent['id'], $parent['table']);
+						$this->db_remove_editable($parent['id'], $parent['table']);
+					}
+				}
+	
 			}
-
-			if (!empty($parent))
-				$this->db_remove_editable($parent->id, $table_name);
 		}
 	}
 
 	private function db_remove_relationship_many ($id, $table_name) {
 
-		$langs = DB::table('languages')->get();
-		$field_properties = json_decode(DB::table('menu')
+		$field_properties = DB::table('menu')
 		->select('fields')
 		->where('table_name', $table_name)
-		->first()
-		->fields);
+		->first();
 
-		foreach ($field_properties as $properties) {
-			if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
-				
-				DB::table($table_name . '_' . $properties->relationship_table_name)
-				->where('id_' . $table_name, $id)
-				->delete();
+		if ($field_properties) {
+
+			$field_properties = json_decode($field_properties->fields);
+
+			foreach ($field_properties as $properties) {
+				if ($properties->type == 'relationship' && $properties->relationship_count == 'many') {
+					
+					DB::table($table_name . '_' . $properties->relationship_table_name)
+					->where('id_' . $table_name, $id)
+					->delete();
+				}
 			}
 		}
+
 	}
 
 	public function db_remove_row () {
@@ -1118,6 +1322,27 @@ class ApiController extends \App\Http\Controllers\Controller {
 					->select('id', $field->relationship_view_field.' as title')
 					->get();
 
+					//for filters_fields
+					if ($field->relationship_table_name == 'filter_fields'){
+						$field->values = DB::table($this->get_table(
+							$field->relationship_table_name, 
+							$input['language']
+						))
+						->select('id', 'title', 'id_filters')
+						->get();					
+						
+						$filters = DB::table('filters_'.$input['language'])
+						->select('id', 'title')
+						->get();
+						
+						foreach ($field->values as &$value){
+							$filter = $filters->where('id', $value->id_filters)->first();
+							
+							if ($filter)
+								$value->title = $filter->title.': '.$value->title;	
+						}						
+					}
+
 					if ($field->relationship_count == 'single') {
 
 						if ($input['id'] == 0) {
@@ -1198,6 +1423,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field_title = $field->db_title;
 					$field->value = json_decode($instance->$field_title);
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
 				}
 
 			} else if ($field->type == 'password') {
@@ -1213,6 +1445,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field_title = $field->db_title;
 					$field->value = $instance->$field_title;
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
 				}
 
 			} else if ($field->type == 'date') {
@@ -1225,6 +1464,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field_title = $field->db_title;
 					$field->value = $instance->$field_title;
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
 				}
 			} else if ($field->type == 'datetime') {
 
@@ -1236,6 +1482,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field_title = $field->db_title;
 					$field->value = $instance->$field_title;
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
 				}
 			} else {
 
@@ -1246,6 +1499,15 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field_title = $field->db_title;
 					$field->value = $instance->$field_title;
+
+					$field->instance_id = $instance->id;
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
 				}
 			}
 
@@ -1274,4 +1536,114 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		return response()->json($response, $code);
 	}
+
+	public function get_mainpage(){
+		
+        // $popproducts =  DB::select('
+        //     SELECT products_'.Lang::get().'.title, products_'.Lang::get().'.slug, products_'.Lang::get().'.image, orders_product.slug, orders_product.title, 
+        //     COUNT(*) as countorders FROM orders_product 
+        //         INNER JOIN products_'.Lang::get().' ON products_'.Lang::get().'.id = orders_product.id 
+        //         GROUP BY orders_product.title
+        //         ORDER BY countorders DESC LIMIT 5');
+
+		$count_popular = DB::table('orders_product')
+		->select(DB::raw("SUM(count) as countorders, slug"))
+		->orderBy('countorders', 'DESC')
+		->groupBy('slug')
+		->get();
+
+		$popproducts = DB::table('products_'.Lang::get())
+		->whereIn('slug', $count_popular->pluck('slug'))
+		->get();
+
+		foreach($popproducts as &$popproduct){
+			$popproduct->count = $count_popular->where('slug', $popproduct->slug)->first()->countorders;
+		}
+
+		$popproducts = $popproducts->sortByDesc('count')->slice(0, 4);
+		
+		$sorted_popular_products = [];
+
+		foreach ($popproducts as $key => $popproduct) {
+			$sorted_popular_products[] = $popproduct;
+		}
+
+        $thismonth = date("Y-m-00 00:00:00");
+        $today = date("Y-m-d 00:00:00");
+
+        $alldata = [   
+			'allproducts' 	=> DB::table('products_'.Lang::get())->count(),
+			'productsale' 	=> DB::table('orders_product')->sum('count'),
+			'callbackall' 	=> DB::table('callback_horizontal')->count() + DB::table('callback_contacts')->count() + DB::table('callback_modal')->count(),
+			'allorders' 	=> DB::table('orders')->count(),
+			'orderstoday' 	=> DB::table('orders')->where('created_at','>',$today)->count(),
+			'ordersmonth' 	=> DB::table('orders')->where('created_at','>',$thismonth)->count()
+		];
+
+        $lastweek = date( "Y-m-d", strtotime( "-6 day" ));
+        $weekdata = [
+            date("Y-m-d") 							=> 0,
+            date( "Y-m-d", strtotime( "-1 day" )) 	=> 0,
+            date( "Y-m-d", strtotime( "-2 day" )) 	=> 0,
+            date( "Y-m-d", strtotime( "-3 day" )) 	=> 0,
+            date( "Y-m-d", strtotime( "-4 day" )) 	=> 0,
+            date( "Y-m-d", strtotime( "-5 day" )) 	=> 0,
+            date( "Y-m-d", strtotime( "-6 day" )) 	=> 0,
+        ];
+
+        $orders = DB::table('orders')
+		->where('created_at','>',$lastweek)
+		->get();
+
+        foreach ($orders as &$lw){
+            $lw->created_at = explode(' ',$lw->created_at)[0];
+        }
+
+        foreach ($orders as $lw){
+            $weekdata[$lw->created_at]++;
+        }
+
+        $graph1 = implode(',',$weekdata);
+
+        foreach ($weekdata as &$w){
+            $w = 0;
+        }
+
+        $callbacks = DB::table('callback_horizontal')
+		->select('created_at')
+		->where('created_at','>',$lastweek)
+		->get();
+
+		$callbacks = $callbacks->merge(
+			DB::table('callback_modal')
+			->select('created_at')
+			->where('created_at','>',$lastweek)
+			->get()
+		);
+
+		$callbacks = $callbacks->merge(
+			DB::table('callback_contacts')
+			->select('created_at')
+			->where('created_at','>',$lastweek)
+			->get()
+		);
+
+		
+        foreach ($callbacks as &$lw) {
+            $lw->created_at = explode(' ',$lw->created_at)[0];
+        }
+
+        foreach ($callbacks as $lw) {
+            $weekdata[$lw->created_at]++;
+        }
+
+        $graph2 = implode(',',$weekdata);
+
+		return $this->response([
+			'firstblock' => $alldata,
+            'popproducts' => $sorted_popular_products,
+            'graph1' => $graph1,
+            'graph2' => $graph2
+		]);
+    }
 }
