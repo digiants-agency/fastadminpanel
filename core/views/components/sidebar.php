@@ -139,7 +139,6 @@
 				sortable.forEach(function(item){
 					sorted[item[0]] = dropdown_menu[item[0]]
 				})
-				console.log(sorted)
 				// save
 				this.dropdown_menu = sorted
 			},

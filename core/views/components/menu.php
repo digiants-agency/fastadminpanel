@@ -398,7 +398,6 @@
 					this.action = 'edit'
 				}
 
-				console.log(this.menu_item_edit)
 			},
 			remove_menu_item: function(index) {
 				this.to_remove.push(this.menu_item_edit.fields[index].id)
