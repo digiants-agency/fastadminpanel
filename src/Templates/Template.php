@@ -11,9 +11,4 @@ class Template {
 		}
 	}
 
-    protected function template_path_package ($path) {
-
-		return base_path("/vendor/sv-digiants/fastadminpanel/template" . $path);
-	}
-
 }

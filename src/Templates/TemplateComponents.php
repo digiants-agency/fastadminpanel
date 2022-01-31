@@ -2,11 +2,11 @@
 
 namespace Digiants\FastAdminPanel\Templates;
 
-class TemplateDefault extends Template{
+class TemplateComponents extends Template{
 
 	protected function template_path_package ($path) {
 
-		return base_path("/vendor/sv-digiants/fastadminpanel/templates/default" . $path);
+		return base_path("/vendor/sv-digiants/fastadminpanel/templates/components" . $path);
 	}
 
 	public function import () {
@@ -24,20 +24,24 @@ class TemplateDefault extends Template{
 		foreach ($css as $path) {
 			copy(
 				$this->template_path_package("/css/$path"),
-				public_path("/css/$path"));
+				public_path("/css/$path")
+			);
 		}
 
 		// add views
 		$this->template_add_folder(base_path('/resources/views/inc'));
-		$this->template_add_folder(base_path('/resources/views/layouts'));
 		$this->template_add_folder(base_path('/resources/views/pages'));
+		$this->template_add_folder(base_path('/resources/views/components'));
+
 		$views = [
-			'layouts/app.blade.php',
-			'inc/footer.blade.php',
-			'inc/header.blade.php',
 			'inc/head.blade.php',
-			'inc/pagination.blade.php',
+			'components/inc/header.blade.php',
+			'components/inc/footer.blade.php',
+			'components/inc/pagination.blade.php',
+			'components/inc/breadcrumbs.blade.php',
+			'components/layout.blade.php',
 			'pages/index.blade.php',
+			'pages/sitemap.blade.php',
 		];
 		foreach ($views as $path) {
 			copy(
@@ -56,18 +60,40 @@ class TemplateDefault extends Template{
 
 		// controllers
 		copy(
-			$this->template_path_package("/SitemapController.php"),
+			$this->template_path_package("/Controllers/SitemapController.php"),
 			base_path("/app/Http/Controllers/SitemapController.php")
 		);
 		copy(
-			$this->template_path_package("/PagesController.php"),
-			base_path("/app/Http/Controllers/PagesController.php")
+			$this->template_path_package("/Controllers/PageController.php"),
+			base_path("/app/Http/Controllers/PageController.php")
 		);
+
 		if (file_exists(base_path("/app/Http/Controllers/Controller.php")))
 			unlink(base_path("/app/Http/Controllers/Controller.php"));
+
 		copy(
-			$this->template_path_package("/Controller.php"),
+			$this->template_path_package("/Controllers/Controller.php"),
 			base_path("/app/Http/Controllers/Controller.php")
+		);
+
+		//components
+		copy(
+			$this->template_path_package("/Components/Layout.php"),
+			base_path("/app/View/Components/Layout.php")
+		);
+		copy(
+			$this->template_path_package("/Components/Inc/Breadcrumbs.php"),
+			base_path("/app/View/Components/Inc/Breadcrumbs.php")
+		);
+		copy(
+			$this->template_path_package("/Components/Inc/Footer.php"),
+			base_path("/app/View/Components/Inc/Footer.php")
+		);copy(
+			$this->template_path_package("/Components/Inc/Header.php"),
+			base_path("/app/View/Components/Inc/Header.php")
+		);copy(
+			$this->template_path_package("/Components/Inc/Pagination.php"),
+			base_path("/app/View/Components/Inc/Pagination.php")
 		);
 		
 		// rm default view

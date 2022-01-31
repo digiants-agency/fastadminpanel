@@ -1,0 +1,64 @@
+:root {
+	--column-width: 1240px;
+	--offset: calc(50% - (var(--column-width) / 2));
+}
+
+body, input, textarea, select {
+	font-family: 'Arial', sans-serif;
+	font-size: 16px;
+	-webkit-text-size-adjust: none;
+}
+
+img, svg {
+	max-width: 100%;
+	display: block;
+}
+
+* {
+	box-sizing: border-box;
+	outline: none !important;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-appearance:none;
+}
+
+body, dl, dt, dd, ul, ol, li, form, table, tr, td, h1, h2, h3, h4, h5, h6, pre, p, span, b, i, input, textarea, fieldset {
+	margin: 0;
+	padding: 0;
+}
+
+.none {
+	display: none;
+}
+
+.fade-out {
+	opacity: 1;
+	transition: 0.3s;
+	pointer-events: auto;
+}
+
+.fade-out.active {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.fade-in {
+	opacity: 0;
+	transition: 0.3s;
+	pointer-events: none;
+}
+
+.fade-in.active {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.container {
+	padding-left: var(--offset);
+	padding-right: var(--offset);
+}
+
+.container-offset {
+	width: var(--column-width);
+	margin-left: auto;
+	margin-right: auto;
+}

@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateBahroma;
+use Digiants\FastAdminPanel\Templates\TemplateComponents;
 use Digiants\FastAdminPanel\Templates\TemplateDefault;
 
 class FastAdminPanelInstall extends Command {
@@ -44,8 +45,8 @@ class FastAdminPanelInstall extends Command {
 		$this->add_roles();
 		$this->add_user();
 		$this->add_menu();
-		$this->import_default_template();
-		$this->import_default_shop();
+		$this->import_template();
+		$this->import_shop();
 	}
 
 	private function template_add_folder ($path) {
@@ -142,20 +143,29 @@ class FastAdminPanelInstall extends Command {
 		}
 	}
 
-	private function import_default_template () {
+	private function import_template () {
 
-		$answer = $this->ask('Import default template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController, View Composer (Y/n)?');
+		$answer = $this->ask('Import template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController (Y/n)?');
 
 		if ($answer != 'n') {
 
-			$template = new TemplateDefault();
+			$type = $this->choice('Which type of template do you want?', [
+				'Default',
+				'With Components',
+			]);
 
-			$template->import_default_template();
+			if ($type == 'Default'){
+				$template = new TemplateDefault();
+			} else {
+				$template = new TemplateComponents();
+			}
+
+			$template->import();
 			
 		}
 	}
 
-	private function import_default_shop(){
+	private function import_shop(){
 
 		$answer = $this->ask('Import shop template (if previous been yes) (Y/n)?');
 
