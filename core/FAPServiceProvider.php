@@ -6,23 +6,58 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Blade;
 use View;
+use Convertor;
+use Platform;
 
 class FAPServiceProvider extends ServiceProvider
 {
 
 	public function boot() {
 
-		View::composer(["inc.header", "inc.footer"], function ($view) {
-		
-			// 
-
-			$view->with([
-
-			]);
+		$this->app->bind('fastadminpanel:translate', function ($app) {
+			return new \App\FastAdminPanel\Commands\FastAdminPanelTranslate();
 		});
+		
+		$this->commands([
+			'fastadminpanel:translate',
+		]);
 
 		include base_path('/routes/fap.php');
+
+		
+		Blade::directive('desktopcss', function () {
+
+            return "<?php if(Platform::desktop()){ ob_start(); ?>";
+        });
+
+        Blade::directive('mobilecss', function () {
+        
+            return '<?php Convertor::create($view_name, ob_get_clean()); } else { ob_start(); ?>';
+        });
+
+        Blade::directive('endcss', function () {
+
+            return '<?php Convertor::create($view_name, ob_get_clean()); } ?>';
+        });
+
+        Blade::directive('js', function ($index) {
+            
+            return '<?php $position_js = '.($index ? $index : '1').'; ob_start(); ?>';
+        });
+
+        Blade::directive('endjs', function () {
+
+            return '<?php JSAssembler::str($view_name.":".$position_js, ob_get_clean()); ?>';
+        });
+        
+        View::composer('*', function($view){
+
+            $view->with([
+                'view_name' => $view->getName(),
+            ]);
+        });
 	}
 
 	public function register() {
@@ -35,6 +70,7 @@ class FAPServiceProvider extends ServiceProvider
 			$loader->alias('Single', \App\FastAdminPanel\Helpers\Single::class);
 			$loader->alias('Field', \App\FastAdminPanel\Helpers\Field::class);
 			$loader->alias('Platform', \App\FastAdminPanel\Helpers\Platform::class);
+			$loader->alias('Convertor', \App\FastAdminPanel\Helpers\Convertor::class);
 		});
 	}
 }
