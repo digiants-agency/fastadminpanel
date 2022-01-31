@@ -1,11 +1,20 @@
 <script type="text/x-template" id="template-field-photo">
-	<div class="row form-group" v-on:dragenter="dragenter" v-on:dragleave="dragleave" v-on:dragover="dragover" v-on:drop="drop">
-		<label class="col-sm-2 control-label" v-text="field.title"></label>
-		<div class="col-sm-10">
+	<div class="form-group" v-on:dragenter="dragenter" v-on:dragleave="dragleave" v-on:dragover="dragover" v-on:drop="drop">
+		
+		<div class="field-title">
+			<label class="edit-field-title control-label" v-text="field.title"></label>
+			
+			<div class="field-remark" v-if="field.remark">
+				i
+				<div class="field-remark-modal" v-text="field.remark"></div>
+			</div>
+		</div>
+		
+		<div class="edit-field-inner">
 			<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="error = ''">
 			<div class="photo-preview-wrapper">
 				<img :src="field.value" alt="" class="photo-preview-img">
-				<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Add photo</div>
+				<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Добавить</div>
 			</div>
 			<div class="input-error" v-text="error"></div>
 		</div>

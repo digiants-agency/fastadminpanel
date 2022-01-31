@@ -1,7 +1,16 @@
 <script type="text/x-template" id="template-field-text">
-	<div class="row form-group">
-		<label class="col-sm-2 control-label" v-text="field.title"></label>
-		<div class="col-sm-10">
+	<div class="form-group">
+		
+		<div class="field-title">
+			<label class="edit-field-title control-label" v-text="field.title"></label>
+			
+			<div class="field-remark" v-if="field.remark">
+				i
+				<div class="field-remark-modal" v-text="field.remark"></div>
+			</div>
+		</div>
+
+		<div class="edit-field-inner">
 			<input class="form-control" type="text" v-model="field.value" v-on:change="error = ''" v-on:input="change" maxlength="191">
 			<div class="input-error" v-text="error"></div>
 		</div>
@@ -10,10 +19,11 @@
 <script>
 	Vue.component('template-field-text',{
 		template: '#template-field-text',
-		props:['field'],
+		props:['field', 'parent_hash'],
 		components: {},
 		data: function () {
 			return {
+				is_empty: false,
 				error: '',
 			}
 		},
@@ -36,7 +46,7 @@
 			change: function(e){
 
 				if (this.field.db_title == 'title') {
-					this.$root.$emit('title_changed', e.target.value)
+					this.$root.$emit('title_changed', e.target.value, this.parent_hash)
 				}
 			},
 			slugify: function(s, opt) {
@@ -154,9 +164,15 @@
 			},
 		},
 		created: function(){
-			if (this.field.db_title == 'slug' && !this.$route.params.edit_id) {
-				this.$root.$on('title_changed', (title)=>{
-					this.field.value = this.slugify(title)
+			if (!this.field.value)
+				this.is_empty = true
+
+			
+			if (this.field.db_title == 'slug' && this.is_empty) {
+				this.$root.$on('title_changed', (title, hash)=>{
+					
+					if (hash == this.parent_hash)
+						this.field.value = this.slugify(title)
 					// this.$forceUpdate()
 				})
 			}
