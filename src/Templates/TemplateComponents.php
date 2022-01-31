@@ -13,6 +13,11 @@ class TemplateComponents extends Template{
 
 		// add converter
 		$this->template_add_folder(public_path('/css'));
+		$this->template_add_folder(public_path('/css/cache'));
+		$this->template_add_folder(public_path('/js'));
+		$this->template_add_folder(public_path('/js/cache'));
+
+
 		$css = [
 			'converter-desktop.php', 
 			'converter-mobile.php',

@@ -24,5 +24,5 @@ Route::group([
 	]
 ], function(){
 
-	Route::get('/', 'PagesController@index');
+	Route::get('/', 'PageController@index');
 });
