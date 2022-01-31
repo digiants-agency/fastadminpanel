@@ -57,4 +57,19 @@ class FAPController extends \App\Http\Controllers\Controller {
 		setcookie('password', 'incorrect', time() + 3600 * 5);
 		return redirect('/login');
 	}
+
+	public function logout () {
+
+		$request = request();
+
+		Auth::logout();
+
+		// setcookie('password', 'incorrect', time() + 3600 * 5);
+
+		// $request->session()->invalidate();
+
+		// $request->session()->regenerateToken();
+
+		return redirect('/login');
+	}
 }
