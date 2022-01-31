@@ -1,52 +1,59 @@
 <script type="text/x-template" id="template-main">
     <div class="row">
-        <h1>Общая информация</h1>
-        <div class="blocks">
-            <div class="iteminfo" v-if="allproducts">
-                <p>Всех товаров</p>
-                <span v-text="allproducts"></span>
-            </div>
-            <div class="iteminfo" v-if="productsale">
-                <p>Товаров продано</p>
-                <span v-text="productsale"></span>
-            </div>
-            <div class="iteminfo" v-if="callbackall">
-                <p>Оставлено заявок</p>
-                <span v-text="callbackall"></span>
-            </div>
-            <div class="iteminfo" v-if="allorders">
-                <p>Всех заказов</p>
-                <span v-text="allorders"></span>
-            </div>
-            <div class="iteminfo" v-if="orderstoday">
-                <p>Заказов за сегодня</p>
-                <span v-text="orderstoday"></span>
-            </div>
-            <div class="iteminfo" v-if="ordersmonth">
-                <p>Заказов за этот месяц</p>
-                <span v-text="ordersmonth"></span>
+
+        <div class="blocks-wrapper" v-if="allproducts && productsale && callbackall && allorders && orderstoday && ordersmonth">
+
+            <h1>Общая информация</h1>
+            <div class="blocks">
+                <div class="iteminfo" v-if="allproducts">
+                    <p>Всех товаров</p>
+                    <span v-text="allproducts"></span>
+                </div>
+                <div class="iteminfo" v-if="productsale">
+                    <p>Товаров продано</p>
+                    <span v-text="productsale"></span>
+                </div>
+                <div class="iteminfo" v-if="callbackall">
+                    <p>Оставлено заявок</p>
+                    <span v-text="callbackall"></span>
+                </div>
+                <div class="iteminfo" v-if="allorders">
+                    <p>Всех заказов</p>
+                    <span v-text="allorders"></span>
+                </div>
+                <div class="iteminfo" v-if="orderstoday">
+                    <p>Заказов за сегодня</p>
+                    <span v-text="orderstoday"></span>
+                </div>
+                <div class="iteminfo" v-if="ordersmonth">
+                    <p>Заказов за этот месяц</p>
+                    <span v-text="ordersmonth"></span>
+                </div>
             </div>
         </div>
 
         <div class="graphs">
-            <div class="graph">
+            <div class="graph" v-if="graph1">
                 <canvas id="myChart"></canvas>
             </div>
-            <div class="graph">
+            <div class="graph" v-if="graph2">
                 <canvas id="myChart2"></canvas>
             </div>
         </div>
 
-        <h1>Топ продаж</h1>
-        <div class="itemstosale">
-            <div v-for="product in products" :key='product.id'class="product">
-                <a v-bind:href="'/product/'+product.slug" target="_blank"><img v-bind:src="product.image" alt=""></a>
-                <a v-bind:href="'/product/'+product.slug" class="product-slug" target="_blank">
-                    {{product.title}}
-                </a>
-                <div class="product-count">Продано: {{ product.count }}</div>
+        <div class="top-sales" v-if="products">
+            <h1>Топ продаж</h1>
+            <div class="itemstosale">
+                <div v-for="product in products" :key='product.id'class="product">
+                    <a v-bind:href="'/product/'+product.slug" target="_blank"><img v-bind:src="product.image" alt=""></a>
+                    <a v-bind:href="'/product/'+product.slug" class="product-slug" target="_blank">
+                        {{product.title}}
+                    </a>
+                    <div class="product-count">Продано: {{ product.count }}</div>
+                </div>
             </div>
         </div>
+
     </div>
 </script>
 
@@ -81,8 +88,18 @@
                 this.orderstoday = response.data.firstblock.orderstoday;
                 this.ordersmonth = response.data.firstblock.ordersmonth;
                 this.products = response.data.popproducts;
-                this.graph1 = response.data.graph1.split(',').map(Number);
-                this.graph2 = response.data.graph2.split(',').map(Number);
+                
+                if (response.data.graph1) {
+                    this.graph1 = response.data.graph1.split(',').map(Number);
+                } else {
+                    this.graph1 = null;
+                }
+
+                if (response.data.graph2) {
+                    this.graph2 = response.data.graph2.split(',').map(Number);
+                } else {
+                    this.graph2 = null;
+                }
 
                 this.initadmin();
 

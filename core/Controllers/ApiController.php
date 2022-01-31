@@ -1546,39 +1546,53 @@ class ApiController extends \App\Http\Controllers\Controller {
         //         GROUP BY orders_product.title
         //         ORDER BY countorders DESC LIMIT 5');
 
-		$count_popular = DB::table('orders_product')
-		->select(DB::raw("SUM(count) as countorders, slug"))
-		->orderBy('countorders', 'DESC')
-		->groupBy('slug')
-		->get();
+		$sorted_popular_products = null;
 
-		$popproducts = DB::table('products_'.Lang::get())
-		->whereIn('slug', $count_popular->pluck('slug'))
-		->get();
+		if (Schema::hasTable('orders_product') && Schema::hasTable('products_'.Lang::get())){
 
-		foreach($popproducts as &$popproduct){
-			$popproduct->count = $count_popular->where('slug', $popproduct->slug)->first()->countorders;
+			$count_popular = DB::table('orders_product')
+			->select(DB::raw("SUM(count) as countorders, slug"))
+			->orderBy('countorders', 'DESC')
+			->groupBy('slug')
+			->get();
+	
+			$popproducts = DB::table('products_'.Lang::get())
+			->whereIn('slug', $count_popular->pluck('slug'))
+			->get();
+	
+			foreach($popproducts as &$popproduct){
+				$popproduct->count = $count_popular->where('slug', $popproduct->slug)->first()->countorders;
+			}
+	
+			$popproducts = $popproducts->sortByDesc('count')->slice(0, 4);
+			
+			$sorted_popular_products = [];
+	
+			foreach ($popproducts as $key => $popproduct) {
+				$sorted_popular_products[] = $popproduct;
+			}
 		}
-
-		$popproducts = $popproducts->sortByDesc('count')->slice(0, 4);
 		
-		$sorted_popular_products = [];
-
-		foreach ($popproducts as $key => $popproduct) {
-			$sorted_popular_products[] = $popproduct;
-		}
 
         $thismonth = date("Y-m-00 00:00:00");
         $today = date("Y-m-d 00:00:00");
 
-        $alldata = [   
-			'allproducts' 	=> DB::table('products_'.Lang::get())->count(),
-			'productsale' 	=> DB::table('orders_product')->sum('count'),
-			'callbackall' 	=> DB::table('callback_horizontal')->count() + DB::table('callback_contacts')->count() + DB::table('callback_modal')->count(),
-			'allorders' 	=> DB::table('orders')->count(),
-			'orderstoday' 	=> DB::table('orders')->where('created_at','>',$today)->count(),
-			'ordersmonth' 	=> DB::table('orders')->where('created_at','>',$thismonth)->count()
-		];
+		$alldata = [];
+
+		if (Schema::hasTable('orders_product') && 
+			Schema::hasTable('products_'.Lang::get()) && 
+			Schema::hasTable('callback_horizontal') && 
+			Schema::hasTable('orders')){
+
+			$alldata = [   
+				'allproducts' 	=> DB::table('products_'.Lang::get())->count(),
+				'productsale' 	=> DB::table('orders_product')->sum('count'),
+				'callbackall' 	=> DB::table('callback_horizontal')->count() + DB::table('callback_contacts')->count() + DB::table('callback_modal')->count(),
+				'allorders' 	=> DB::table('orders')->count(),
+				'orderstoday' 	=> DB::table('orders')->where('created_at','>', $today)->count(),
+				'ordersmonth' 	=> DB::table('orders')->where('created_at','>', $thismonth)->count()
+			];
+		}
 
         $lastweek = date( "Y-m-d", strtotime( "-6 day" ));
         $weekdata = [
@@ -1591,53 +1605,66 @@ class ApiController extends \App\Http\Controllers\Controller {
             date( "Y-m-d", strtotime( "-6 day" )) 	=> 0,
         ];
 
-        $orders = DB::table('orders')
-		->where('created_at','>',$lastweek)
-		->get();
+		$graph1 = null;
 
-        foreach ($orders as &$lw){
-            $lw->created_at = explode(' ',$lw->created_at)[0];
-        }
+		if (Schema::hasTable('orders')) {
 
-        foreach ($orders as $lw){
-            $weekdata[$lw->created_at]++;
-        }
+			$orders = DB::table('orders')
+			->where('created_at','>', $lastweek)
+			->get();
 
-        $graph1 = implode(',',$weekdata);
+			foreach ($orders as &$lw){
+				$lw->created_at = explode(' ', $lw->created_at)[0];
+			}
+	
+			foreach ($orders as $lw){
+				$weekdata[$lw->created_at]++;
+			}
 
-        foreach ($weekdata as &$w){
-            $w = 0;
-        }
+			$graph1 = implode(',', $weekdata);
 
-        $callbacks = DB::table('callback_horizontal')
-		->select('created_at')
-		->where('created_at','>',$lastweek)
-		->get();
+			foreach ($weekdata as &$w){
+				$w = 0;
+			}
+		}
 
-		$callbacks = $callbacks->merge(
-			DB::table('callback_modal')
+		$graph2 = null;
+
+		if (Schema::hasTable('callback_horizontal') && 
+			Schema::hasTable('callback_modal') && 
+			Schema::hasTable('callback_contacts')) {
+
+			$callbacks = DB::table('callback_horizontal')
 			->select('created_at')
-			->where('created_at','>',$lastweek)
-			->get()
-		);
+			->where('created_at','>', $lastweek)
+			->get();
+	
+			$callbacks = $callbacks->merge(
+				DB::table('callback_modal')
+				->select('created_at')
+				->where('created_at','>', $lastweek)
+				->get()
+			);
+	
+			$callbacks = $callbacks->merge(
+				DB::table('callback_contacts')
+				->select('created_at')
+				->where('created_at','>', $lastweek)
+				->get()
+			);
 
-		$callbacks = $callbacks->merge(
-			DB::table('callback_contacts')
-			->select('created_at')
-			->where('created_at','>',$lastweek)
-			->get()
-		);
+			foreach ($callbacks as &$lw) {
+				$lw->created_at = explode(' ', $lw->created_at)[0];
+			}
+	
+			foreach ($callbacks as $lw) {
+				$weekdata[$lw->created_at]++;
+			}
+	
+			$graph2 = implode(',', $weekdata);
+		}
 
 		
-        foreach ($callbacks as &$lw) {
-            $lw->created_at = explode(' ',$lw->created_at)[0];
-        }
-
-        foreach ($callbacks as $lw) {
-            $weekdata[$lw->created_at]++;
-        }
-
-        $graph2 = implode(',',$weekdata);
 
 		return $this->response([
 			'firstblock' => $alldata,
