@@ -89,6 +89,18 @@ class Lang {
 		return Lang::$lang;
 	}
 
+	public static function get_main () {
+
+		if (empty(Lang::$langs)) {
+
+			return DB::table('languages')->where('main_lang', 1)
+			->first()->tag;
+		}
+
+		return Lang::$langs->where('main_lang', 1)->first()->tag;
+		
+	}
+
 	public static function get_langs () {
 
 		if (count(Lang::$langs) == 0) {

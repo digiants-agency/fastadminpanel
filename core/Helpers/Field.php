@@ -15,6 +15,10 @@ class Field {
 		return str_replace("[", '<span>', str_replace(']', '</span>', $str));
 	}
 
+	public static function content_images ($str) {
+		return str_replace("[images]", '<div class="content-images">', str_replace('[/images]', '</div>', $str));
+	}
+
 	public static function phone ($phone) {
 		return preg_replace('/[^0-9\+]/', '', $phone);
 	}
