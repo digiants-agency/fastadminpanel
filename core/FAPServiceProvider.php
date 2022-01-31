@@ -71,6 +71,7 @@ class FAPServiceProvider extends ServiceProvider
 			$loader->alias('Field', \App\FastAdminPanel\Helpers\Field::class);
 			$loader->alias('Platform', \App\FastAdminPanel\Helpers\Platform::class);
 			$loader->alias('Convertor', \App\FastAdminPanel\Helpers\Convertor::class);
+			$loader->alias('SEO', \App\FastAdminPanel\Helpers\SEO::class);
 		});
 	}
 }
