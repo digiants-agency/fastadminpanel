@@ -78,6 +78,10 @@ class TemplateComponents extends Template{
 		);
 
 		//components
+		$this->template_add_folder(base_path('/app/View'));
+		$this->template_add_folder(base_path('/app/View/Components'));
+		$this->template_add_folder(base_path('/app/View/Components/Inc'));
+
 		copy(
 			$this->template_path_package("/Components/Layout.php"),
 			base_path("/app/View/Components/Layout.php")
