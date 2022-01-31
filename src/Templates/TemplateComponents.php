@@ -6,7 +6,7 @@ class TemplateComponents extends Template{
 
 	protected function template_path_package ($path) {
 
-		return base_path("/vendor/sv-digiants/fastadminpanel/templates/components" . $path);
+		return base_path("vendor/sv-digiants/fastadminpanel/templates/components" . $path);
 	}
 
 	public function import () {
