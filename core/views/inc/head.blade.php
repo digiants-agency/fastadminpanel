@@ -4,15 +4,18 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="robots" content="noindex" />
 
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap&subset=cyrillic" rel="stylesheet">
 <link href="/vendor/fastadminpanel/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="/vendor/fastadminpanel/css/style.css" rel="stylesheet">
+
 <link href="/vendor/fastadminpanel/css/vue-prism-editor.css" rel="stylesheet">
 <link href="/vendor/fastadminpanel/css/prism-theme.css" rel="stylesheet">
 
 <script src="/vendor/fastadminpanel/js/vue.js"></script>
 <script src="/vendor/fastadminpanel/js/vue-router.js"></script>
 <script src="/vendor/fastadminpanel/js/vue-prism-editor.js"></script>
+
+<script src="/vendor/fastadminpanel/vue-select/dist/vue-select.js"></script>
+<link rel="stylesheet" href="/vendor/fastadminpanel/vue-select/dist/vue-select.css">
+
 <script src="/vendor/fastadminpanel/js/prism.js"></script>
 <script src="/vendor/fastadminpanel/js/jquery.js"></script>  <!-- for crutch purpose only -->
 <script src="/vendor/fastadminpanel/js/script.js"></script>
@@ -29,5 +32,12 @@
 <script src="/vendor/fastadminpanel/js/ckeditor-MyCustomUploadAdapterPlugin.js"></script>
 <script src="/vendor/fastadminpanel/ckeditor/ckeditor.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>
+<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor.css" />
+
+@if (Agent::isMobile() && !Agent::isTablet())
+	<link rel="stylesheet" href="<?php include 'vendor/fastadminpanel/css/converter-mobile.php' ?>">
+@else
+	<link rel="stylesheet" href="<?php include 'vendor/fastadminpanel/css/converter-desktop.php' ?>">
+@endif
 
 <title>Admin panel</title>

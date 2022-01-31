@@ -1,12 +1,7 @@
 @extends('fastadminpanel.layouts.app')
 
 @section('content')
-<div class="topbar">
-	<div>Admin panel</div>
-	<div class="langs">
-		<div class="langs-elm" :class="{'active': lang.is_active}" v-for="lang in languages" v-text="lang.tag" v-on:click="set_language(lang)"></div>
-	</div>
-</div>
+
 <main>
 	<template-sidebar :is_dev="is_dev" :menu="menu" :dropdown="dropdown"></template-sidebar>
 	<div class="content">
@@ -20,9 +15,11 @@
 	var languages = JSON.parse('{!! $languages !!}')
 	var ckeditor_path = '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}"; ?>/admin/upload-image'
 </script>
+
 @foreach ($custom_components as $custom_component)
 	@include($custom_component['path'])
 @endforeach
+
 @include('fastadminpanel.components.dropdown')
 @include('fastadminpanel.components.fields.checkbox')
 @include('fastadminpanel.components.fields.ckeditor')
@@ -47,7 +44,9 @@
 @include('fastadminpanel.components.edit')
 @include('fastadminpanel.components.main')
 @include('fastadminpanel.components.index')
+
 <script>
+
 	const router = new VueRouter({
 		mode: 'history',
 		routes: [
@@ -95,6 +94,8 @@
 	})
 	
 
+	Vue.component("v-select", VueSelect.VueSelect);
+	
 	var app = new Vue({
 		router,
 		el: '#app',
