@@ -27,15 +27,17 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_public(){
 
-		$this->copy_folder($this->shop_path_package("/public/css/"), public_path('/css/'));
+		$this->copy_folder($this->shop_path_package("/public/"), public_path());
 
-		$this->copy_folder($this->shop_path_package("/public/js/"), public_path('/js/'));
+		// $this->copy_folder($this->shop_path_package("/public/css/"), public_path('/css/'));
 
-		$this->copy_folder($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
+		// $this->copy_folder($this->shop_path_package("/public/js/"), public_path('/js/'));
 
-		$this->copy_folder($this->shop_path_package('/public/images/'), public_path('/images/'));
+		// $this->copy_folder($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
 
-		$this->copy_folder($this->shop_path_package('/public/photos/'), public_path('/photos/'));
+		// $this->copy_folder($this->shop_path_package('/public/images/'), public_path('/images/'));
+
+		// $this->copy_folder($this->shop_path_package('/public/photos/'), public_path('/photos/'));
 
 	}
 
