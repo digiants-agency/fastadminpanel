@@ -9,7 +9,7 @@ class ShopTemplateBahroma extends ShopTemplate{
 
     private function shop_path_package ($path) {
 
-		return base_path("/vendor/sv-digiants/fastadminpanel/shoptemplate" . $path);
+		return base_path("/vendor/sv-digiants/fastadminpanel/templates/shop/Bahroma" . $path);
 	}
 
     public function import_default_shop(){
