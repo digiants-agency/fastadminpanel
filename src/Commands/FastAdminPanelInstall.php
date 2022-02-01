@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateBahroma;
+use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateDTG;
 use Digiants\FastAdminPanel\Templates\TemplateComponents;
 use Digiants\FastAdminPanel\Templates\TemplateDefault;
 
@@ -45,8 +46,8 @@ class FastAdminPanelInstall extends Command {
 		$this->add_roles();
 		$this->add_user();
 		$this->add_menu();
-		$this->import_template();
-		$this->import_shop();
+		$type_template = $this->import_template();
+		$this->import_shop($type_template);
 	}
 
 	private function template_add_folder ($path) {
@@ -147,6 +148,8 @@ class FastAdminPanelInstall extends Command {
 
 		$answer = $this->ask('Import template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController (Y/n)?');
 
+		$type = '';
+
 		if ($answer != 'n') {
 
 			$type = $this->choice('Which type of template do you want?', [
@@ -163,19 +166,32 @@ class FastAdminPanelInstall extends Command {
 			$template->import();
 			
 		}
+
+		return $type;
 	}
 
-	private function import_shop(){
+	private function import_shop($type){
+
+		if (empty($type))
+			return;
 
 		$answer = $this->ask('Import shop template (if previous been yes) (Y/n)?');
 
 		if ($answer != 'n') {
 
-			$shop_template = new ShopTemplateBahroma();
+			if ($type == 'Default'){
+				$shop_template = new ShopTemplateBahroma();
 
-			$status = $shop_template->import_default_shop();
+				$status = $shop_template->import_default_shop();
+	
+			} else {
+				$shop_template = new ShopTemplateDTG();
 
-			$this->info($status);
+				$status = $shop_template->import_default_shop();
+	
+			}
+
+			$this->info($status);	
 		}
 	}
 

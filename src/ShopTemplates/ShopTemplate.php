@@ -10,4 +10,9 @@ class ShopTemplate {
 			mkdir($path, 0777, true);
 		}
 	}
+
+	protected function folder_files($dir)
+	{
+		return array_values(array_diff(scandir($dir), array('..', '.')));
+	}
 }
