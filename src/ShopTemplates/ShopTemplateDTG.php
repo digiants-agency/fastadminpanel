@@ -15,12 +15,11 @@ class ShopTemplateDTG extends ShopTemplate{
     public function import_default_shop(){
 
         $this->import_public();
-
+		$this->import_routes();
 
 
         // routes
 
-		// $this->copy_files($this->shop_path_package("/web.php"), base_path("/routes/web.php"));
 
         // $views = [
         //     'layouts/app.blade.php',
@@ -137,24 +136,28 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_public(){
 
-		//copy and change styles
+		$this->copy_folder($this->shop_path_package("/public/css/"), public_path('/css/'));
 
-		$this->copy_files($this->shop_path_package("/public/css/"), public_path('/css/'));
+		$this->copy_folder($this->shop_path_package("/public/js/"), public_path('/js/'));
 
-		$this->copy_files($this->shop_path_package("/public/js/"), public_path('/js/'));
+		$this->copy_folder($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
 
-		$this->copy_files($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
+		$this->copy_folder($this->shop_path_package('/public/images/'), public_path('/images/'));
 
-		$this->copy_files($this->shop_path_package('/public/images/'), public_path('/images/'));
-
-		$this->copy_files($this->shop_path_package('/public/photos/'), public_path('/photos/'));
+		$this->copy_folder($this->shop_path_package('/public/photos/'), public_path('/photos/'));
 
 	}
 
-	public function copy_files($from, $to) {
+	private function import_routes(){
+
+		$this->copy_folder($this->shop_path_package("/routes/"), base_path("/routes/"));
+
+	}
+
+	public function copy_folder($from, $to) {
 
 		$this->template_add_folder($to);
-		var_dump($to);
+
 		if ($from[strlen($from) - 1] != '/')
 			$from .= '/';
 		
