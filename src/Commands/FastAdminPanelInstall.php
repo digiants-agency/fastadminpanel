@@ -182,12 +182,12 @@ class FastAdminPanelInstall extends Command {
 			if ($type == 'Default'){
 				$shop_template = new ShopTemplateBahroma();
 
-				$status = $shop_template->import_default_shop();
+				$status = $shop_template->import_shop();
 	
 			} else {
 				$shop_template = new ShopTemplateDTG();
 
-				$status = $shop_template->import_default_shop();
+				$status = $shop_template->import_shop();
 	
 			}
 

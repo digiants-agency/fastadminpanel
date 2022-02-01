@@ -12,7 +12,7 @@ class ShopTemplateDTG extends ShopTemplate{
 		return base_path("/vendor/sv-digiants/fastadminpanel/templates/shop/DTG" . $path);
 	}
 
-    public function import_default_shop(){
+    public function import_shop(){
 
         $this->import_public();
 		$this->import_routes();
@@ -26,37 +26,19 @@ class ShopTemplateDTG extends ShopTemplate{
 	}
 
 	private function import_public(){
-
 		$this->copy_folder($this->shop_path_package("/public/"), public_path());
-
-		// $this->copy_folder($this->shop_path_package("/public/css/"), public_path('/css/'));
-
-		// $this->copy_folder($this->shop_path_package("/public/js/"), public_path('/js/'));
-
-		// $this->copy_folder($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
-
-		// $this->copy_folder($this->shop_path_package('/public/images/'), public_path('/images/'));
-
-		// $this->copy_folder($this->shop_path_package('/public/photos/'), public_path('/photos/'));
-
 	}
 
 	private function import_routes(){
-
 		$this->copy_folder($this->shop_path_package("/routes/"), base_path("/routes/"));
-
 	}
 
 	private function import_app(){
-
 		$this->copy_folder($this->shop_path_package("/app/"), base_path("/app/"));
-
 	}
 
 	private function import_resources(){
-
 		$this->copy_folder($this->shop_path_package("/resources/"), base_path("/resources/"));
-
 	}
 
 	private function create_db_shop(){

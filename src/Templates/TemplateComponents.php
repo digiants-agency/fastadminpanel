@@ -21,8 +21,6 @@ class TemplateComponents extends Template{
 		$css = [
 			'desktop-src.css',
 			'mobile-src.css',
-			'desktop.css',
-			'mobile.css',
 		];
 		foreach ($css as $path) {
 			copy(
