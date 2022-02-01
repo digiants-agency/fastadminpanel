@@ -207,6 +207,12 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	public function copy_files($from, $to) {
 
+		if ($from[strlen($from) - 1] != '/')
+			$from .= '/';
+		
+		if ($to[strlen($to) - 1] != '/')
+			$to .= '/';
+
 		$this->template_add_folder($to);
 
 		$files = $this->folder_files($from);
