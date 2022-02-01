@@ -169,7 +169,7 @@ class ShopTemplateDTG extends ShopTemplate{
 		foreach ($files as $file) {
 
 			if (is_dir($from.$file)) {
-				$this->copy_files($from.$file, $to.$file);
+				$this->copy_folder($from.$file, $to.$file);
 			} else {
 
 				if (file_exists($to.$file))
