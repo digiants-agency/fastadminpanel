@@ -138,7 +138,7 @@ class ShopTemplateDTG extends ShopTemplate{
 	private function import_public(){
 
 		//copy and change styles
-		
+
 		$this->copy_files($this->shop_path_package("/public/css/"), public_path('/css/'));
 
 		$this->copy_files($this->shop_path_package("/public/js/"), public_path('/js/'));
@@ -153,13 +153,13 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	public function copy_files($from, $to) {
 
+		$this->template_add_folder($to);
+
 		if ($from[strlen($from) - 1] != '/')
 			$from .= '/';
 		
 		if ($to[strlen($to) - 1] != '/')
 			$to .= '/';
-
-		$this->template_add_folder($to);
 
 		$files = $this->folder_files($from);
 
