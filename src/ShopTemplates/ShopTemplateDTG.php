@@ -19,6 +19,8 @@ class ShopTemplateDTG extends ShopTemplate{
 		$this->import_app();
 		$this->import_resources();
 
+		$this->import_db();
+
         // $this->create_db_shop();
         // $this->copyshopdata();
 
@@ -39,6 +41,13 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_resources(){
 		$this->copy_folder($this->shop_path_package("/resources/"), base_path("/resources/"));
+	}
+
+	private function import_db(){
+
+		$sql = file_get_contents($this->shop_path_package("/db.sql"));
+
+		DB::unprepared($sql);
 	}
 
 	private function create_db_shop(){
