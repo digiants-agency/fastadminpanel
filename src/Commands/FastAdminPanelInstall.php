@@ -188,7 +188,7 @@ class FastAdminPanelInstall extends Command {
 				$table->increments('id');
 				$table->string('title')->default('');
 				$table->integer('sort')->default(0);
-				$table->string('icon')->default('');
+				$table->string('icon')->default('')->nullable();
 			});
 		} else {
 			$this->info('Dropdown table has already exist!');
@@ -233,7 +233,7 @@ class FastAdminPanelInstall extends Command {
 				$table->integer('is_soft_delete');
 				$table->integer('sort');
 				$table->integer('parent')->default(0);
-				$table->string('icon')->default('');
+				$table->string('icon')->default('')->nullable();
 				$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 				$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 			});
