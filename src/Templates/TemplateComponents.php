@@ -19,8 +19,6 @@ class TemplateComponents extends Template{
 
 
 		$css = [
-			'converter-desktop.php', 
-			'converter-mobile.php',
 			'desktop-src.css',
 			'mobile-src.css',
 			'desktop.css',
