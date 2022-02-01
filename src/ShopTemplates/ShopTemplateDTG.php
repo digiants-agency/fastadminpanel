@@ -20,7 +20,7 @@ class ShopTemplateDTG extends ShopTemplate{
 
         // routes
 
-		$this->copy_files($this->shop_path_package("/web.php"), base_path("/routes/web.php"));
+		// $this->copy_files($this->shop_path_package("/web.php"), base_path("/routes/web.php"));
 
         // $views = [
         //     'layouts/app.blade.php',
@@ -154,7 +154,7 @@ class ShopTemplateDTG extends ShopTemplate{
 	public function copy_files($from, $to) {
 
 		$this->template_add_folder($to);
-
+		var_dump($to);
 		if ($from[strlen($from) - 1] != '/')
 			$from .= '/';
 		
