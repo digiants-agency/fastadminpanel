@@ -17,117 +17,7 @@ class ShopTemplateDTG extends ShopTemplate{
         $this->import_public();
 		$this->import_routes();
 		$this->import_app();
-
-
-        // routes
-
-
-        // $views = [
-        //     'layouts/app.blade.php',
-        //     'inc/footer.blade.php',
-        //     'inc/header.blade.php',
-        //     'inc/horizontal.blade.php',
-        //     'inc/salebanner.blade.php',
-        //     'pages/about.blade.php',
-        //     'pages/article.blade.php',
-        //     'pages/blog.blade.php',
-        //     'pages/catalog.blade.php',
-        //     'pages/contact.blade.php',
-        //     'pages/delandpay.blade.php',
-        //     'pages/index.blade.php',
-        //     'pages/order.blade.php',
-        //     'pages/product.blade.php',
-        //     'pages/search.blade.php',
-        //     'pages/successorder.blade.php',
-        //     'pages/userinfo.blade.php',
-        //     'fastadminpanel/components/custom/vigruzka.php',
-        // ];
-
-        // foreach ($views as $path) {
-        //     if (file_exists(base_path("/views/$path")))
-        //         unlink(base_path("/views/$path"));
-
-        //     copy(
-        //         $this->shop_path_package("/views/$path"),
-        //         base_path("/resources/views/$path")
-        //     );
-        // }
-
-        // $shop = [
-        //     'Shop/Cart.php',
-        //     'Shop/CartDB.php',
-        //     'Shop/CartSession.php',
-        //     'Shop/Saved.php',
-        //     'CartHandler.php',
-        //     'SavedHandler.php',
-        // ];
-
-        // mkdir(base_path("/app/Shop"));
-        // foreach ($shop as $path) {
-        //     if (file_exists(base_path("/app/$path")))
-        //         unlink(base_path("/app/$path"));
-
-        //     copy(
-        //         $this->shop_path_package("/$path"),
-        //         base_path("/app/$path")
-        //     );
-        // }
-		
-
-        // $controllers = [
-        //     'BlogController.php',
-        //     'CartController.php',
-        //     'CatalogController.php',
-        //     'Controller.php',
-        //     'PageController.php',
-        //     'ProductController.php',
-        //     'SearchController.php',
-        //     'SitemapController.php',
-        //     'UserController.php',
-        // ];
-
-        // foreach ($controllers as $path) {
-        //     if (file_exists(base_path("/Controllers/$path")))
-        //         unlink(base_path("/app/Http/Controllers/$path"));
-
-        //     copy(
-        //         $this->shop_path_package("/Controllers/$path"),
-        //         base_path("/app/Http/Controllers/$path")
-        //     );
-        // }
-
-        // if (file_exists(base_path("/app/Providers/AppServiceProvider.php")))
-        //     unlink(base_path("/app/Providers/AppServiceProvider.php"));
-
-        // copy(
-        //     $this->shop_path_package("/AppServiceProvider.php"),
-        //     base_path("/app/Providers/AppServiceProvider.php")
-        // );
-
-        // $this->template_add_folder(public_path('/images'));
-
-        // $images = [
-        //     'about.png',
-        //     'aboutbanner.jpg',
-        //     'abouticon.svg',
-        //     'arrow.svg',
-        //     'banner.jpg',
-        //     'category.jpg',
-        //     'history.jpg',
-        //     'logo.svg',
-        //     'lupa.png',
-        //     'news.jpg',
-        //     'producslider.jpg',
-        //     'product.jpg',
-        //     'sale.png',
-        // ];
-
-        // foreach ($images as $path) {
-        //     copy(
-        //         $this->shop_path_package("/images/$path"),
-        //         public_path("/images/$path")
-        //     );
-        // }
+		$this->import_resources();
 
         // $this->create_db_shop();
         // $this->copyshopdata();
@@ -158,6 +48,12 @@ class ShopTemplateDTG extends ShopTemplate{
 	private function import_app(){
 
 		$this->copy_folder($this->shop_path_package("/app/"), base_path("/app/"));
+
+	}
+
+	private function import_resources(){
+
+		$this->copy_folder($this->shop_path_package("/resources/"), base_path("/resources/"));
 
 	}
 
