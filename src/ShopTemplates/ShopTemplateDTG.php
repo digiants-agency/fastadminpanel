@@ -221,12 +221,12 @@ class ShopTemplateDTG extends ShopTemplate{
 
 			if (is_dir($from.$file)) {
 				$this->copy_files($from.$file, $to.$file);
+			} else {
+				copy(
+					$from.$file,
+					$to.$file
+				);
 			}
-
-			copy(
-				$from.$file,
-				$to.$file
-			);
 		}
 
 	}
