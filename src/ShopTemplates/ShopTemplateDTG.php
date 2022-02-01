@@ -16,6 +16,12 @@ class ShopTemplateDTG extends ShopTemplate{
 
         $this->import_public();
 
+
+
+        // routes
+
+		$this->copy_files($this->shop_path_package("/web.php"), base_path("/routes/web.php"));
+
         // $views = [
         //     'layouts/app.blade.php',
         //     'inc/footer.blade.php',
@@ -66,14 +72,7 @@ class ShopTemplateDTG extends ShopTemplate{
         //         base_path("/app/$path")
         //     );
         // }
-        // // routes
-        // if (file_exists(base_path("/routes/web.php")))
-        //     unlink(base_path("/routes/web.php"));
-            
-        // copy(
-        //     $this->shop_path_package("/web.php"),
-        //     base_path("/routes/web.php")
-        // );
+		
 
         // $controllers = [
         //     'BlogController.php',
@@ -139,69 +138,16 @@ class ShopTemplateDTG extends ShopTemplate{
 	private function import_public(){
 
 		//copy and change styles
-
-        if (file_exists(public_path("/css/desktop-src.css")))
-            unlink(public_path("/css/desktop-src.css"));
-        if (file_exists(public_path("/css/mobile-src.css")))
-            unlink(public_path("/css/mobile-src.css"));
-
-        // copy(
-        //     $this->shop_path_package("/public/css/desktop-src.css"),
-        //     public_path("/css/desktop-src.css"));
-
-        // copy(
-        //     $this->shop_path_package("/public/css/mobile-src.css"),
-        //     public_path("/css/mobile-src.css"));
-
-		// $css_files = $this->folder_files($this->shop_path_package('/public/css/cache'));
-
-		// $this->template_add_folder(public_path('/css/cache'));
-
-		// foreach ($css_files as $css_file) {
-		// 	copy(
-		// 		$this->shop_path_package("/public/css/cache/".$css_file),
-		// 		public_path("/css/cache/".$css_file));
-		// }
-
+		
 		$this->copy_files($this->shop_path_package("/public/css/"), public_path('/css/'));
-
-
-		//copy and change js
-
-		// $this->template_add_folder(public_path('/js'));
-		// $this->template_add_folder(public_path('/js/cache'));
-
-		// copy(
-        //     $this->shop_path_package("/public/js/priceslider.js"),
-        //     public_path("/js/priceslider.js"));
-
-        // copy(
-        //     $this->shop_path_package("/public/js/slider.js"),
-        //     public_path("/js/slider.js"));
-
-		// $js_files = $this->folder_files($this->shop_path_package('/public/js/cache'));
-		// foreach ($js_files as $js_file) {
-		// 	copy(
-		// 		$this->shop_path_package("/public/js/cache/".$js_file),
-		// 		public_path("/js/cache/".$js_file));
-		// }
 
 		$this->copy_files($this->shop_path_package("/public/js/"), public_path('/js/'));
 
-		//copy fonts
-
-		// $this->template_add_folder(public_path('/fonts'));
-		
-		// $fonts_files = $this->folder_files($this->shop_path_package('/public/fonts'));
-
-		// foreach ($fonts_files as $fonts_file) {
-		// 	copy(
-		// 		$this->shop_path_package('/public/fonts/'.$fonts_file),
-		// 		public_path('/fonts/'.$js_file));
-		// }
-
 		$this->copy_files($this->shop_path_package('/public/fonts/'), public_path('/fonts/'));
 
+		$this->copy_files($this->shop_path_package('/public/images/'), public_path('/images/'));
+
+		$this->copy_files($this->shop_path_package('/public/photos/'), public_path('/photos/'));
 
 	}
 
@@ -222,6 +168,10 @@ class ShopTemplateDTG extends ShopTemplate{
 			if (is_dir($from.$file)) {
 				$this->copy_files($from.$file, $to.$file);
 			} else {
+
+				if (file_exists($to.$file))
+            		unlink($to.$file);
+
 				copy(
 					$from.$file,
 					$to.$file
