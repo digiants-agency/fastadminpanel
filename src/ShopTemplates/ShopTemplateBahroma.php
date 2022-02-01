@@ -51,7 +51,6 @@ class ShopTemplateBahroma extends ShopTemplate{
             'pages/search.blade.php',
             'pages/successorder.blade.php',
             'pages/userinfo.blade.php',
-            'fastadminpanel/components/main.php',
             'fastadminpanel/components/custom/vigruzka.php',
         ];
 
@@ -98,7 +97,7 @@ class ShopTemplateBahroma extends ShopTemplate{
             'CartController.php',
             'CatalogController.php',
             'Controller.php',
-            'PagesController.php',
+            'PageController.php',
             'ProductController.php',
             'SearchController.php',
             'SitemapController.php',

@@ -23,12 +23,12 @@ Route::group([
 	]
 ], function(){
 
-	Route::get('/', 'PagesController@index');
-    Route::get('/about', 'PagesController@about');
-    Route::get('/contact', 'PagesController@contact');
-    Route::get('/delandpay', 'PagesController@delandpay');
-    Route::get('/successorder', 'PagesController@successorder');
-    Route::get('/privacypolicy', 'PagesController@privacypolicy');
+	Route::get('/', 'PageController@index');
+    Route::get('/about', 'PageController@about');
+    Route::get('/contact', 'PageController@contact');
+    Route::get('/delandpay', 'PageController@delandpay');
+    Route::get('/successorder', 'PageController@successorder');
+    Route::get('/privacypolicy', 'PageController@privacypolicy');
     Route::get('/page/{slug}', 'PageController@defaultpage');
 
     Route::get('/search', 'SearchController@index');
@@ -40,8 +40,6 @@ Route::group([
 
     Route::get('/products/{slug}', 'CatalogController@view')->where('slug', '.*');
     Route::get('/products', 'CatalogController@index');
-
-    Route::any('/admin/getdata', 'PagesController@getadmindata');
 
     Route::get('/order', 'CartController@order');
     Route::post('/cart/order', 'CartController@createorder');
