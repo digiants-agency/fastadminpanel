@@ -60,8 +60,8 @@ class TemplateDefault extends Template{
 			base_path("/app/Http/Controllers/SitemapController.php")
 		);
 		copy(
-			$this->template_path_package("/PagesController.php"),
-			base_path("/app/Http/Controllers/PagesController.php")
+			$this->template_path_package("/PageController.php"),
+			base_path("/app/Http/Controllers/PageController.php")
 		);
 		if (file_exists(base_path("/app/Http/Controllers/Controller.php")))
 			unlink(base_path("/app/Http/Controllers/Controller.php"));
