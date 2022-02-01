@@ -1613,18 +1613,21 @@ class ApiController extends \App\Http\Controllers\Controller {
 			->where('created_at','>', $lastweek)
 			->get();
 
-			foreach ($orders as &$lw){
-				$lw->created_at = explode(' ', $lw->created_at)[0];
-			}
-	
-			foreach ($orders as $lw){
-				$weekdata[$lw->created_at]++;
-			}
+			if ($orders->count()){
 
-			$graph1 = implode(',', $weekdata);
+				foreach ($orders as &$lw){
+					$lw->created_at = explode(' ', $lw->created_at)[0];
+				}
+		
+				foreach ($orders as $lw){
+					$weekdata[$lw->created_at]++;
+				}
 
-			foreach ($weekdata as &$w){
-				$w = 0;
+				$graph1 = implode(',', $weekdata);
+
+				foreach ($weekdata as &$w){
+					$w = 0;
+				}
 			}
 		}
 
@@ -1653,15 +1656,18 @@ class ApiController extends \App\Http\Controllers\Controller {
 				->get()
 			);
 
-			foreach ($callbacks as &$lw) {
-				$lw->created_at = explode(' ', $lw->created_at)[0];
+			if ($callbacks->count()){
+
+				foreach ($callbacks as &$lw) {
+					$lw->created_at = explode(' ', $lw->created_at)[0];
+				}
+		
+				foreach ($callbacks as $lw) {
+					$weekdata[$lw->created_at]++;
+				}
+		
+				$graph2 = implode(',', $weekdata);
 			}
-	
-			foreach ($callbacks as $lw) {
-				$weekdata[$lw->created_at]++;
-			}
-	
-			$graph2 = implode(',', $weekdata);
 		}
 
 		
