@@ -29,13 +29,13 @@ class ShopTemplateDTG extends ShopTemplate{
             $this->shop_path_package("/public/css/mobile-src.css"),
             public_path("/css/mobile-src.css"));
 
-		$css_files = $this->folder_files($this->shop_path_package('/public/css/cahce'));
+		$css_files = $this->folder_files($this->shop_path_package('/public/css/cache'));
 
 		$this->template_add_folder(public_path('/css/cache'));
 
 		foreach ($css_files as $css_file) {
 			copy(
-				$this->shop_path_package("/public/css/cahce/".$css_file),
+				$this->shop_path_package("/public/css/cache/".$css_file),
 				public_path("/css/cache/".$css_file));
 		}
 
