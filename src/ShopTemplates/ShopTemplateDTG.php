@@ -4,6 +4,7 @@ namespace Digiants\FastAdminPanel\ShopTemplates;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Lang;
 
 class ShopTemplateDTG extends ShopTemplate{
 
@@ -42,9 +43,13 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_db(){
 
+		$langs = Lang::all();
+
 		$sql = file_get_contents($this->shop_path_package("/db.sql"));
 
 		DB::unprepared($sql);
+
+		var_dump($langs);
 	}
 
 }
