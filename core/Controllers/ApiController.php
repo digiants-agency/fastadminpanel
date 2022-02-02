@@ -1419,6 +1419,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field->value = [];
 
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
+
 				} else {
 
 					$field_title = $field->db_title;
@@ -1441,6 +1448,14 @@ class ApiController extends \App\Http\Controllers\Controller {
 				if ($input['id'] == 0) {
 
 					$field->value = 0;
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
+
 				} else {
 
 					$field_title = $field->db_title;
@@ -1460,6 +1475,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field->value = date('Y-m-d');
 
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
+
 				} else {
 
 					$field_title = $field->db_title;
@@ -1478,6 +1500,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					$field->value = date('Y-m-d H:i');
 					
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
+
 				} else {
 
 					$field_title = $field->db_title;
@@ -1495,6 +1524,14 @@ class ApiController extends \App\Http\Controllers\Controller {
 				if ($input['id'] == 0) {
 
 					$field->value = '';
+
+					preg_match('/{(.*)}/', $field->title, $remark);
+					if ($remark){
+
+						$field->title  = str_replace($remark[0], '', $field->title);
+						$field->remark = $remark[1];
+					}
+					
 				} else {
 
 					$field_title = $field->db_title;
