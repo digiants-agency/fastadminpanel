@@ -110,6 +110,11 @@ class FastAdminPanelInstall extends Command {
 		);
 
 		$this->publish_parts_folder(
+			$this->path_package('/core/Models'),
+			base_path('/app/FastAdminPanel/Models')
+		);
+
+		$this->publish_parts_folder(
 			$this->path_package('/core/views'),
 			base_path('/resources/views/fastadminpanel')
 		);
