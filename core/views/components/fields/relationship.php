@@ -4,7 +4,12 @@
 		<div v-if="field.relationship_count == 'editable'">
 			<div class="editable-blocks">
 				<div class="mb-15 relationship_block" v-for="(group, i) in field.value" :class="{active: table_name == 'orders'}">
-					<div class="reletionship_title" v-text="group.fields[0].value" v-if="table_name != 'orders'" @click="e => e.target.parentElement.classList.toggle('active')"></div>
+					
+					<div class="reletionship_title" 
+						v-text="group.fields[0].relationship_count != 'single' ? group.fields[0].value : group.fields[0].value_title" 
+						v-if="table_name != 'orders'" 
+						@click="e => e.target.parentElement.classList.toggle('active')"
+					></div>
 
 					<div class="btn btn-editable-delete btn-delete btn-danger btn-small" v-on:click="field.value.splice(i, 1)" v-if="table_name != 'orders'">
 						<svg class="btn-svg" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">

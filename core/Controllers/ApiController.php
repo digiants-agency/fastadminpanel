@@ -1299,6 +1299,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 							$field_title = 'id_' . $field->relationship_table_name;
 							$field->value = $instance->$field_title;
+							$field->value_title = $field->values->where('id', $field->value)->first()->title;
 						}
 
 					} else if ($field->relationship_count == 'many') {
