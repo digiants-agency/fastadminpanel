@@ -2543,17 +2543,6 @@ ADD `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
 ADD `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL;
 
 --
--- Дамп даних таблиці `users`
---
-
-INSERT INTO `users` (`id`, `name`, `id_roles`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `surname`, `login`, `phone`, `code`) VALUES
-(1, 'Анатолий', 1, 'pa@digiants.com.ua', NULL, '$2y$10$cmOWSEOU4L/L1dyzzdxdaORzd4m9oWc14LR4hZzk8l3VHQg7jRXAS', 'TDT4EnSSWilZIW3wYedzMYIaopugg81TMtwCmSxkvP3q0BVctZ6nPWW26G4D', '2021-12-21 06:45:13', '2022-01-31 08:12:19', NULL, 'Проботюк', 'padigiants', '+12345678', ''),
-(4, 'test', 2, 'test@test.test', NULL, '$2y$10$mm7xLhgW1lUKrO4yf0TkXeHbxZqhKjYdw9mnsY2tOUe8lXPwG7o4.', NULL, '2022-01-21 13:39:04', '2022-01-27 11:24:07', NULL, 'test', 'test2', '12345', '2990'),
-(6, 'Анатолій Проботюк', 2, 'tolikshift@gmail.com', NULL, '$2y$10$aGhk5Odudl9OVfZ6QIsaaeQftN3fWub0yItBsgVLQXfiFr6nD1mjy', NULL, '2022-01-27 11:33:27', '2022-01-27 13:42:51', NULL, '', '', '+380689277992', ''),
-(7, 'Alex test', 2, 'test1@test1.test1', NULL, '$2y$10$vLK7khHKG8B9mnO0tevEj.YdvTxB8IBdl0elvnHCvPwPPZTMhtPNe', NULL, '2022-01-28 11:23:35', '2022-01-28 11:23:35', NULL, '', '', '+380953308060', ''),
-(8, 'Маяда', 2, 'mh@digiants.com.ua', NULL, '$2y$10$9pbTRMoQqe6WnzbR4hZIQe7b3rVW2LecMShwWnVQAMQCFFabjDwcC', NULL, '2022-01-28 13:14:54', '2022-01-28 13:14:54', NULL, '', '', '38073', '');
-
---
 -- Індекси збережених таблиць
 --
 
