@@ -1844,7 +1844,7 @@ ALTER TABLE `characteristic_ru`
 -- Індекси таблиці `delivery_ru`
 --
 ALTER TABLE `delivery_ru`
-  ADD PRIMARY KEY (`id`)
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Індекси таблиці `dropdown`
