@@ -102,6 +102,20 @@ class Lang {
 		
 	}
 
+	public static function change_main($to) {
+
+		DB::table('languages')
+		->update([
+			'main_lang'	=> 0,
+		]);
+
+		DB::table('languages')->where('tag', $to)
+		->update([
+			'main_lang'	=> 1,
+		]);
+		
+	}
+
 	public static function get_langs () {
 
 		if (count(Lang::$langs) == 0) {
