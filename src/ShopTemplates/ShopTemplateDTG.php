@@ -53,21 +53,11 @@ class ShopTemplateDTG extends ShopTemplate{
 
 		$langs_old = DB::table('languages')->get()->pluck('tag')->all();
 
-		DB::table('languages')->update([
-			'main_lang'	=> 0,
-		]);
-
 		foreach ($langs_new as $lang_new) {
 
 			if (!in_array($lang_new->tag, $langs_old)) {
 				
-				$main_lang = false;
-				
-				if ($lang_new->main_lang == 1){
-					$main_lang = true;
-				}
-
-				Lang::add($lang_new->tag, $main_lang);
+				Lang::add($lang_new->tag);
 			}
 		}
 
