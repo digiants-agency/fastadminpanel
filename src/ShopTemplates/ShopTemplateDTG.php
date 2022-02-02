@@ -43,13 +43,39 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_db(){
 
-		$langs = DB::table('languages')->get();
+		$langs_new = DB::table('languages')->get();
 
 		$sql = file_get_contents($this->shop_path_package("/db.sql"));
 
 		DB::unprepared($sql);
 
-		var_dump($langs);
+		$langs_old = DB::table('languages')->get()->pluck('tag')->all();
+
+		DB::table('languages')->update([
+			'main_lang'	=> 0,
+		]);
+
+		foreach ($langs_new as $lang_new) {
+
+			if (!in_array($lang_new->tag, $langs_old)) {
+				
+				$main_lang = false;
+				
+				if ($lang_new->main_lang == 1){
+					$main_lang = true;
+				}
+
+				Lang::add($lang_new->tag, $main_lang);
+			}
+		}
+
+		foreach ($langs_old as $lang_old){
+
+			if (!in_array($lang_old->tag, $langs_new->pluck('tag')->all())) {
+				Lang::remove($lang_old->tag);
+			}
+		}
+
 	}
 
 }

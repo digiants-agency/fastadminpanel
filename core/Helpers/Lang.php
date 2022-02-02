@@ -151,7 +151,7 @@ class Lang {
 		return '';
 	}
 
-	public static function add ($tag) {
+	public static function add ($tag, $is_main = false) {
 
 		$tag = mb_strtolower($tag);
 
@@ -170,10 +170,15 @@ class Lang {
 		->first()
 		->tag;
 
+		$main_lang = 0;
+		if ($is_main) {
+			$main_lang = 1;
+		}
+
 		DB::table('languages')
 		->insert([
 			'tag'		=> $tag,
-			'main_lang'	=> 0,
+			'main_lang'	=> $main_lang,
 		]);
 
 		$menu = DB::table('menu')->get();
@@ -214,4 +219,5 @@ class Lang {
 
 		Single::rm_db($tag);
 	}
+
 }
