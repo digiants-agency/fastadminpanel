@@ -43,7 +43,9 @@ class ShopTemplateDTG extends ShopTemplate{
 
 	private function import_db(){
 
-		$langs_new = DB::table('languages')->get();
+		$langs_new = DB::table('languages')
+		->orderBy('main_lang', 'DESC')
+		->get();
 
 		$sql = file_get_contents($this->shop_path_package("/db.sql"));
 

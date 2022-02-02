@@ -185,6 +185,7 @@ class Lang {
 
 		foreach ($menu as $elm) {
 			if ($elm->multilanguage == 1) {
+				DB::statement("DROP TABLE IF EXISTS {$elm->table_name}_$tag");
 				DB::statement("CREATE TABLE {$elm->table_name}_$tag LIKE {$elm->table_name}_$main_tag");
 				DB::statement("INSERT {$elm->table_name}_$tag SELECT * FROM {$elm->table_name}_$main_tag");
 			}
