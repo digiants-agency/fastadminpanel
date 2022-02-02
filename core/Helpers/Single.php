@@ -416,6 +416,8 @@ class Single {
 
 	public static function add_db ($tag, $main_tag) {
 
+		self::rm_db($tag);
+
 		DB::statement("CREATE TABLE single_int_$tag LIKE single_int_$main_tag");
 		DB::statement("INSERT single_int_$tag SELECT * FROM single_int_$main_tag");
 
