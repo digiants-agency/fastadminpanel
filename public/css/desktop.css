@@ -1894,6 +1894,11 @@ textarea.form-control {
     justify-content: space-between;
 }
 
+.top-sales, 
+.blocks-wrapper {
+    width: 100%;
+}
+
 .itemstosale .product {
     display: flex;
     flex-direction: column;
