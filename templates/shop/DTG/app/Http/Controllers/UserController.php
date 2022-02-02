@@ -52,11 +52,11 @@ class UserController extends Controller
 
 	public function edit (Request $r){
 
-		$name = $r->get('name');
-		$surname = $r->get('surname');
-		$login = $r->get('login');
-		$email = $r->get('email');
-		$phone = $r->get('phone');
+		$name = $r->get('name') ?? '';
+		$surname = $r->get('surname') ?? '';
+		$login = $r->get('login') ?? '';
+		$email = $r->get('email') ?? '';
+		$phone = $r->get('phone') ?? '';
 		$password = $r->get('password');
 		// $password_confirmation = $r->get('password_confirmation');
 
