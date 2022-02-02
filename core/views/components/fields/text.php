@@ -178,7 +178,7 @@
 			}
 		},
 		destroyed: function(){
-			this.$root.$off('title_changed')
+			// this.$root.$off('title_changed')
 		},
 	})
 </script>
