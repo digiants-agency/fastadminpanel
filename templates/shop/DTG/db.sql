@@ -2769,12 +2769,6 @@ ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
--- Індекси таблиці `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Індекси таблиці `saved`
 --
 ALTER TABLE `saved`
@@ -2931,13 +2925,6 @@ ALTER TABLE `standart_ru`
 --
 ALTER TABLE `standart_uk`
   ADD PRIMARY KEY (`id`);
-
---
--- Індекси таблиці `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
 -- AUTO_INCREMENT для збережених таблиць
@@ -3165,11 +3152,6 @@ ALTER TABLE `projects_uk`
 ALTER TABLE `reviews`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
---
--- AUTO_INCREMENT для таблиці `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблиці `saved`
@@ -3327,12 +3309,6 @@ ALTER TABLE `standart_ru`
 ALTER TABLE `standart_uk`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
---
--- AUTO_INCREMENT для таблиці `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
