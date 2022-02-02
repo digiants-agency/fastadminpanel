@@ -24,5 +24,12 @@
 
 <script>
 	var is_mobile = {{(Agent::isMobile() && !Agent::isTablet()) ? 'true' : 'false'}}
+	
 	var lang = document.querySelector('html').getAttribute('lang')
+	
+	if (lang === '{{ Lang::get_main() }}') 
+		lang = ''
+	else 
+		lang = '/' + lang;
+		
 </script>
