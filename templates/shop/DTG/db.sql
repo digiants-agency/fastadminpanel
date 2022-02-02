@@ -821,7 +821,7 @@ INSERT INTO `menu` (`id`, `title`, `table_name`, `fields`, `is_dev`, `multilangu
 (1, 'Menu', 'menu', '[]', 1, 0, 0, 0, 0, '', '2021-12-21 08:45:13', '2021-12-21 08:45:13'),
 (2, 'Roles', 'roles', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Title\"}]', 1, 0, 0, 1, 0, '', '2021-12-21 08:45:13', '2021-12-21 08:45:13'),
 (3, 'Пользователи', 'users', '[{\"id\":0,\"lang\":0,\"required\":\"optional\",\"is_visible\":true,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"name\",\"title\":\"Имя\"},{\"id\":6,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"title\":\"Фамилия\",\"type\":\"text\",\"db_title\":\"surname\"},{\"id\":2,\"lang\":0,\"required\":\"optional\",\"is_visible\":true,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"email\",\"title\":\"E-mail\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"title\":\"Логин\",\"type\":\"text\",\"db_title\":\"login\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"phone\",\"title\":\"Номер телефона\"},{\"id\":3,\"lang\":0,\"required\":\"optional\",\"is_visible\":true,\"show_in_list\":\"no\",\"type\":\"password\",\"db_title\":\"password\",\"title\":\"Пароль\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"single\",\"relationship_table_name\":\"roles\",\"title\":\"Роль\",\"relationship_view_field\":\"title\"},{\"id\":7,\"required\":\"optional\",\"is_visible\":false,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"text\",\"db_title\":\"code\",\"title\":\"Код\"}]', 0, 0, 0, 2, 0, '/vendor/fastadminpanel/icons/1/15.svg', '2021-12-21 08:45:13', '2022-01-31 10:27:29'),
-(4, 'Товары', 'products', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Название\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"text\",\"db_title\":\"slug\",\"title\":\"Ссылка\"},{\"id\":8,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"articul\",\"title\":\"Код товара\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_available\",\"title\":\"Наличие\"},{\"id\":6,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_show\",\"title\":\"Отображать на сайте?\"},{\"id\":11,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"sort\",\"title\":\"Сортировка\"},{\"id\":9,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"single\",\"relationship_table_name\":\"categories\",\"relationship_view_field\":\"title\",\"title\":\"Категория\"},{\"id\":10,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"price\",\"title\":\"Цена\"},{\"id\":3,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"photo\",\"db_title\":\"image\",\"title\":\"Изображение {290x270}\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"gallery\",\"db_title\":\"gallery\",\"title\":\"Галерея {450x450}\"},{\"id\":12,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"ckeditor\",\"db_title\":\"short_description\",\"title\":\"Короткое описание\"},{\"id\":18,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"attributes_counter\",\"relationship_view_field\":\"title\",\"title\":\"Количественные атрибуты\"},{\"id\":7,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"db_title\":\"description\",\"title\":\"Описание\",\"type\":\"ckeditor\"},{\"id\":19,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"filter_fields\",\"relationship_view_field\":\"title\",\"title\":\"Фильтры\"},{\"id\":13,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"products\",\"relationship_view_field\":\"title\",\"title\":\"Рекомендованные товары\"},{\"id\":15,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_title\",\"title\":\"Meta Title\"},{\"id\":16,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_description\",\"title\":\"Meta Description\"},{\"id\":17,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_keywords\",\"title\":\"Meta Keywords\"},{\"id\":14,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"editable\",\"relationship_table_name\":\"characteristic\",\"title\":\"Характеристики\"}]', 0, 1, 0, 10, 0, '/vendor/fastadminpanel/icons/1/8.png', '2021-12-30 10:14:32', '2022-01-31 10:27:58'),
+(4, 'Товары', 'products', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Название\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"text\",\"db_title\":\"slug\",\"title\":\"Ссылка\"},{\"id\":8,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"articul\",\"title\":\"Код товара\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_available\",\"title\":\"Наличие\"},{\"id\":6,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_show\",\"title\":\"Отображать на сайте?\"},{\"id\":11,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"sort\",\"title\":\"Сортировка\"},{\"id\":9,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"single\",\"relationship_table_name\":\"categories\",\"relationship_view_field\":\"title\",\"title\":\"Категория\"},{\"id\":10,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"price\",\"title\":\"Цена\"},{\"id\":3,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"photo\",\"db_title\":\"image\",\"title\":\"Изображение {290x270}\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"gallery\",\"db_title\":\"gallery\",\"title\":\"Галерея {450x450}\"},{\"id\":12,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"ckeditor\",\"db_title\":\"short_description\",\"title\":\"Короткое описание\"},{\"id\":18,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"attributes_counter\",\"relationship_view_field\":\"title\",\"title\":\"Количественные атрибуты\"},{\"id\":7,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"db_title\":\"description\",\"title\":\"Описание\",\"type\":\"ckeditor\"},{\"id\":19,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"filter_fields\",\"relationship_view_field\":\"title\",\"title\":\"Фильтры\"},{\"id\":13,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"products\",\"relationship_view_field\":\"title\",\"title\":\"Рекомендованные товары\"},{\"id\":15,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_title\",\"title\":\"Meta Title\"},{\"id\":16,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_description\",\"title\":\"Meta Description\"},{\"id\":17,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_keywords\",\"title\":\"Meta Keywords\"},{\"id\":14,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"editable\",\"relationship_table_name\":\"characteristic\",\"title\":\"Характеристики\"}]', 0, 1, 0, 10, 0, '/vendor/fastadminpanel/icons/1/8.svg', '2021-12-30 10:14:32', '2022-01-31 10:27:58'),
 (6, 'Категории', 'categories', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Название\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"text\",\"db_title\":\"slug\",\"title\":\"Ссылка\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_show\",\"title\":\"Отображать на сайте?\"},{\"id\":2,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_menu\",\"title\":\"Отображать в меню\"},{\"id\":6,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"sort\",\"title\":\"Сортировка\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"photo\",\"db_title\":\"image\",\"title\":\"Изображение {400x286}\"},{\"id\":3,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"single\",\"relationship_table_name\":\"categories\",\"relationship_view_field\":\"title\",\"title\":\"Родительская категория\"},{\"id\":7,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"filters\",\"relationship_view_field\":\"title\",\"title\":\"Фильтры\"},{\"id\":8,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_title\",\"title\":\"Meta title\"},{\"id\":9,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_description\",\"title\":\"Meta description\"},{\"id\":10,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_keywords\",\"title\":\"Meta keywords\"}]', 0, 1, 0, 10, 0, '/vendor/fastadminpanel/icons/1/3.svg', '2022-01-04 14:00:19', '2022-01-31 10:28:05'),
 (7, 'Стандартные страницы', 'standart', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Название\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"slug\",\"title\":\"Ссылка\"},{\"id\":2,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"ckeditor\",\"db_title\":\"content\",\"title\":\"Контент\"},{\"id\":3,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_title\",\"title\":\"Meta Title\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_description\",\"title\":\"Meta Description\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_keywords\",\"title\":\"Meta Keywords\"}]', 0, 1, 0, 10, 0, '/vendor/fastadminpanel/icons/1/13.svg', '2022-01-05 11:01:14', '2022-01-31 10:28:13'),
 (8, 'Блог', 'blog', '[{\"id\":0,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"yes\",\"type\":\"text\",\"db_title\":\"title\",\"title\":\"Название\"},{\"id\":1,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"text\",\"db_title\":\"slug\",\"title\":\"Ссылка\"},{\"id\":12,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"number\",\"db_title\":\"sort\",\"title\":\"Сортировка\"},{\"id\":10,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_show\",\"title\":\"Отображать на сайте?\"},{\"id\":9,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"editable\",\"type\":\"checkbox\",\"db_title\":\"is_main\",\"title\":\"Отображать на главной\"},{\"id\":2,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"photo\",\"db_title\":\"image\",\"title\":\"Изображение карточки {400x286}\"},{\"id\":11,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"photo\",\"db_title\":\"main_image\",\"title\":\"Главное изображение {1240x450}\"},{\"id\":3,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"short_description\",\"title\":\"Короткое описание\"},{\"id\":4,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"ckeditor\",\"db_title\":\"content\",\"title\":\"Контент {Чтобы вывести изображения в ряд нужно перед ними написать [images] и после [/images]}\"},{\"id\":5,\"required\":\"optional\",\"is_visible\":true,\"lang\":\"0\",\"show_in_list\":\"no\",\"type\":\"relationship\",\"relationship_count\":\"many\",\"relationship_table_name\":\"blog\",\"relationship_view_field\":\"title\",\"title\":\"Читать подробнее\"},{\"id\":6,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_title\",\"title\":\"Meta Title\"},{\"id\":7,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_description\",\"title\":\"Meta Description\"},{\"id\":8,\"required\":\"optional\",\"is_visible\":true,\"lang\":1,\"show_in_list\":\"no\",\"type\":\"textarea\",\"db_title\":\"meta_keywords\",\"title\":\"Meta Keywords\"}]', 0, 1, 0, 10, 0, '/vendor/fastadminpanel/icons/1/6.svg', '2022-01-05 11:18:58', '2022-01-31 10:28:23'),
@@ -866,39 +866,6 @@ CREATE TABLE `orders` (
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп даних таблиці `orders`
---
-
-INSERT INTO `orders` (`id`, `id_users`, `user_name`, `user_email`, `user_phone`, `city`, `region`, `id_delivery`, `id_payment`, `status_payment`, `recall`, `created_at`, `updated_at`, `id_order`, `id_orders_status`, `date`) VALUES
-(9, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 0, '2022-01-25 08:01:57', '2022-01-25 08:01:57', 1, 1, '2022-01-25 10:01:57'),
-(10, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 2, 1, 0, 1, '2022-01-25 08:05:03', '2022-01-25 08:05:03', 10, 1, '2022-01-25 10:05:03'),
-(11, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 0, '2022-01-25 08:06:52', '2022-01-25 08:06:52', 11, 1, '2022-01-25 10:06:52'),
-(12, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 1, '2022-01-25 08:08:07', '2022-01-25 08:08:07', 12, 1, '2022-01-25 10:08:07'),
-(13, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 1, '2022-01-25 08:09:51', '2022-01-25 13:50:36', 13, 4, '2022-01-25 10:09:51'),
-(14, 1, 'test test', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 2, 3, 0, 1, '2022-01-25 08:14:30', '2022-01-25 13:50:25', 14, 5, '2022-01-25 10:14:30'),
-(15, 4, 'test', 'test@test.test', '12345', 'Киев', 'Киевская', 2, 2, 0, 1, '2022-01-25 12:43:54', '2022-01-25 12:43:54', 15, 1, '2022-01-25 14:43:54'),
-(16, 1, 'Анатолий', 'pa@digiants.com.ua', '+12345678', 'Kyiv', 'wqeqwewqe', 1, 1, 0, 1, '2022-01-25 13:39:49', '2022-01-25 13:39:49', 16, 1, '2022-01-25 15:39:49'),
-(17, 1, 'test test', 'pa@digiants.com.ua', '+12345678', 'Kiev', 'Kiev', 2, 2, 0, 1, '2022-01-26 07:05:28', '2022-01-26 07:05:28', 17, 1, '2022-01-26 09:05:28'),
-(56, 0, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 1, '2022-01-27 12:00:37', '2022-01-27 12:00:37', 56, 1, '2022-01-27 14:00:37'),
-(58, 1, 'Анатолий', 'pa@digiants.com.ua', '+12345678', 'еуые', 'еуые', 2, 1, 0, 1, '2022-01-27 12:29:09', '2022-01-27 12:29:09', 57, 1, '2022-01-27 14:29:09'),
-(59, 6, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 1, '2022-01-27 14:02:55', '2022-01-27 14:02:55', 59, 1, '2022-01-27 16:02:55'),
-(60, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:24:36', '2022-01-28 11:24:36', 60, 1, '2022-01-28 11:24:36'),
-(61, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:24:41', '2022-01-28 11:24:41', 61, 1, '2022-01-28 11:24:41'),
-(62, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:24:42', '2022-01-28 11:24:42', 62, 1, '2022-01-28 11:24:42'),
-(63, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:25:00', '2022-01-28 11:25:00', 63, 1, '2022-01-28 11:25:00'),
-(64, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:25:00', '2022-01-28 11:25:00', 64, 1, '2022-01-28 11:25:00'),
-(65, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 0, '2022-01-28 11:25:14', '2022-01-28 11:25:14', 65, 1, '2022-01-28 11:25:14'),
-(66, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 0, '2022-01-28 11:25:16', '2022-01-28 11:25:16', 66, 1, '2022-01-28 11:25:16'),
-(67, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:25:18', '2022-01-28 11:25:18', 67, 1, '2022-01-28 11:25:18'),
-(68, 1, 'Анатолий', 'pa@digiants.com.ua', '+12345678', 'test', 'test', 1, 1, 0, 0, '2022-01-28 11:25:22', '2022-01-28 11:25:22', 68, 1, '2022-01-28 11:25:22'),
-(69, 1, 'Анатолий', 'pa@digiants.com.ua', '+12345678', 'test', 'test', 1, 1, 0, 0, '2022-01-28 11:26:18', '2022-01-28 11:26:18', 69, 1, '2022-01-28 11:26:18'),
-(70, 7, 'Alex test', 'test1@test1.test1', '+380953308060', 'Kyiv', 'Kyiv', 1, 1, 0, 1, '2022-01-28 11:27:39', '2022-01-28 11:27:39', 70, 1, '2022-01-28 11:27:39'),
-(71, 8, 'Маяда', 'mh@digiants.com.ua', '38073', 'Kiev', 'Kiev', 1, 1, 0, 0, '2022-01-28 13:15:36', '2022-01-28 13:15:36', 71, 1, '2022-01-28 13:15:36'),
-(72, 1, 'test test', 'test@gmail.com', '7665555555', 'kiev', 'Alabama', 1, 1, 1, 0, '2022-01-28 13:22:15', '2022-01-28 13:23:23', 72, 5, '2022-01-28 13:22:15'),
-(73, 8, 'Маяда', 'mh@digiants.com.ua', '38073', 'киев', 'киевская', 1, 1, 0, 0, '2022-01-31 08:07:48', '2022-01-31 08:07:48', 73, 1, '2022-01-31 08:07:48'),
-(74, 1, 'Анатолий', 'pa@digiants.com.ua', '+12345678', 'test', 'test', 2, 1, 0, 1, '2022-01-31 08:38:41', '2022-01-31 08:38:41', 74, 1, '2022-01-31 10:38:41');
-
 -- --------------------------------------------------------
 
 --
@@ -917,41 +884,6 @@ CREATE TABLE `orders_product` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_orders` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп даних таблиці `orders_product`
---
-
-INSERT INTO `orders_product` (`id`, `title`, `slug`, `price`, `image`, `count`, `created_at`, `updated_at`, `id_orders`) VALUES
-(52, 'Ролетная штора-плиссе для мансардных окон Розовый', 'roleta-dlya-mansardnyh-okon-seryj-copy-3', '459', '/photos/1/products/rolerapink.jpg', 1, '2022-01-27 12:00:37', '2022-01-27 12:00:37', 56),
-(53, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-27 12:00:37', '2022-01-27 12:00:37', 56),
-(55, 'Москитная сетка ролетная ', 'moskitnaya-setka-roletnaya', '299', '/photos/1/products/moskit.jpg', 1, '2022-01-27 12:29:09', '2022-01-27 12:29:09', 58),
-(56, 'Ролетная штора-плиссе для мансардных окон Белая', 'roleta-dlya-mansardnyh-okon-seryj-copy-1', '459', '/photos/1/products/roletamansardwhite.jpg', 1, '2022-01-27 12:29:09', '2022-01-27 12:29:09', 58),
-(57, 'Москитная сетка ролетная ', 'moskitnaya-setka-roletnaya', '299', '/photos/1/products/moskit.jpg', 1, '2022-01-27 14:02:55', '2022-01-27 14:02:55', 59),
-(58, 'Беспроводные тканевые сотовые шторы-плиссе Коричневый', 'mehanizm-korich', '499', '/photos/1/products/plissekorich.jpg', 2, '2022-01-27 14:02:55', '2022-01-27 14:02:55', 59),
-(59, 'Ролета для мансардных окон Серый', 'roleta-dlya-mansardnyh-okon-seryj', '459', '/photos/1/products/roletamasrd1.jpg', 1, '2022-01-27 14:02:55', '2022-01-27 14:02:55', 59),
-(60, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:24:36', '2022-01-28 11:24:36', 60),
-(61, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:24:41', '2022-01-28 11:24:41', 61),
-(62, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:24:42', '2022-01-28 11:24:42', 62),
-(63, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:00', '2022-01-28 11:25:00', 63),
-(64, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:00', '2022-01-28 11:25:00', 64),
-(65, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:14', '2022-01-28 11:25:14', 65),
-(66, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:16', '2022-01-28 11:25:16', 66),
-(67, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:18', '2022-01-28 11:25:18', 67),
-(68, 'Шторы блэкаут', 'dizajnerskie-shtory-copy-2', '325', '/photos/1/product.png', 1, '2022-01-28 11:25:22', '2022-01-28 11:25:22', 68),
-(69, 'Дизайнерские шторы copy', 'dizajnerskie-shtory-copy-1', '225', '/photos/1/product.png', 2, '2022-01-28 11:25:22', '2022-01-28 11:25:22', 68),
-(70, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:25:22', '2022-01-28 11:25:22', 68),
-(71, 'Шторы блэкаут', 'dizajnerskie-shtory-copy-2', '325', '/photos/1/product.png', 1, '2022-01-28 11:26:18', '2022-01-28 11:26:18', 69),
-(72, 'Дизайнерские шторы copy', 'dizajnerskie-shtory-copy-1', '225', '/photos/1/product.png', 2, '2022-01-28 11:26:18', '2022-01-28 11:26:18', 69),
-(73, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:26:18', '2022-01-28 11:26:18', 69),
-(74, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-01-28 11:27:39', '2022-01-28 11:27:39', 70),
-(75, 'Беспроводные тканевые сотовые шторы-плиссе Коричневый', 'mehanizm-korich', '499', '/photos/1/products/plissekorich.jpg', 8, '2022-01-28 13:15:36', '2022-01-28 13:15:36', 71),
-(76, 'Дизайнерские шторы', 'dizajnerskie-shtory', '225', '/photos/1/product.png', 1, '2022-01-28 13:22:15', '2022-01-28 13:22:15', 72),
-(77, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 6, '2022-01-28 13:22:15', '2022-01-28 13:22:15', 72),
-(78, 'Шторы блэкаут', 'dizajnerskie-shtory-copy-2', '325', '/photos/1/product.png', 3, '2022-01-31 08:07:49', '2022-01-31 08:07:49', 73),
-(79, 'Шторы блэкаут', 'dizajnerskie-shtory-copy-2', '325', '/photos/1/product.png', 23, '2022-01-31 08:38:41', '2022-01-31 08:38:41', 74),
-(80, 'Ролетная штора-плиссе для мансардных окон Розовый', 'roleta-dlya-mansardnyh-okon-seryj-copy-3', '459', '/photos/1/products/rolerapink.jpg', 1, '2022-01-31 08:38:41', '2022-01-31 08:38:41', 74),
-(81, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 12, '2022-01-31 08:38:41', '2022-01-31 08:38:41', 74);
 
 -- --------------------------------------------------------
 
@@ -1398,36 +1330,9 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `name`, `phone`, `email`, `message`, `id_products`, `created_at`, `updated_at`, `answer`, `is_show`, `date`) VALUES
-(13, 'Анатолій Проботюк', '+380689277992', 'tolikshift@gmail.com', 'test', 6, '2022-01-10 08:22:06', '2022-01-10 10:22:28', 'Спасибо за Ваш отзыв!', 1, '2022-01-10 10:22:06'),
-(14, 'Анатолій Проботюк', '+380689277992', 'tolikshift@gmail.com', 'Супер!', 1, '2022-01-10 08:22:59', '2022-01-10 10:23:40', 'Спасибо за Ваш отзыв!', 1, '2022-01-10 10:22:59'),
-(15, 'Анатолій Проботюк', '+380689277992', 'tolikshift@gmail.com', 'Супер!', 1, '2022-01-10 10:23:51', '2022-01-10 10:23:51', 'Спасибо за Ваш отзыв!', 1, '2022-01-10 10:22:59'),
-(16, 'Анатолій Проботюк', '+380689277992', 'tolikshift@gmail.com', 'Супер!', 1, '2022-01-10 10:23:52', '2022-01-10 10:23:52', 'Спасибо за Ваш отзыв!', 1, '2022-01-10 10:22:59'),
 (17, 'TEST', '123', 'test@test.test', 'TEST', 1, '2022-01-17 06:16:51', '2022-01-17 08:16:57', '', 1, '2022-01-17 08:16:51'),
-(18, 'Dasha Volos', '122345567889', 'ugcg@hghh', 'Rtyuu', 1, '2022-01-17 18:14:54', '2022-01-17 18:14:54', '', 0, '2022-01-17 18:14:54'),
 (19, 'Маяда', '+380731003444', 'test@gmail.com', 'Шторы класс, ткань приятная', 1, '2022-01-18 08:31:19', '2022-01-18 08:31:38', '', 1, '2022-01-18 08:31:19'),
 (20, 'Олег', '7665555555', 'test@gmail.com', 'Зашел купить диван Олег, а тут шторы. Заказал, качество ок', 28, '2022-01-18 12:15:04', '2022-01-18 12:15:29', 'Можно обшить диван шторами, спасибо за отзыв!', 1, '2022-01-18 12:15:04');
-
--- --------------------------------------------------------
-
---
--- Структура таблиці `roles`
---
-
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE `roles` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп даних таблиці `roles`
---
-
-INSERT INTO `roles` (`id`, `title`, `created_at`, `updated_at`) VALUES
-(1, 'Администратор', '2021-12-21 08:44:24', '2022-01-21 14:55:15'),
-(2, 'Пользователь', '2021-12-21 08:44:24', '2022-01-21 14:55:07');
 
 -- --------------------------------------------------------
 
@@ -2631,23 +2536,11 @@ INSERT INTO `standart_uk` (`id`, `title`, `slug`, `content`, `meta_title`, `meta
 -- Структура таблиці `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_roles` int(11) NOT NULL DEFAULT 1,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `surname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `login` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `users`
+ADD `surname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ADD `login` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ADD `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ADD `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL;
 
 --
 -- Дамп даних таблиці `users`
