@@ -524,6 +524,154 @@ class FastAdminPanelTranslate extends Command {
 		return 'Success';
 	}
 
+	public function translate_admin () {
+
+		$lang_from = 'ru';
+		$lang_to = 'sv';
+
+		//translate menu
+
+		$menu = DB::table('menu')->get();
+
+		foreach ($menu as $menu_item) {
+			if ($menu_item->title != 'Menu' && $menu_item->title != 'Roles') {
+
+				$new_title = Translater::tr($menu_item->title, $lang_from, $lang_to);
+				echo $new_title . "\n";
+
+				$fields = json_decode($menu_item->fields);
+
+				foreach ($fields as &$field) {
+					$field->title = Translater::tr($field->title, $lang_from, $lang_to);
+					echo $field->title . "\n";
+				}
+
+
+				DB::table('menu')
+				->where('id', $menu_item->id)
+				->update([
+					'title'		=> $new_title,
+					'fields'	=> json_encode($fields),
+				]);
+			}
+		}
+
+
+		// translate dropdown
+
+		$dropdown = DB::table('dropdown')->get();
+
+		foreach ($dropdown as $dropdown_item) {
+			$new_title = Translater::tr($dropdown_item->title, $lang_from, $lang_to);
+			echo $new_title . "\n";
+
+			DB::table('dropdown')
+			->where('id', $dropdown_item->id)
+			->update([
+				'title'		=> $new_title,
+			]);
+
+		}
+
+		//translate single page
+
+		$single_page = DB::table('single_page')->get();
+
+		foreach ($single_page as $single_page_item) {
+
+			$new_title = Translater::tr($single_page_item->title, $lang_from, $lang_to);
+			echo $new_title . "\n";
+
+			DB::table('single_page')
+			->where('id', $single_page_item->id)
+			->update([
+				'title_sv'		=> $new_title,
+			]);
+		}
+
+		//translate single fields
+		
+		$single_field = DB::table('single_field')->get();
+
+		foreach ($single_field as $single_field_item) {
+
+			$new_title = Translater::tr($single_field_item->title, $lang_from, $lang_to);
+			echo $new_title . "\n";
+
+			$new_block_title = Translater::tr($single_field_item->block_title, $lang_from, $lang_to);
+			echo $new_block_title . "\n";
+
+			DB::table('single_field')
+			->where('id', $single_field_item->id)
+			->update([
+				'title_sv'			=> $new_title,
+				'block_title_sv'	=> $new_block_title,
+			]);
+		}
+
+		//translate single fields repeated
+
+		$single_field_repeated_ids = DB::table('single_field')
+		->select('id')
+		->where('type', 'repeat')
+		->get()->pluck('id');
+
+		$langs = Lang::all();
+
+		foreach ($langs as $lang) {
+
+			$single_repeated = DB::table('single_text_'.$lang->tag)
+			->whereIn('field_id', $single_field_repeated_ids)
+			->get();
+
+			foreach ($single_repeated as $single_repeated_item) {
+
+				$single_repeated_item_value = json_decode($single_repeated_item->value);
+
+				foreach ($single_repeated_item_value as &$single_repeated_item_keys) {
+					
+					$new_title = Translater::tr($single_repeated_item_keys->title, $lang_from, $lang_to);
+					echo $new_title."\n";
+
+					$single_repeated_item_keys->title = $new_title;
+				}
+
+				DB::table('single_text_'.$lang->tag)
+				->where('field_id', $single_repeated_item->field_id)
+				->update([
+					'value'	=> json_encode($single_repeated_item_value),
+				]);
+
+			}
+
+		}
+
+		$single_repeated = DB::table('single_text')
+		->whereIn('field_id', $single_field_repeated_ids)
+		->get();
+
+		foreach ($single_repeated as $single_repeated_item) {
+
+			$single_repeated_item_value = json_decode($single_repeated_item->value);
+
+			foreach ($single_repeated_item_value as &$single_repeated_item_keys) {
+				
+				$new_title = Translater::tr($single_repeated_item_keys->title, $lang_from, $lang_to);
+				echo $new_title."\n";
+
+				$single_repeated_item_keys->title = $new_title;
+			}
+
+			DB::table('single_text')
+			->where('field_id', $single_repeated_item->field_id)
+			->update([
+				'value'	=> json_encode($single_repeated_item_value),
+			]);
+
+		}
+
+	}
+
 	/*
 	 * End FAP Translator
 	 */
@@ -538,7 +686,11 @@ class FastAdminPanelTranslate extends Command {
 		
 		$langs = Lang::get_langs()->pluck('tag')->all();
 
-		if (is_numeric($this->argument('argument'))) {
+		if ($this->argument('argument') == 'admin'){
+			
+			$this->translate_admin();
+
+		} elseif (is_numeric($this->argument('argument'))) {
 
 			$this->translate_single($this->argument('argument'));
 
