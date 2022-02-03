@@ -1,15 +1,17 @@
-<div class="seo mb-100">
-    <div class="container">
-        <div class="seo-inner">
-            <div class="h2 color-text seo-title">{{ $title }}</div>
-            <div class="seo-content">
-                <x-inc.content>
-                    {!! $content !!}
-                </x-inc.content>
+@if (!$title->isEmpty() && !$content->isEmpty())
+    <div class="seo mb-100">
+        <div class="container">
+            <div class="seo-inner">
+                <div class="h2 color-text seo-title">{{ $title }}</div>
+                <div class="seo-content">
+                    <x-inc.content>
+                        {!! $content !!}
+                    </x-inc.content>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endif
 
 
 @desktopcss

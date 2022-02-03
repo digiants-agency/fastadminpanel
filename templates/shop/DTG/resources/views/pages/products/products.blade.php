@@ -4,11 +4,15 @@
 
 	<x-inc.seo>
 		<x-slot name="title">
-			{{ $s->field('SEO text', 'Заголовок', 'text', true, 'Seo Text') }}
+			@if (!empty($category->seo_title))
+				{{ $category->seo_title }}
+			@endif
 		</x-slot>
 
 		<x-slot name="content">
-			{!! $s->field('SEO text', 'Контент', 'ckeditor', true, '') !!}
+			@if (!empty($category->seo_text))
+				{!! $category->seo_text !!}
+			@endif
 		</x-slot>
 	</x-inc.seo>
 
