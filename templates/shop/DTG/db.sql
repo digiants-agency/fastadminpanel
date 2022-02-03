@@ -622,6 +622,11 @@ CREATE TABLE `orders` (
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `orders` (`id`, `id_users`, `user_name`, `user_email`, `user_phone`, `city`, `region`, `id_delivery`, `id_payment`, `status_payment`, `recall`, `created_at`, `updated_at`, `id_order`, `id_orders_status`, `date`) VALUES
+(75, 1, 'admin', 'admin@admin', '3423423423', 'etestset', 'testset', 2, 1, 0, 1, '2022-02-03 12:02:17', '2022-02-03 12:02:17', 1, 1, '2022-02-03 16:02:11'),
+(76, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 0, '2022-02-03 12:02:44', '2022-02-03 12:02:44', 76, 1, '2022-02-03 16:02:44'),
+(77, 1, 'Анатолій Проботюк', 'tolikshift@gmail.com', '+380689277992', 'Житомир', 'Житомирська область', 1, 1, 0, 0, '2022-02-03 12:03:00', '2022-02-03 12:03:00', 77, 1, '2022-02-03 16:03:00');
+
 -- --------------------------------------------------------
 
 --
@@ -640,6 +645,13 @@ CREATE TABLE `orders_product` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_orders` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `orders_product` (`id`, `title`, `slug`, `price`, `image`, `count`, `created_at`, `updated_at`, `id_orders`) VALUES
+(82, 'Ролеты зеленые', 'rolety-zelenye', '799', '/photos/1/products/roletagreen.png', 1, '2022-02-03 12:02:17', '2022-02-03 12:02:17', 75),
+(83, 'Ролета для мансардных окон Серый', 'roleta-dlya-mansardnyh-okon-seryj', '459', '/photos/1/products/roletamasrd1.jpg', 1, '2022-02-03 12:02:44', '2022-02-03 12:02:44', 76),
+(84, 'Ролетная штора-плиссе для мансардных окон Розовый', 'roleta-dlya-mansardnyh-okon-seryj-copy-3', '459', '/photos/1/products/rolerapink.jpg', 2, '2022-02-03 12:02:44', '2022-02-03 12:02:44', 76),
+(85, 'Ролетная штора-плиссе для мансардных окон Белая', 'roleta-dlya-mansardnyh-okon-seryj-copy-1', '459', '/photos/1/products/roletamansardwhite.jpg', 1, '2022-02-03 12:03:00', '2022-02-03 12:03:00', 77),
+(86, 'Ролетная штора-плиссе для мансардных окон Желтая', 'roleta-dlya-mansardnyh-okon-seryj-copy-2', '459', '/photos/1/products/roletayellow.jpg', 1, '2022-02-03 12:03:00', '2022-02-03 12:03:00', 77);
 
 -- --------------------------------------------------------
 
