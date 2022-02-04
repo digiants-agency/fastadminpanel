@@ -7,7 +7,7 @@
 					<div v-if="field.type != 'repeat'" class="single-block-wrapper-field">
 						<template-fields  :field="field"></template-fields>
 						<?php if(isset($_GET['dev'])): ?>
-							<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Delete</div>
+							<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Удалить</div>
 						<?php endif; ?>
 					</div>
 					<div class="single-repeat" v-else>
@@ -29,14 +29,14 @@
 						<div class="btn btn-add btn-dash" v-on:click="repeat_add(field)">Добавить блок +</div>
 						
 						<?php if(isset($_GET['dev'])): ?>
-							<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Delete</div>
+							<div class="btn btn-xs btn-danger td-actions-delete mb-3" v-on:click="delete_single(field.id)">Удалить</div>
 						<?php endif; ?>
 					</div>
 				</div>
 			</div>
 			
 		</div>
-		<button class="btn btn-primary" v-on:click="save()">Save</button>
+		<button class="btn btn-primary" v-on:click="save()">Сохранить</button>
 	</div>
 </script>
 
