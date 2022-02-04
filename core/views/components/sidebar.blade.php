@@ -1,12 +1,14 @@
 <script type="text/x-template" id="template-sidebar">
 	<div class="sidebar">
 
-		<div class="sidebar-header">
-			<a href="/" target="_blank">
-				<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
-			</a>
-            <a href="/admin" class="sidebar-header-title">Admin Panel</a>
-		</div>
+		@if(!Platform::mobile())
+			<div class="sidebar-header">
+				<a href="/" target="_blank">
+					<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
+				</a>
+				<a href="/admin" class="sidebar-header-title">Admin Panel</a>
+			</div>
+		@endif
 
 		<div class="sidebar-menu">
 			<div class="sidebar-menu-items">
@@ -38,7 +40,16 @@
 								</svg>
 							</div>
 						</div>
-						<router-link :to="(elm.type == 'multiple') ? '/admin/' + elm.table_name : '/admin/single/' + elm.table_name" :key="elm.id" class="sidebar-menu-item child" :class="{'active': elm.active}" v-if="is_dev || !elm.is_dev" v-for="elm in item.children" v-text="elm.title"></router-link>
+						<router-link 
+							:to="(elm.type == 'multiple') ? '/admin/' + elm.table_name : '/admin/single/' + elm.table_name" 
+							:key="elm.id" 
+							class="sidebar-menu-item child" 
+							:class="{'active': elm.active}" 
+							v-if="is_dev || !elm.is_dev" 
+							v-for="elm in item.children" 
+							v-text="elm.title"
+						>
+						</router-link>
 					</div>
 					
 					<div class="sidebar-menu-item" :class="{'active': item.active}" v-else-if="is_dev || !item.is_dev">
@@ -65,7 +76,7 @@
 			
 					
 			<div class="langs">
-				<div class="lang lang-active" v-if="lang.is_active" v-for="lang in languages" v-text="lang.tag" v-on:click="set_language(lang)"></div>
+				<div class="lang lang-active" v-if="lang.is_active" v-for="lang in languages" v-text="lang.tag"></div>
 
 				<div class="langs-choice">
 					<div class="lang" v-if="!lang.is_active" v-for="lang in languages" v-text="lang.tag" v-on:click="set_language(lang)"></div>
@@ -93,7 +104,7 @@
 		data: function () {
 			return {
 				dropdown_menu: [],
-				languages: JSON.parse('<?php echo json_encode($languages); ?>')
+				languages: JSON.parse('<?php echo json_encode($languages); ?>'),
 			}
 		},
 		methods: {
@@ -203,4 +214,5 @@
 		mounted: function(){
 		},
 	})
+
 </script>

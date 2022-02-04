@@ -140,18 +140,18 @@ fieldset {
     width: 148.51px;
     height: 20.87px;
     position: absolute;
-    bottom: 50px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .login-form-fields {
-    width: 1000px;
-    height: 451px;
+    width: 290px;
+    height: 327px;
     background: #FFFFFF;
     box-shadow: 19px 0px 75px rgba(0, 1, 20, 0.03);
     border-radius: 15px;
-    padding: 50px 240px;
+    padding: 30px 15px;
 }
 
 .login-form-logo-wrapper {
@@ -161,30 +161,30 @@ fieldset {
 }
 
 .login-form-logo {
-    width: 126.84px;
-    height: 61.11px;
+    width: 83.03px;
+    height: 40px;
 }
 
 .login-title {
     font-style: normal;
     font-weight: bold;
-    font-size: 21.14px;
-    line-height: 27px;
+    font-size: 13.8382px;
+    line-height: 18px;
     color: #171219;
-    padding: 16px 22px;
+    padding: 10px 14px;
     background: #F1F4F6;
-    border-radius: 15.1px;
-    margin-left: 8px;
+    border-radius: 9px;
+    margin-left: 5px;
 }
 
 .login-form-title {
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 26px;
     position: relative;
-    margin-top: 30px;
-    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
@@ -207,17 +207,17 @@ fieldset {
 }
 
 .login-form-input {
-    width: 520px;
-    height: 50px;
+    width: 260px;
+    height: 40px;
     display: block;
     border: 1px solid #E3E3E3;
     border-radius: 5px;
     background-color: transparent;
-    padding: 15px 20px;
-    margin-bottom: 15px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
 }
 
@@ -225,7 +225,7 @@ fieldset {
     display: flex;
     user-select: none;
     cursor: pointer;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .checkbox-rectangle {
@@ -257,10 +257,10 @@ fieldset {
 .checkbox-text {
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
     color: #7F7F7F;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 
 .login-form-btn {
@@ -268,63 +268,77 @@ fieldset {
     border-radius: 5px;
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
     color: #FFFFFF;
-    width: 520px;
-    height: 50px;
+    width: 260px;
+    height: 40px;
     display: block;
     border: 0;
 }
 
 .login-error {
     color: red;
-    margin-top: 15px;
+    margin-top: 5px;
     text-align: center;
     font-size: 14px;
 }
 
 .sidebar {
+    /* width: 300px; */
+    width: 100vw;
+    height: 100vh;
+    /* padding: 30px 50px; */
+    position: fixed;
+    top: 60px;
+    left: 0;
+    z-index: 1000;
+    transition: .5s;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.sidebar-menu {
+    width: 270px;
+    padding: 15px 0 !important;
     background: #FFFFFF;
-    width: 300px;
-    min-height: 100vh;
-    overflow-y: auto;
-    padding: 30px 50px;
-    flex-shrink: 0;
+    height: calc(100vh - 60px);
+    transform: translateX(-100vw);
+    transition: .5s;
+}
+
+.sidebar.active .sidebar-menu {
+    transform: translateX(0);
 }
 
 .sidebar-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #E3E3E3;
 }
 
 .sidebar-logo {
-    width: 84px;
-    height: 40.47px;
+    width: 83.03px;
+    height: 40px;
     margin-right: 5px;
 }
 
 .sidebar-header-title {
     font-style: normal;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13.8383px;
     line-height: 18px;
-    padding: 11px 15px;
+    padding: 10px 15px;
     background: #EFF2F4;
     border-radius: 10px;
-    color: #171219;
-}
-
-.sidebar-header-title:hover {
-    text-decoration: none;
-    color: #171219;
-}
-
-.sidebar-menu {
-    padding: 12px 0;
+    color: #171219 !important;
+    text-decoration: none !important;
 }
 
 .sidebar-menu-item-parent {
@@ -336,7 +350,7 @@ fieldset {
     display: block;
     background: rgba(81, 34, 93, 0.04);
     border-radius: 8px 4px 4px 8px;
-    width: calc(100% + 80px);
+    width: calc(100% + 30px);
     height: calc(100% + 16px);
     position: absolute;
     top: -8px;
@@ -347,6 +361,7 @@ fieldset {
 
 .sidebar-menu-item {
     margin-bottom: 15px;
+    padding: 0 15px;
 }
 
 .sidebar-menu-item,
@@ -397,7 +412,7 @@ fieldset {
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: 0;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -420,14 +435,42 @@ fieldset {
     display: block;
 }
 
+.sidebar-menu-item-count {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 0 3px;
+    background: #51225D;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 main {
     display: flex;
+    height: 100%;
+    flex-grow: 1;
 }
 
 .content {
-    padding: 30px 50px;
+    padding: 20px 15px;
     width: 100%;
     background: #EFF2F4;
+}
+
+.row {
+    margin: 0;
 }
 
 .control-label {
@@ -439,9 +482,9 @@ main {
 h1 {
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 26px;
+    margin-bottom: 5px;
 }
 
 h2 {
@@ -568,6 +611,7 @@ h3 {
     background: #EFF2F4;
     border-radius: 5px;
     padding: 10px 20px;
+    flex-wrap: wrap;
 }
 
 #datatable_filter label {
@@ -578,10 +622,18 @@ h3 {
     line-height: 18px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#datatable_filter label span {
+    width: 100%;
+    margin-bottom: 5px;
 }
 
 #datatable_filter .select-wrapper {
-    margin-left: 10px;
+    width: auto;
 }
 
 #datatable_filter .select-arrow-block {
@@ -590,11 +642,17 @@ h3 {
 }
 
 #datatable_filter select {
-    width: 118px;
+    width: 105px;
 }
 
 #datatable_filter input {
-    margin-left: 15px;
+    width: 100%;
+}
+
+.datatable-wrapper {
+    overflow-x: scroll;
+    max-width: 100%;
+    margin-top: 20px;
 }
 
 .datatable {
@@ -710,7 +768,7 @@ td.td-content {
 }
 
 .mass-delete-col {
-    margin-top: -60px;
+    margin-top: 20px;
 }
 
 .space-between {
@@ -870,13 +928,15 @@ td.td-content {
     bottom: 0;
     right: 0;
     background-color: rgba(255, 255, 255, 0.7);
-    z-index: 100;
+    z-index: 1001;
     opacity: 0;
     pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: opacity 0.3s;
+    width: 100vw;
+    height: 100vh;
 }
 
 #loader.active {
@@ -895,21 +955,21 @@ td.td-content {
 .single-block-title {
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 26px;
     color: #171219;
     margin-bottom: 10px;
 }
 
 .single-block {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .single-block-wrapper {
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
-    padding: 30px 40px;
+    padding: 20px 15px;
 }
 
 .single-btns {
@@ -944,8 +1004,8 @@ td.td-content {
 
 .single-repeat-delete {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 5px;
+    top: 5px;
     cursor: pointer;
     z-index: 1;
     border-radius: 3px;
@@ -954,8 +1014,8 @@ td.td-content {
 
 .single-repeat-move {
     position: absolute;
-    right: 37px;
-    top: 10px;
+    right: 32px;
+    top: 5px;
     cursor: pointer;
     z-index: 1;
     border-radius: 3px;
@@ -1086,8 +1146,9 @@ select {
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
-    padding: 30px 40px;
+    padding: 15px 20px;
     margin-bottom: 20px;
+    overflow-x: scroll;
 }
 
 .table {
@@ -1206,7 +1267,7 @@ select {
 }
 
 .menu-table {
-    padding: 30px 40px;
+    padding: 15px 20px;
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
@@ -1350,6 +1411,7 @@ select:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 .select-arrow {
@@ -1359,11 +1421,12 @@ select:focus {
 }
 
 .menu-table-editfields {
-    padding: 30px 40px;
+    padding: 15px 20px;
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
     margin-bottom: 20px;
+    overflow-x: scroll;
 }
 
 .menu-table-editfields td {
@@ -1414,11 +1477,15 @@ select:focus {
 }
 
 .edit-fields {
-    padding: 30px 40px;
+    padding: 20px 15px;
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
+}
+
+.edit-fields-btns .btn {
+    margin-top: 10px;
 }
 
 .edit-fields-editable {
@@ -1431,8 +1498,8 @@ select:focus {
 .edit-field-title {
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 16px;
     padding: 0;
     display: block;
     text-align: left;
@@ -1495,8 +1562,8 @@ select:focus {
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    line-height: 22px;
-    padding: 7px 20px;
+    line-height: 20px;
+    padding: 10px 15px;
 }
 
 .edit-fields .form-group {
@@ -1512,7 +1579,7 @@ select:focus {
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
-    padding: 30px 40px 60px;
+    padding: 20px 15px;
 }
 
 .index-title {
@@ -1534,14 +1601,14 @@ select:focus {
 
 .index-search-wrapper {
     position: relative;
+    margin-top: 5px !important;
 }
 
 .index-search-icon {
     width: 14px;
     height: 14px;
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 10px;
     right: 10px;
 }
 
@@ -1638,6 +1705,7 @@ select:focus {
     line-height: 20px;
     color: #7F7F7F;
     padding-top: 14px;
+    padding-left: 15px;
 }
 
 .logout svg {
@@ -1647,11 +1715,17 @@ select:focus {
 }
 
 .sidebar-menu-items {
-    padding-bottom: 100px;
+    padding-bottom: 0;
+    height: 460px;
+    overflow: auto;
+}
+
+.sidebar-menu-items::-webkit-scrollbar {
+    display: none;
 }
 
 .langs {
-    padding: 14px 0;
+    padding: 14px 15px;
     border-top: 1px solid #E3E3E3;
     border-bottom: 1px solid #E3E3E3;
     position: relative;
@@ -1690,7 +1764,7 @@ select:focus {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    left: 45px;
+    left: 65px;
     background: #fff;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.2);
     font-style: normal;
@@ -1719,7 +1793,7 @@ select:focus {
 }
 
 .single-block-wrapper-block {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .single-block-wrapper-block:last-child {
@@ -1727,7 +1801,7 @@ select:focus {
 }
 
 textarea.form-control {
-    height: 58px !important;
+    height: 100px !important;
 }
 
 .graph {
@@ -1738,12 +1812,13 @@ textarea.form-control {
 .blocks {
     /* padding: 20px; */
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
-    padding: 30px 40px;
-    margin-bottom: 40px;
+    padding: 20px 15px;
+    margin-bottom: 20px;
 }
 
 .iteminfo {
@@ -1751,24 +1826,29 @@ textarea.form-control {
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 0 38px;
+    padding-right: 25px;
     position: relative;
-    height: 119px;
+    height: 91px;
+    width: 130px;
     border-right: 1px solid #E3E3E3;
+    margin-bottom: 20px;
 }
 
-.iteminfo:last-child {
+.iteminfo:nth-child(2n) {
     border: none;
+    padding-right: 0;
+    padding-left: 25px;
 }
 
 .iteminfo p {
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 18px;
     color: #171219;
     margin: 0;
     padding: 0;
+    width: 76px;
 }
 
 .iteminfo span {
@@ -1782,6 +1862,8 @@ textarea.form-control {
     background: #F4F2FE;
     border-radius: 10px;
     padding: 10px 15px;
+    width: 105px;
+    text-align: center;
 }
 
 .iteminfo:nth-child(1) span {
@@ -1808,31 +1890,25 @@ textarea.form-control {
     background: #EFFBFE;
 }
 
-.graphs {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+.graph {
+    display: block;
+    width: 290px;
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .itemstosale {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
-    padding: 0 25px;
     justify-content: space-between;
 }
 
 .itemstosale .product {
     display: flex;
     flex-direction: column;
-    flex: 0 0 18%;
-    -ms-flex: 0 0 18%;
-    max-width: 18%;
-}
-
-.itemstosale .product a:nth-child(2) {
-    font-size: 16px;
-    line-height: 30px;
-    font-weight: bold;
 }
 
 .itemstosale .product a {
@@ -1840,4 +1916,115 @@ textarea.form-control {
     flex-wrap: wrap;
     color: #000;
     font-weight: 400;
+}
+
+.itemstosale {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.top-sales,
+.blocks-wrapper {
+    width: 100%;
+}
+
+.itemstosale .product {
+    display: flex;
+    flex-direction: column;
+    width: 140px;
+    background: #FFFFFF;
+    box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
+    border-radius: 15px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.itemstosale .product img {
+    width: 124px;
+    height: 78px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.itemstosale .product-count {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #7F7F7F;
+    margin-top: 5px;
+}
+
+.itemstosale .product a {
+    display: flex;
+    flex-wrap: wrap;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #171219;
+}
+
+.topbar {
+    padding: 10px 15px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #51225D;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 12px;
+    position: relative;
+}
+
+.toggle-item {
+    width: 16px;
+    height: 2px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    margin: 2px 0;
+    transition: .3s;
+    opacity: 1;
+}
+
+.toggle-item:nth-child(2) {
+    width: 10px;
+}
+
+.toggle.active .toggle-item:nth-child(2) {
+    transform: translateX(100px);
+    opacity: 0;
+}
+
+.toggle.active .toggle-item:nth-child(1) {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.toggle.active .toggle-item:nth-child(3) {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.btn-tooltip {
+    display: none;
+}
+
+.editable-orders .relationship_block {
+    padding: 20px 15px;
 }

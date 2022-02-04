@@ -2,8 +2,24 @@
 
 @section('content')
 
+@if(Platform::mobile())
+	<div class="topbar">
+		<div class="toggle" :class="{ active: show_mobile_menu }" @click="show_mobile_menu = !show_mobile_menu">
+			<div class="toggle-item"></div>
+			<div class="toggle-item"></div>
+			<div class="toggle-item"></div>
+		</div>
+		<div class="sidebar-header">
+			<a href="/" target="_blank">
+				<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
+			</a>
+            <a href="/admin" class="sidebar-header-title">Admin Panel</a>
+		</div>
+	</div>
+@endif
+
 <main>
-	<template-sidebar :is_dev="is_dev" :menu="menu" :dropdown="dropdown"></template-sidebar>
+	<template-sidebar :class="{ active: show_mobile_menu }" :is_dev="is_dev" :menu="menu" :dropdown="dropdown"></template-sidebar>
 	<div class="content">
 		<router-view></router-view>
 	</div>
@@ -104,6 +120,7 @@
 			menu: [],
 			languages: languages,
 			dropdown: [],
+			show_mobile_menu: false,
 		},
 		methods: {
 			get_language: function(){
@@ -167,4 +184,21 @@
 		},
 	})
 </script>
+
+<script>
+	
+	$('.sidebar').on('click', function(e) {
+        if (this == (e.target)) {
+            $(this).removeClass('active')
+            $('.toggle').removeClass('active')
+        }
+    })
+	$('.sidebar').on('click', function(e){
+		if(e.target.tagName == 'A'){
+			$(this).removeClass('active')
+			$('.toggle').removeClass('active')
+		}
+	})
+</script>
+
 @endsection

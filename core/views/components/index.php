@@ -10,7 +10,8 @@
 				<div id="datatable_wrapper">
 					<div id="datatable_filter">
 						<div class="datatables-sort">
-							<label>Сортировать:
+							<label>
+								<span>Сортировать:</span>
 								<div class="select-wrapper">
 									<select v-on:change="get_fields_instances" v-model="order">
 										<option v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :value="field.db_title" v-text="field.title"></option>
@@ -50,80 +51,84 @@
 							</svg>
 						</label>
 					</div>
-					<table class="table table-striped table-hover table-responsive datatable dataTable no-footer">
-						<thead>
-							<tr>
-								<th class="sorting_asc flex0">
-									<label class="checkbox">
-										<input class="checkbox-input" v-on:change="set_marked($event.target.checked)" style="display: none;" type="checkbox">
-										<div class="checkbox-rectangle">
-											<svg class="checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
-										</div>
-									</label>
-								</th>
-								<th class="sorting" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :class="{'flex0': field.show_in_list == 'editable' && field.type == 'checkbox'}" v-text="field.title"></th>
-								<th class="sorting">&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="instance in instances" class="datatable-tr">
-								<td class="td-content flex0">
-									<div class="td-content-conteiner">
+
+					<div class="datatable-wrapper">
+						<table class="table table-striped table-hover table-responsive datatable dataTable no-footer">
+							<thead>
+								<tr>
+									<th class="sorting_asc flex0">
 										<label class="checkbox">
-											<input class="checkbox-input" v-on:change="instance.marked = $event.target.checked" :checked="instance.marked" style="display: none;" type="checkbox">
+											<input class="checkbox-input" v-on:change="set_marked($event.target.checked)" style="display: none;" type="checkbox">
 											<div class="checkbox-rectangle">
 												<svg class="checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
 											</div>
 										</label>
-									</div>
-								</td>
-								<td class="td-content" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :class="{'flex0': field.show_in_list == 'editable' && field.type == 'checkbox'}">
-									<div class="td-content-conteiner">
-										
-										<span v-if="field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single'" v-text="instance[field.relationship_table_name + '_' + field.relationship_view_field]"></span>
-										<input class="form-control editable-input" :class="{saving: false, saved: false}" type="text" v-on:change="editable_change($event.target.value, instance, field)" v-model="instance[field.db_title]" v-else-if="field.show_in_list == 'editable' && (field.type == 'number' || field.type == 'text' || field.type == 'textarea')">
-										<label class="checkbox editable-checkbox" v-else-if="field.show_in_list == 'editable' && field.type == 'checkbox'">
-											<input class="checkbox-input" :class="{saving: false, saved: false}" v-on:change="editable_change($event.target.checked, instance, field)" v-model="instance[field.db_title]" style="display: none;" type="checkbox">
-											<div class="checkbox-rectangle">
-												<svg class="checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
+									</th>
+									<th class="sorting" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :class="{'flex0': field.show_in_list == 'editable' && field.type == 'checkbox'}" v-text="field.title"></th>
+									<th class="sorting">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="instance in instances" class="datatable-tr">
+									<td class="td-content flex0">
+										<div class="td-content-conteiner">
+											<label class="checkbox">
+												<input class="checkbox-input" v-on:change="instance.marked = $event.target.checked" :checked="instance.marked" style="display: none;" type="checkbox">
+												<div class="checkbox-rectangle">
+													<svg class="checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
+												</div>
+											</label>
+										</div>
+									</td>
+									<td class="td-content" v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :class="{'flex0': field.show_in_list == 'editable' && field.type == 'checkbox'}">
+										<div class="td-content-conteiner">
+											
+											<span v-if="field.show_in_list == 'yes' && field.type == 'relationship' && field.relationship_count == 'single'" v-text="instance[field.relationship_table_name + '_' + field.relationship_view_field]"></span>
+											<input class="form-control editable-input" :class="{saving: false, saved: false}" type="text" v-on:change="editable_change($event.target.value, instance, field)" v-model="instance[field.db_title]" v-else-if="field.show_in_list == 'editable' && (field.type == 'number' || field.type == 'text' || field.type == 'textarea')">
+											<label class="checkbox editable-checkbox" v-else-if="field.show_in_list == 'editable' && field.type == 'checkbox'">
+												<input class="checkbox-input" :class="{saving: false, saved: false}" v-on:change="editable_change($event.target.checked, instance, field)" v-model="instance[field.db_title]" style="display: none;" type="checkbox">
+												<div class="checkbox-rectangle">
+													<svg class="checkbox-mark" enable-background="new 0 0 515.556 515.556" height="512" viewBox="0 0 515.556 515.556" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m0 274.226 176.549 176.886 339.007-338.672-48.67-47.997-290.337 290-128.553-128.552z" fill="white"/></svg>
+												</div>
+											</label>
+											<span v-text="instance[field.db_title]" v-else></span>
+										</div>
+									</td>
+									<td class="td-actions">
+										<div class="td-content-conteiner td-actions-container">
+
+											<router-link :to="'/admin/' + menu_item.table_name + '/edit/' + instance.id" class="btn btn-small btn-blue btn-with-tip">
+												<svg class="btn-svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M4.23649 10.499L1.51468 7.77721L8.09785 1.19404L10.8197 3.91585L4.23649 10.499ZM1.26026 8.25666L3.75704 10.7534L0.0136719 12L1.26026 8.25666ZM11.6568 3.0823L11.1847 3.55439L8.45931 0.828983L8.93141 0.356884C9.40696 -0.118961 10.1781 -0.118961 10.6537 0.356884L11.6568 1.36C12.1289 1.83715 12.1289 2.6053 11.6568 3.0823Z" fill="black"/>
+													<clipPath id="clip0_754_1317">
+													<rect width="12" height="12" fill="white"/>
+													</clipPath>
+												</svg>
+												<div class="btn-tooltip">Редактировать</div>
+											</router-link>
+											
+											<div class="btn btn-small btn-blue td-actions-delete btn-with-tip" v-on:click="copy(instance.id)" >
+												<svg class="btn-svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M7.13278 2.25003C8.30429 2.25003 9.25781 3.20355 9.25781 4.37506V9.5H10.1328C10.8913 9.5 11.5078 8.88358 11.5078 8.12506V1.37506C11.5078 0.616547 10.8913 3.05176e-05 10.1328 3.05176e-05H3.88284C3.12433 3.05176e-05 2.50781 0.616547 2.50781 1.37506V2.25003H7.13278Z" fill="black"/>
+													<path d="M0.507843 10.625C0.507843 11.3845 1.12335 12 1.88278 12H7.13278C7.8923 12 8.50781 11.3845 8.50781 10.625V4.37503C8.50781 3.61551 7.8923 3 7.13278 3H1.88278C1.12335 3 0.507843 3.61551 0.507843 4.37503V10.625Z" fill="black"/>
+												</svg>
+												<div class="btn-tooltip">Копировать</div>
 											</div>
-										</label>
-										<span v-text="instance[field.db_title]" v-else></span>
-									</div>
-								</td>
-								<td class="td-actions">
-									<div class="td-content-conteiner td-actions-container">
+											
+											<div class="btn btn-small btn-danger td-actions-delete btn-with-tip" v-on:click="remove_row(instance.id)">
+												<svg class="btn-svg" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M4.88111 4.00017L7.8722 1.00895C7.95447 0.926606 7.99987 0.816752 8 0.699614C8 0.582411 7.9546 0.472427 7.8722 0.390216L7.61008 0.128167C7.52767 0.0456305 7.41782 0.000427246 7.30055 0.000427246C7.18348 0.000427246 7.07363 0.0456305 6.99122 0.128167L4.00013 3.11919L1.00891 0.128167C0.926634 0.0456305 0.816715 0.000427246 0.699512 0.000427246C0.582439 0.000427246 0.47252 0.0456305 0.390244 0.128167L0.128 0.390216C-0.0426667 0.560883 -0.0426667 0.838476 0.128 1.00895L3.11915 4.00017L0.128 6.99126C0.0456585 7.07373 0.000325203 7.18358 0.000325203 7.30072C0.000325203 7.41786 0.0456585 7.52771 0.128 7.61012L0.390179 7.87217C0.472455 7.95464 0.582439 7.99991 0.699447 7.99991C0.81665 7.99991 0.926569 7.95464 1.00885 7.87217L4.00006 4.88108L6.99115 7.87217C7.07356 7.95464 7.18341 7.99991 7.30049 7.99991H7.30062C7.41776 7.99991 7.52761 7.95464 7.61002 7.87217L7.87213 7.61012C7.95441 7.52778 7.9998 7.41786 7.9998 7.30072C7.9998 7.18358 7.95441 7.07373 7.87213 6.99132L4.88111 4.00017Z" fill="#F8F9FB"/>
+												</svg>
+												<div class="btn-tooltip">Удалить</div>
+											</div>
 
-										<router-link :to="'/admin/' + menu_item.table_name + '/edit/' + instance.id" class="btn btn-small btn-blue btn-with-tip">
-											<svg class="btn-svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M4.23649 10.499L1.51468 7.77721L8.09785 1.19404L10.8197 3.91585L4.23649 10.499ZM1.26026 8.25666L3.75704 10.7534L0.0136719 12L1.26026 8.25666ZM11.6568 3.0823L11.1847 3.55439L8.45931 0.828983L8.93141 0.356884C9.40696 -0.118961 10.1781 -0.118961 10.6537 0.356884L11.6568 1.36C12.1289 1.83715 12.1289 2.6053 11.6568 3.0823Z" fill="black"/>
-												<clipPath id="clip0_754_1317">
-												<rect width="12" height="12" fill="white"/>
-												</clipPath>
-											</svg>
-											<div class="btn-tooltip">Редактировать</div>
-										</router-link>
-										
-										<div class="btn btn-small btn-blue td-actions-delete btn-with-tip" v-on:click="copy(instance.id)" >
-											<svg class="btn-svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M7.13278 2.25003C8.30429 2.25003 9.25781 3.20355 9.25781 4.37506V9.5H10.1328C10.8913 9.5 11.5078 8.88358 11.5078 8.12506V1.37506C11.5078 0.616547 10.8913 3.05176e-05 10.1328 3.05176e-05H3.88284C3.12433 3.05176e-05 2.50781 0.616547 2.50781 1.37506V2.25003H7.13278Z" fill="black"/>
-												<path d="M0.507843 10.625C0.507843 11.3845 1.12335 12 1.88278 12H7.13278C7.8923 12 8.50781 11.3845 8.50781 10.625V4.37503C8.50781 3.61551 7.8923 3 7.13278 3H1.88278C1.12335 3 0.507843 3.61551 0.507843 4.37503V10.625Z" fill="black"/>
-											</svg>
-											<div class="btn-tooltip">Копировать</div>
 										</div>
-										
-										<div class="btn btn-small btn-danger td-actions-delete btn-with-tip" v-on:click="remove_row(instance.id)">
-											<svg class="btn-svg" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M4.88111 4.00017L7.8722 1.00895C7.95447 0.926606 7.99987 0.816752 8 0.699614C8 0.582411 7.9546 0.472427 7.8722 0.390216L7.61008 0.128167C7.52767 0.0456305 7.41782 0.000427246 7.30055 0.000427246C7.18348 0.000427246 7.07363 0.0456305 6.99122 0.128167L4.00013 3.11919L1.00891 0.128167C0.926634 0.0456305 0.816715 0.000427246 0.699512 0.000427246C0.582439 0.000427246 0.47252 0.0456305 0.390244 0.128167L0.128 0.390216C-0.0426667 0.560883 -0.0426667 0.838476 0.128 1.00895L3.11915 4.00017L0.128 6.99126C0.0456585 7.07373 0.000325203 7.18358 0.000325203 7.30072C0.000325203 7.41786 0.0456585 7.52771 0.128 7.61012L0.390179 7.87217C0.472455 7.95464 0.582439 7.99991 0.699447 7.99991C0.81665 7.99991 0.926569 7.95464 1.00885 7.87217L4.00006 4.88108L6.99115 7.87217C7.07356 7.95464 7.18341 7.99991 7.30049 7.99991H7.30062C7.41776 7.99991 7.52761 7.95464 7.61002 7.87217L7.87213 7.61012C7.95441 7.52778 7.9998 7.41786 7.9998 7.30072C7.9998 7.18358 7.95441 7.07373 7.87213 6.99132L4.88111 4.00017Z" fill="#F8F9FB"/>
-											</svg>
-											<div class="btn-tooltip">Удалить</div>
-										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
 					<div class="index-pagination">
 						<div class="index-pagination-btns">
 							<div class="index-pagination-number index-pagination-prev" onselectstart="return false" :class="{'disabled': curr_page == 1}" v-on:click="prev_page()">

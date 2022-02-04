@@ -32,12 +32,13 @@
 <script src="/vendor/fastadminpanel/js/ckeditor-MyCustomUploadAdapterPlugin.js"></script>
 <script src="/vendor/fastadminpanel/ckeditor/ckeditor.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>
-<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor.css" />
 
 @if (Agent::isMobile() && !Agent::isTablet())
 	<link rel="stylesheet" href="<?php include 'vendor/fastadminpanel/css/converter-mobile.php' ?>">
+	<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor-mobile.css" />
 @else
 	<link rel="stylesheet" href="<?php include 'vendor/fastadminpanel/css/converter-desktop.php' ?>">
+	<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor.css" />
 @endif
 
 <title>Admin panel</title>
