@@ -125,6 +125,7 @@ class FastAdminPanelTranslate extends Command {
 		'is_available',
 		'articul',
 		'price',
+		'icon'
 	];
 
 	private $not_translate_fields = [
@@ -522,6 +523,61 @@ class FastAdminPanelTranslate extends Command {
 		}
 
 		return 'Success';
+	}
+
+	public function translate_table ($table) {
+
+		$counter = 0;
+
+		set_time_limit(2500);
+
+		$langs = DB::table('languages')
+		->where('main_lang', '!=', 1)
+		->get();
+
+		$main_tag = DB::table('languages')
+		->where('main_lang', 1)
+		->first()
+		->tag;
+
+		foreach ($langs as $lang) {
+							
+			$menu_row = DB::table('menu')
+			->where('table_name', $table)
+			->first();
+
+			if ($menu_row->multilanguage == 1) {
+
+				$table_count_rows = DB::table("{$table}_$main_tag")
+				->select('id')
+				->get()->pluck('id');
+
+				foreach($table_count_rows as $row_id){
+					$row = DB::table("{$table}_$main_tag")
+					->where('id', $row_id)
+					->first();
+	
+					$update = [];
+					foreach ($row as $coll => $cell) {
+						if (!in_array($coll, $this->not_translate_cols) && !empty($cell) && mb_strpos($coll, 'id_') !== 0) {
+							$cell = Translater::tr($cell, $main_tag, $lang->tag);
+
+							echo ++$counter, "\n";
+							echo $cell, "\n";
+						}
+						if ($coll != 'id')
+							$update[$coll] = $cell;
+						if ($coll == 'id') {
+							continue;
+						}
+					}
+					DB::table("{$table}_{$lang->tag}")
+					->where('id', $row->id)
+					->update($update);
+				}
+				
+			}
+		}
 	}
 
 	public function translate_admin () {
