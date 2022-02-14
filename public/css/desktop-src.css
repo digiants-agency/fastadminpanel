@@ -1294,7 +1294,6 @@ select:focus {
 }
 
 .select-wrapper .form-control {
-    padding: 0 20px;
     height: 36px;
 }
 
@@ -1504,7 +1503,6 @@ select:focus {
     padding: 0;
     display: block;
     text-align: left;
-    margin-bottom: 5px;
 }
 
 .field-title {
