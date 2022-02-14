@@ -4150,3 +4150,8 @@ label.ck.ck-color-grid__label {
 .ck.ck-table-properties-form .ck-form__row.ck-table-properties-form__alignment-row .ck.ck-toolbar .ck-toolbar__items>* {
     width: 2.7778vw
 }
+
+.ck ul, 
+.ck ol {
+    margin-left: 1vw;
+}
