@@ -60,8 +60,10 @@ class Pagination extends Component
 			
 		if ($page_count > 1) {
 			
-			if ($curr > 1) 
+			if ($curr > 1){
 				$obj['arrow_left'] = $curr - 1;
+				$obj['arrow_first'] = 1;
+			} 
 
 			if ($page_count > 7) {
 			
@@ -100,14 +102,16 @@ class Pagination extends Component
 				$obj['middle'] = [];
 				$obj['first'] = 1;
 				$obj['last'] = $page_count;
-				for ($i = 2;$i < $page_count;$i++) {
+				for ($i = 2; $i < $page_count; $i++) {
 
 					$obj['middle'][] = $i;
 				}
 			}
 			
-			if ($page_count > $curr) 
+			if ($page_count > $curr) {
 				$obj['arrow_right'] = $curr + 1;
+				$obj['arrow_last'] = $page_count;
+			} 
 			
 			$obj['active'] = $curr;
 			$obj['link'] = $link;
