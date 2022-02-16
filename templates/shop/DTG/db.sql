@@ -1812,13 +1812,14 @@ CREATE TABLE `npwarehouses` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-----
+--
 -- Дамп данных таблицы `npwarehouses`
 --
 
 INSERT INTO `npwarehouses` (`id`, `site_key`, `description`, `description_ru`, `short_address`, `short_address_ru`, `phone`, `type_of_warehouse`, `ref`, `city_ref`, `city_description`, `city_description_ru`, `settlement_ref`, `number`, `created_at`, `updated_at`) VALUES
 (1, '19709', 'Пункт приймання-видачі (до 30 кг): вул. Андрія Бобира, 13', 'Пункт приема-выдачи (до 30 кг): ул. Андрея Бобырь, 13', 'Ничипорівка, Андрія Бобира, 13', 'Ничипоровка, Андрея Бобырь, 13', '380800500609', '841339c7-591a-42e2-8233-7a0a00f0ed6f', 'e68be3b9-ca66-11e9-b0c5-005056b24375', '5f732140-8837-11e9-898c-005056b24375', 'Ничипорівка', 'Нечипоровка', '0ea103c8-4b3a-11e4-ab6d-005056801329', 1, '2022-02-15 09:05:51', '2022-02-15 09:05:51');
 
+-- --------------------------------------------------------
 
 -- Індекси збережених таблиць
 --
