@@ -54,11 +54,15 @@
 </footer>
 
 <x-modals.error />
+
 <x-modals.callback />
 <x-modals.cart />
+
 <x-modals.login />
 <x-modals.register />
 <x-modals.forgot />
+
+<x-inc.chatbtn />
 
 
 <div id="loader">

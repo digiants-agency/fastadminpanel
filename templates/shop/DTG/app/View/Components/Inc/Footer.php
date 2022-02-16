@@ -65,6 +65,8 @@ class Footer extends Component
                 $elm->field('Ссылка', 'text', ''), 
                 $elm->field('Иконка (закрашеная) {32x32}', 'photo', ''), 
                 $elm->field('Иконка (маленькая) {15x15}', 'photo', ''), 
+                $elm->field('Иконка (разноцветная) {32x32}', 'photo', ''), 
+                $elm->field('Название', 'text', ''), 
             ];
             $elm->end();
         }
