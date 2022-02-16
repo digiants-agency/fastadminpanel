@@ -50,10 +50,6 @@ class ShopTemplateDTG extends ShopTemplate{
 
 		DB::unprepared($sql);
 
-		$novaposhtasql = file_get_contents($this->shop_path_package("/novaposhta.sql"));
-
-		DB::unprepared($novaposhtasql);
-
 		$langs_old = DB::table('languages')
 		->get();
 

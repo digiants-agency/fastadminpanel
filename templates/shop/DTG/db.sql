@@ -1790,6 +1790,28 @@ ADD `login` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
 ADD `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
 ADD `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL;
 
+-- Структура таблицы `npwarehouses`
+--
+
+CREATE TABLE `npwarehouses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description_ru` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_address_ru` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type_of_warehouse` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ref` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city_ref` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city_description_ru` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `settlement_ref` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `number` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Індекси збережених таблиць
 --
