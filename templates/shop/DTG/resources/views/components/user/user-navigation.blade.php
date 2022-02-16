@@ -156,6 +156,7 @@
         if (response.success){
             
             $('#user-navigation').html(response.data.navigation)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (screen.width > 900)
                 $('#user-content').html(response.data.content)
