@@ -767,9 +767,9 @@ td.td-content {
 }
 
 .dropdown-td-wrapper .photo-preview-img {
-    width: 9.7222vw;
+    width: 2.2222vw;
+    height: 2.2222vw;
     margin-bottom: 0;
-    max-width: max-content;
 }
 
 .form-control-checkbox {
