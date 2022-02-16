@@ -22,8 +22,6 @@
 
 					<x-checkout.checkout-personal />
 
-					<x-checkout.checkout-delivery />
-
 					<x-checkout.checkout-type-delivery />
 
 					<x-checkout.checkout-payment />

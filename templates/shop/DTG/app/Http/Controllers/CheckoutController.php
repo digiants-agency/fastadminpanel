@@ -11,6 +11,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\View\Components\Cart\Cart as CartComponent;
 use Illuminate\Support\Facades\Auth;
+use App\NovaPoshta\Delivery\NovaPoshtaApi2;
 
 class CheckoutController extends Controller
 {
@@ -38,6 +39,92 @@ class CheckoutController extends Controller
 
 	}
 
+	public function get_city() {
+
+		$input = request()->get('city');
+		$np = new NovaPoshtaApi2('6fbacbe26346597568aec4fd476fda8b');
+		$cities = $np->getCities(0, $input);
+
+		$cities_array = [];
+		foreach ($cities['data'] as $city){
+			if (Lang::get() == 'ru'){
+
+				$cities_array[] = [
+					'name'	=> $city['DescriptionRu'],
+					'ref'	=> $city['Ref'],
+				];
+			} else {
+				$cities_array[] = [
+					'name'	=> $city['Description'],
+					'ref'	=> $city['Ref'],
+				];
+			}
+		}
+
+		$html = "<div class='input-group-autocomplete-wrapper'>";
+        foreach ($cities_array as $city_elm) {
+			$html .= '<div onclick="getCity(this)" class="input-group-autocomplete-item" value="' . $city_elm['ref'] . '">' .$city_elm['name'] . '</div>'; 
+        }
+		$html .= "</div>";
+
+		if (empty($cities_array)) {
+
+			return $this->error();
+
+		} else {
+
+			return $this->response([
+				'html'	=> $html
+			]);
+
+		}
+	}
+
+	public function get_warehouse() {
+
+		$city = request()->get('city');
+		$warehouse = request()->get('warehouse');
+
+		$warehouses = DB::table('npwarehouses')
+		->where('city_ref', $city)
+		->where('number',  'like', '%' . $warehouse . '%')
+		->get();
+
+		$warehouses_array = [];
+		foreach ($warehouses as $warehouse){
+			if (Lang::get() == 'ru'){
+
+				$warehouses_array[] = [
+					'name'	=> $warehouse->description_ru,
+					'ref'	=> $warehouse->ref,
+				];
+			} else {
+				$warehouses_array[] = [
+					'name'	=> $warehouse->description,
+					'ref'	=> $warehouse->ref,
+				];
+			}
+		}
+
+		$html = "<div class='input-group-autocomplete-wrapper'>";
+        foreach($warehouses_array as $warehouse_elm){
+            $html .= '<div onclick="getWarehouse(this)" class="input-group-autocomplete-item" value="' . $warehouse_elm['ref'] . '">' . $warehouse_elm['name'] . '</div>';
+        }
+		$html .= "</div>";
+
+		if (empty($warehouses_array)) {
+
+			return $this->error();
+
+		} else {
+
+			return $this->response([
+				'html'	=> $html
+			]);
+
+		}
+	}
+
 	public function order (Request $r, Delivery $delivery_model, Payment $payment_model) {
 
 		$order = new Order();
@@ -51,8 +138,19 @@ class CheckoutController extends Controller
 		$order->user_name = $r->get('name');
 		$order->user_email = $r->get('email');
 		$order->user_phone = $r->get('phone');
-		$order->city = $r->get('city');
-		$order->region = $r->get('region');
+
+		if( !empty($r->get('city')) && !empty($r->get('region')) ) {
+
+			$order->city = $r->get('city') ;
+			$order->region = $r->get('region');
+
+		} else {
+
+			$order->city = '-' ;
+			$order->region = '-' ;
+
+		}
+
 		$order->recall = intval($r->get('recall'));
 		$order->status_payment = 0;
 		$order->id_orders_status = 1;

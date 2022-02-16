@@ -23,6 +23,8 @@
                 :price="$delivery_item->price"
             />
             
+            <x-checkout.checkout-delivery />
+            
         @endif
 
         

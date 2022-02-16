@@ -49,6 +49,8 @@ Route::group([
 
 	Route::get('/{slug}', 'PageController@standart');
 
+	Route::get('/np/update-all-warehouses', 'NovaPoshtaController@update_warehouses');
+
 	Route::post('/api/show-more-reviews', 'ReviewController@show_more_reviews');
 	Route::post('/api/send-review', 'ReviewController@send_review');
 	Route::post('/api/send-horizontal', 'CallbackController@send_horizontal');
@@ -67,6 +69,8 @@ Route::group([
 	Route::post('/api/add-to-cart', 'CartController@add');
 	Route::post('/api/change-delivery', 'CheckoutController@change_delivery');
 	Route::post('/api/order', 'CheckoutController@order');
+	Route::post('/api/get-city', 'CheckoutController@get_city');
+	Route::post('/api/get-department', 'CheckoutController@get_warehouse');
 
 	Route::post('/api/saved', 'SavedController@saved');
 	Route::post('/api/saved/clear', 'SavedController@clear');
