@@ -1,6 +1,6 @@
 <?php
 
-use App\NovaPoshta\Delivery;
+namespace App\NovaPoshta\Delivery;
 
 /**
  * Nova Poshta API Class.

@@ -23,8 +23,13 @@
                 :price="$delivery_item->price"
             />
             
-            <x-checkout.checkout-delivery />
             
+        @endif
+       
+        @if($delivery_item->slug == 'novaya-pochta')
+
+            <x-checkout.checkout-delivery />
+
         @endif
 
         
@@ -51,6 +56,12 @@
     <script>
         
         $('input[name="delivery"]').on('change', async function(){
+
+            if ( $(this).val() == 'novaya-pochta') {
+                $('.novaya-pochta').addClass('active')
+            } else {
+                $('.novaya-pochta').removeClass('active')
+            }
             
             const response = await post(lang + '/api/change-delivery', {
                 delivery: $(this).val()
