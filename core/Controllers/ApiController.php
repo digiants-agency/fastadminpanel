@@ -701,8 +701,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				$parents = [];
 
-				$item_table = explode('_', $tables[0])[0]; 
-
 				foreach ($tables as $tbl_index => $tbl){
 
 					$editable_items = DB::table($tbl)
@@ -742,7 +740,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 						if ($tbl_index == 0){
 							$parents[] = [
 								'id'		=> $item_id,
-								'table'		=> $item_table,
+								'table'		=> $table_name,
 								'new_id'	=> $new_editable_id,
 							];
 						}
