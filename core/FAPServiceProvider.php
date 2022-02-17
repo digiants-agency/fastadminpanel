@@ -29,17 +29,17 @@ class FAPServiceProvider extends ServiceProvider
 		
 		Blade::directive('desktopcss', function () {
 
-            return "<?php if(Platform::desktop()){ ob_start(); ?>";
+            return "<?php ob_start(); ?>";
         });
 
         Blade::directive('mobilecss', function () {
         
-            return '<?php Convertor::create($view_name, ob_get_clean()); } else { ob_start(); ?>';
+            return '<?php Convertor::create($view_name, ob_get_clean(), true); ob_start(); ?>';
         });
 
         Blade::directive('endcss', function () {
 
-            return '<?php Convertor::create($view_name, ob_get_clean()); } ?>';
+            return '<?php Convertor::create($view_name, ob_get_clean(), false); ?>';
         });
 
         Blade::directive('js', function ($index) {
