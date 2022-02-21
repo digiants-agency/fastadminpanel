@@ -88,7 +88,7 @@ class Convertor
 
         if ($is_cache){
 
-    	    return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css'>";
+    	    return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
         }
 
         $styles_desktop = file_get_contents(self::$style_source_path_desktop);
@@ -120,7 +120,7 @@ class Convertor
 
         file_put_contents($page_css, $styles);
 
-        return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css'>";
+        return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
     }
 
     public static function remove_style($style){
