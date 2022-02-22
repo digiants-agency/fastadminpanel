@@ -31,8 +31,19 @@ class Single {
 		'repeat' => 'single_text',
 	];
 
+	public static $tables = [
+		'single_date',
+		'single_datetime',
+		'single_int',
+		'single_tinyint',
+		'single_money',
+		'single_text',
+		'single_varchar',
+	];
+
 	protected $page;
 	protected $fields = [];
+	protected $values = [];
 
 	protected $sorts = [];
 
@@ -73,11 +84,50 @@ class Single {
 			->where('title', $title)
 			->first();
 
-			$this->fields = $this->format_fields(
-				DB::table('single_field')
-				->where('single_page_id', $this->page->id)
-				->get()
-			);
+			$fields = DB::table('single_field')
+			->where('single_page_id', $this->page->id)
+			->get();
+
+			$this->fields = $this->format_fields($fields);
+
+			$field_ids = $fields->pluck('id');
+			$tables = self::$tables;
+
+			$first_table = array_shift($tables);
+
+			$request = DB::table($first_table)
+			->select('field_id', 'value', DB::raw('"0" as is_multi'))
+			->whereIn('field_id', $field_ids);
+
+			$request_multi = DB::table($first_table.Lang::ending(true))
+			->select('field_id', 'value', DB::raw('"1" as is_multi'))
+			->whereIn('field_id', $field_ids);
+
+			$request->union($request_multi);
+
+			foreach ($tables as $tbl) {
+
+				$subrequest = DB::table($tbl)
+				->select('field_id', 'value', DB::raw('"0" as is_multi'))
+				->whereIn('field_id', $field_ids);
+
+				$subrequest_multi = DB::table($tbl.Lang::ending(true))
+				->select('field_id', 'value', DB::raw('"1" as is_multi'))
+				->whereIn('field_id', $field_ids);
+
+				$request->union($subrequest);
+				$request->union($subrequest_multi);
+			}
+
+			$raw_values = $request->get();
+			$values = [];
+
+			foreach ($raw_values as $value) {
+
+				$values[$value->field_id . $value->is_multi] = $value->value;
+			}
+
+			$this->values = $values;
 		}
 	}
 
@@ -173,15 +223,12 @@ class Single {
 
 		} else {
 
-			$obj = DB::table(Single::$type_table[$type].Lang::ending($is_multilanguage))
-			->select('value')
-			->where('field_id', $this->fields[$field_block][$field_title]->id)
-			->first();
+			$field_id = $this->fields[$field_block][$field_title]->id;
+			$value_id = $field_id . $is_multilanguage;
 
-			if (empty($obj)) $value = null;
-			else $value = $obj->value;
+			$value = $this->values[$value_id] ?? null;
 
-			Single::format_value($value, $type, $is_multilanguage, $this->fields[$field_block][$field_title]->id);
+			Single::format_value($value, $type, $is_multilanguage, $field_id);
 
 			if (empty($value))
 				return $default_val;
