@@ -9,36 +9,42 @@ use Route;
 class Convertor
 {
 
-    private static $width_mobile = 320;
-    private static $width_desktop = 1440;
-    private static $style_source_path_desktop = 'css/desktop-src.css';
-    private static $style_source_path_mobile = 'css/mobile-src.css';
+    private static $width = [
+        'desktop'   => 1440,
+        'mobile'    => 320,
+    ];
+
+    private static $style_source_path = [
+        'desktop'   => 'css/desktop-src.css',
+        'mobile'    => 'css/mobile-src.css',
+    ];
     
     public static $views = [];
 
     public static function create ($view, $style, $is_desktop = false) {
-
-        $style = self::remove_style($style);
                 
         if ($is_desktop) {
 
             self::$views['desktop'][$view] = $style;
+
         } else {
+
             self::$views['mobile'][$view] = $style;
         }
     }
 
     public static function convert() {
-        
+
         $cache_dir = public_path()."/css/cache";
         $css_dir = "/css/cache";
         
         $components_dir = resource_path().'/views/';
         
-        if (!empty(request()->route()->getAction()['controller']))
-            
+        if (!empty(request()->route()->getAction()['controller'])) {
+
             $method = request()->route()->getAction()['controller'];
-        else {
+
+        } else {
 
             $method = '404';
         }
@@ -64,68 +70,72 @@ class Convertor
 
         $is_cache = true;
 
-        if (file_exists($page_css)){
+        if (file_exists($page_css)) {
 
-            $time_source = filemtime($page_css);
+            // TODO: need collision research
+            $base_time = filemtime(self::$style_source_path['desktop']);
+            $cache_time = $base_time;
+
+            $cache_time += $base_time - filemtime(self::$style_source_path['mobile']);
+
             foreach (self::$views['desktop'] as $key => $view){
 
                 $key = str_replace('.', '/', $key);
 
-                $time_component = filemtime($components_dir.$key.'.blade.php');
-                
-                $time_css_desktop = filemtime(self::$style_source_path_desktop);
-                $time_css_mobile = filemtime(self::$style_source_path_mobile);
-
-                if ($time_component > $time_source || $time_css_desktop > $time_source || $time_css_mobile > $time_source){
-
-                    $is_cache = false;
-                }
+                $cache_time += $base_time - filemtime($components_dir.$key.'.blade.php');
             }
+
+            $time_source = filemtime($page_css);
+
+            if ($time_source != $cache_time) {
+
+                $is_cache = false;
+            }
+
         } else {
 
             $is_cache = false;
         }
 
-        if ($is_cache){
+        if ($is_cache) {
 
-    	    return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
+            return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
         }
 
-        $styles_desktop = file_get_contents(self::$style_source_path_desktop);
-        
-        foreach (self::$views['desktop'] as $view){
+        $style_files = [];
 
-            $styles_desktop .= ' '.$view;
-        }
-        
-        $styles_mobile = file_get_contents(self::$style_source_path_mobile);
-        
-        foreach (self::$views['mobile'] as $view){
+        foreach (['desktop', 'mobile'] as $device) {
+            
+            $style_files[$device] = file_get_contents(self::$style_source_path[$device]);
 
-            $styles_mobile .= ' '.$view;
+            foreach (self::$views[$device] as $view) {
+
+                $style_files[$device] .= ' ' . self::remove_tags($view);
+            }
         }
         
         $styles = '@media (min-width: 1600px) { ';
-        $styles .= $styles_desktop;
+        $styles .= $style_files['desktop'];
         $styles .= ' }';
 
         $styles .= '@media (max-width: 1600px) and (min-width: 1000px) { ';
-        $styles .= self::px_to_vw($styles_desktop, self::$width_desktop);
+        $styles .= self::px_to_vw($style_files['desktop'], self::$width['desktop']);
         $styles .= ' }';
 
         $styles .= self::add_tablet_media(); 
         $styles .= '@media (max-width: 1000px) { ';
-        $styles .= self::px_to_vw($styles_mobile, self::$width_mobile);
+        $styles .= self::px_to_vw($style_files['mobile'], self::$width['mobile']);
         $styles .= ' }';
 
         file_put_contents($page_css, $styles);
+        touch($page_css, $cache_time);
 
         return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
     }
 
-    public static function remove_style($style){
+    public static function remove_tags($style) {
 
-        return str_replace('<style>', '', str_replace('</style>', '',htmlspecialchars_decode($style)));
+        return str_replace(['</style>', '<style>'], ['',''], htmlspecialchars_decode($style));
     }
 
     public static function px_to_vw($styles, $width) {
@@ -142,7 +152,7 @@ class Convertor
             $vw = round($val / $width * 100, 4);
 
             if (Platform::mobile())
-    		    $styles = str_replace($matches[0][$i], ' calc('.$vw.'vw * var(--coef-w))', $styles);
+                $styles = str_replace($matches[0][$i], ' calc('.$vw.'vw * var(--coef-w))', $styles);
             else 
                 $styles = str_replace($matches[0][$i], ' '.$vw.'vw', $styles);
             
@@ -152,24 +162,24 @@ class Convertor
     }
 
 
-    public static function add_tablet_media(){
+    public static function add_tablet_media() {
 
         return 
         '@media (min-width: calc(494px)) and (max-width: calc(1000px)) {
-			body {
-				--coef-w: calc(var(--width) / -1310 + 1.3771);
-				--offset: calc(4.6875vw * (('.strval(self::$width_mobile).' - '.strval(self::$width_mobile).' * var(--coef-w) + 30 * var(--coef-w)) / 30));
+            body {
+                --coef-w: calc(var(--width) / -1310 + 1.3771);
+                --offset: calc(4.6875vw * (('.strval(self::$width['mobile']).' - '.strval(self::$width['mobile']).' * var(--coef-w) + 30 * var(--coef-w)) / 30));
                 --column-width: calc( (1px * var(--width)) - (2 * var(--offset)) );
-			}
-		}
+            }
+        }
 
-		@media (max-width: calc(494px)) {
-			body {
-				--coef-w: 1;
-				--column-width: 87.2vw;
-				--offset: calc(50% - (var(--column-width) / 2));
-			}
-		}
+        @media (max-width: calc(494px)) {
+            body {
+                --coef-w: 1;
+                --column-width: 87.2vw;
+                --offset: calc(50% - (var(--column-width) / 2));
+            }
+        }
         ';
     } 
 }
