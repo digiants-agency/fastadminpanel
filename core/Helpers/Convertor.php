@@ -128,7 +128,7 @@ class Convertor
         $styles .= ' }';
 
         file_put_contents($page_css, $styles);
-        touch($page_css, $cache_time);
+        touch($page_css, $cache_time ?? null);
 
         return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
     }
