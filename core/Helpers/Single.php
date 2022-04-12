@@ -224,7 +224,7 @@ class Single {
 		} else {
 
 			$field_id = $this->fields[$field_block][$field_title]->id;
-			$value_id = $field_id . $is_multilanguage;
+			$value_id = $field_id . (int)$is_multilanguage;
 
 			$value = $this->values[$value_id] ?? null;
 
