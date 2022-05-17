@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/sitemap.xml', 'SitemapController@index');
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::group([
 	'prefix' => Lang::prefix(),
 	'middleware' => [
 		\App\FastAdminPanel\Middleware\Lang::class,
+		\App\FastAdminPanel\Middleware\Convertor::class,
 		//\App\FastAdminPanel\Middleware\RedirectSEO::class,
 	]
 ], function(){
 
-	Route::get('/', 'PageController@index');
+	Route::get('/', [PageController::class, 'index']);
 });
