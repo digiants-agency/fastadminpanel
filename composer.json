@@ -3,17 +3,15 @@
     "description": "Fast admin panel generator",
     "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Savchenko Vladyslav",
-            "email": "sv@digiants.com.ua",
-            "homepage": "https://digiants.agency",
-            "role": "Developer"
-        }
-    ],
+    "authors": [{
+        "name": "Savchenko Vladyslav",
+        "email": "sv@digiants.com.ua",
+        "homepage": "https://digiants.agency",
+        "role": "Developer"
+    }],
     "require": {
         "doctrine/dbal": "^2.9",
-        "unisharp/laravel-filemanager": "v2.2.0",
+        "unisharp/laravel-filemanager": "v2.5.1",
         "jenssegers/agent": "dev-master"
     },
     "autoload": {
@@ -26,8 +24,7 @@
             "providers": [
                 "Digiants\\FastAdminPanel\\FastAdminPanelServiceProvider"
             ],
-            "aliases": {
-            }
+            "aliases": {}
         }
     }
 }
