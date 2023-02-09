@@ -7,7 +7,6 @@ use DB;
 use Schema;
 use Validator;
 use Lang;
-use App\FastAdminPanel\Helpers\Single;
 
 class ApiController extends \App\Http\Controllers\Controller {
 
@@ -31,100 +30,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 
 		DB::table('dropdown')->insert($query);
-	}
-
-	public function set_single ($id) {
-
-		$blocks = request()->get('blocks');
-
-		foreach ($blocks as $block) {
-			foreach ($block as $field) {
-
-				$table_name = Single::$type_table[$field['type']];
-
-				if ($field['is_multilanguage'] == 1)
-					$table_name .= '_'.$_COOKIE['lang'];
-
-				Single::prepare_field_to_db($field);
-
-				if ($field['value'] === null) $field['value'] = '';
-
-				DB::statement("INSERT INTO $table_name (field_id, value) 
-				VALUES(".$field['id'].", ?) 
-				ON DUPLICATE KEY 
-				UPDATE value=?", [$field['value'],$field['value']]);
-			}
-		}
-	}
-
-	public function get_single ($id) {
-		
-		$single_fields = DB::table('single_field')
-		->select(
-			'id',
-			'is_multilanguage',
-			'type',
-			'title',
-			'block_title',
-			'single_page_id',
-			'sort'
-		)->where('single_page_id', $id)
-		->orderBy('sort', 'ASC')
-		->get();
-
-		$blocks = [];
-
-		foreach ($single_fields as &$field) {
-
-			$table_name = Single::$type_table[$field->type];
-
-			if ($field->is_multilanguage == 1)
-				$table_name .= '_'.$_COOKIE['lang'];
-			
-			$obj = DB::table($table_name)
-			->select('value')
-			->where('field_id', $field->id)
-			->first();
-
-			if (empty($obj)) $field->value = null;
-			else Single::prepare_field_to_admin($field, $obj->value);
-
-			if (empty($blocks[$field->block_title]))
-				$blocks[$field->block_title] = [];
-
-
-			$remark = '';
-			if ($field->type == 'repeat'){
-				foreach ($field->repeat as $key_field_value => $field_value){
-					$remark = null;
-					
-					foreach ($field_value as $key_field_repeat_value => &$field_repeat_value){
-
-						preg_match('/{(.*)}/', $field_repeat_value['title'], $remark);
-						if ($remark){
-	
-							$field->repeat[$key_field_value][$key_field_repeat_value]['title'] = str_replace($remark[0], '', $field_repeat_value['title']);
-							$field->repeat[$key_field_value][$key_field_repeat_value]['remark'] = $remark[1];
-						}
-	
-					}
-					
-				}
-			} else {
-				
-				preg_match('/{(.*)}/', $field->title, $remark);
-				if ($remark){
-
-					$field->title = str_replace($remark[0], '', $field->title);
-					$field->remark = $remark[1];
-	
-				}
-			}
-			
-			$blocks[$field->block_title][$field->title] = $field;
-		}
-
-		return $blocks;
 	}
 
 	public function get_menu () {
@@ -174,7 +79,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return response()->json(
 			[
 				'menu'		=> array_values(
-					DB::table('single_page')
+					DB::table('single_pages')
 					->select(
 						'id AS table_name',
 						'title',
@@ -979,20 +884,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return response()->json('{"error":"Error, file not found"}');
 	}
 
-	public function remove_language ($tag) {
-
-		Lang::remove($tag);
-
-		return 'Success';
-	}
-
-	public function add_language ($tag) {
-
-		Lang::add($tag);
-
-		return 'Success';
-	}
-
 	public function set_dynamic () {
 
 		$input = request()->all();
@@ -1204,37 +1095,6 @@ class ApiController extends \App\Http\Controllers\Controller {
 		$fields = $this->get_dynamic_fields($input);
 
 		return $this->response($fields);
-	}
-
-	public function delete_single () {
-		
-		$databases = [];
-		$input = request()->all();
-		$id = $input['id'];
-		$langs = Lang::get_langs(); 
-		
-		$field = DB::table('single_field')
-		->where('id', $id)
-		->first();
-
-		$type_table = Single::$type_table[$field->type];
-		$databases[] = $type_table;
-		foreach ($langs as $lang) {
-			$databases[] = $type_table.'_'.$lang->tag;
-		}
-		
-		DB::table('single_field')
-		->where('id', $id)
-		->delete();
-
-		foreach ($databases as $database) {
-			
-			DB::table($database)
-			->where('field_id', $id)
-			->delete();	
-		}
-		
-		return $this->response();
 	}
 
 	private function get_dynamic_fields ($input) {

@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<input class="form-control" type="text" v-model="field.value" v-on:change="error = ''" v-on:input="change" maxlength="191">
+			<input class="form-control" type="text" v-model="value" v-on:change="error = ''" v-on:input="change" maxlength="191">
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
@@ -19,37 +19,40 @@
 <script>
 	Vue.component('template-field-text',{
 		template: '#template-field-text',
-		props:['field', 'parent_hash'],
+		props: ['field', 'pointer', 'parent_hash'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
-				is_empty: false,
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (this.field.required != 'optional' && !this.field.value) {
+				const val = this.value
+
+				if (this.field.required != 'optional' && !val) {
 					this.error = 'This field is required'
 				} else if (this.field.required == 'required_once') {
 					// TODO
 				}
 									
-				if (this.field.value.length > 191)
+				if (val.length > 191)
 					this.error = 'More than maxlength (191 symbols)'
 
 				if (this.error == '')
 					return true
 				return false
 			},
-			change: function(e){
+			change(e) {
 
 				if (this.field.db_title == 'title') {
+
 					this.$root.$emit('title_changed', e.target.value, this.parent_hash)
 				}
 			},
-			slugify: function(s, opt) {
+			slugify(s, opt) {
 				s = String(s);
 				opt = Object(opt);
 				
@@ -162,23 +165,22 @@
 				
 				return opt.lowercase ? s.toLowerCase() : s;
 			},
-		},
-		created: function(){
-			if (!this.field.value)
-				this.is_empty = true
+			change_slug(title, hash) {
+				
+				if (hash == this.parent_hash) {
 
+					this.value = this.slugify(title)
+				}
+			},
+		},
+		created() {
 			
-			if (this.field.db_title == 'slug' && this.is_empty) {
-				this.$root.$on('title_changed', (title, hash)=>{
-					
-					if (hash == this.parent_hash)
-						this.field.value = this.slugify(title)
-					// this.$forceUpdate()
-				})
+			if (this.field.db_title == 'slug' && !this.value) {
+				this.$root.$on('title_changed', this.change_slug)
 			}
 		},
-		destroyed: function(){
-			// this.$root.$off('title_changed')
+		destroyed() {
+			this.$root.$off('title_changed', this.change_slug)
 		},
 	})
 </script>

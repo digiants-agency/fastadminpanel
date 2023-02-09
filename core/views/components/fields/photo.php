@@ -11,9 +11,9 @@
 		</div>
 		
 		<div class="edit-field-inner">
-			<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="error = ''">
+			<input class="form-control" type="text" :id="field.db_title" v-model="value" v-on:change="error = ''">
 			<div class="photo-preview-wrapper">
-				<img :src="field.value" alt="" class="photo-preview-img">
+				<img :src="value" alt="" class="photo-preview-img">
 				<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Добавить</div>
 			</div>
 			<div class="input-error" v-text="error"></div>
@@ -23,27 +23,28 @@
 <script>
 	Vue.component('template-field-photo',{
 		template: '#template-field-photo',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			dragenter: function(e){
+			dragenter(e) {
 				e.preventDefault()
 				e.stopPropagation()
 			},
-			dragleave: function(e){
+			dragleave(e) {
 				e.preventDefault()
 				e.stopPropagation()
 			},
-			dragover: function(e){
+			dragover(e) {
 				e.preventDefault()
 				e.stopPropagation()
 			},
-			drop: async function(e){
+			async drop(e){
 				e.preventDefault()
 				e.stopPropagation()
 				
@@ -63,7 +64,7 @@
 
 						if (obj.url) {
 
-							this.field.value = '/' + obj.url
+							this.value = '/' + obj.url
 
 						} else {
 
@@ -75,7 +76,7 @@
 					}
 				}
 			},
-			check: function(){
+			check() {
 
 				if (this.field.required != 'optional' && !this.file.value) {
 					this.error = 'This field is required'
@@ -83,12 +84,12 @@
 					// TODO
 				}
 
-				if (!this.field.value)
-					this.field.value = ''
+				if (!this.value)
+					this.value = ''
 
 				return true
 			},
-			add_photo: function(id){
+			add_photo(id) {
 
 				window.open('/laravel-filemanager?type=image', 'FileManager', 'width=900,height=600');
 				window.SetUrl = (items)=>{
@@ -97,7 +98,7 @@
 
 						var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
 						
-						this.field.value = decodeURIComponent(url)
+						this.value = decodeURIComponent(url)
 
 						break;
 					}

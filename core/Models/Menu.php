@@ -3,9 +3,11 @@
 namespace App\FastAdminPanel\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Schema;
+use DB;
 
-class Menu extends Model
-{
+class Menu extends Model {
+    
     protected $table = 'menu';   
 
     public function get_titles_menu_by_table($table) {
@@ -31,4 +33,31 @@ class Menu extends Model
         ];
     }
     
+	public function remove_tables($tag) {
+
+		$menu = $this->select('table_name', 'multilanguage')->get();
+
+		foreach ($menu as $elm) {
+
+			if ($elm->multilanguage == 1) {
+
+				Schema::dropIfExists("{$elm->table_name}_$tag");
+			}
+		}
+	}
+
+	public function add_tables($tag, $main_tag) {
+
+		$menu = $this->select('table_name', 'multilanguage')->get();
+
+		foreach ($menu as $elm) {
+
+			if ($elm->multilanguage == 1) {
+
+				Schema::dropIfExists("{$elm->table_name}_$tag");
+				DB::statement("CREATE TABLE {$elm->table_name}_$tag LIKE {$elm->table_name}_$main_tag");
+				DB::statement("INSERT {$elm->table_name}_$tag SELECT * FROM {$elm->table_name}_$main_tag");
+			}
+		}
+	}
 }

@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<input class="form-control" type="password" v-model="field.value" v-on:change="error = ''" maxlength="191">
+			<input class="form-control" type="password" v-model="value" v-on:change="error = ''" maxlength="191">
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
@@ -19,18 +19,19 @@
 <script>
 	Vue.component('template-field-password',{
 		template: '#template-field-password',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (!this.field.value)
-					this.field.value = ''
+				if (!this.value)
+					this.value = ''
 
 				return true
 			},

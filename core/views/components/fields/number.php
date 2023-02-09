@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<input class="form-control" type="text" v-model="field.value" v-on:change="error = ''">
+			<input class="form-control" type="text" v-model="value" v-on:change="error = ''">
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
@@ -19,22 +19,28 @@
 <script>
 	Vue.component('template-field-number',{
 		template: '#template-field-number',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (!$.isNumeric(this.field.value))
+				if (!$.isNumeric(this.value))
 					this.error = 'Field must be numeric. Use "." instead of ","'
 
 				if (this.error == '')
 					return true
 				return false
+			},
+		},
+		computed: {
+			default() {
+				return 0
 			},
 		},
 	})

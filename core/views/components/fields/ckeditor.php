@@ -11,19 +11,20 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<ckeditor :config="editorConfig" :editor="editor" class="form-control" v-model="field.value"></ckeditor>
+			<ckeditor :config="editorConfig" :editor="editor" class="form-control" v-model="value"></ckeditor>
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
 </script>
 <script>
-	Vue.component('template-field-ckeditor',{
+	Vue.component('template-field-ckeditor', {
 		template: '#template-field-ckeditor',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {
 			ckeditor: CKEditor.component
 		},
-		data: function () {
+		data() {
 			return {
 				error: '',
 				editor: ClassicEditor,
@@ -42,9 +43,9 @@
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (!this.field.value) {
+				if (!this.value) {
 
 					if (this.field.required != 'optional') {
 
@@ -56,7 +57,7 @@
 
 					} else {
 
-						this.field.value = ''
+						this.value = ''
 					}
 				}
 
@@ -64,6 +65,8 @@
 					return true
 				return false
 			},
+		},
+		created() {
 		},
 	})
 </script>

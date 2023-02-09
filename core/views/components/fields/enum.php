@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<select class="form-control" v-model="field.value">
+			<select class="form-control" v-model="value">
 				<option :value="field.enum[index]" v-for="(item, index) in field.enum" v-text="field.enum[index]"></option>
 			</select>
 			<div class="input-error" v-text="error"></div>
@@ -19,24 +19,25 @@
 	</div>
 </script>
 <script>
-	Vue.component('template-field-enum',{
+	Vue.component('template-field-enum', {
 		template: '#template-field-enum',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
 				return true
 			},
 		},
-		mounted: function(){
-			if (!this.field.value && this.field.enum.length > 0) {
-				this.field.value = this.field.enum[0]
+		mounted() {
+			if (!this.value && this.field.enum.length > 0) {
+				this.value = this.field.enum[0]
 			}
 		},
 	})

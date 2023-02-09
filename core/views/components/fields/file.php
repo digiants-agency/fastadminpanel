@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<input class="form-control" type="text" :id="field.db_title" v-model="field.value" v-on:change="error = ''">
+			<input class="form-control" type="text" :id="field.db_title" v-model="value" v-on:change="error = ''">
 			<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Добавить</div>
 			<div class="input-error" v-text="error"></div>
 		</div>
@@ -20,15 +20,16 @@
 <script>
 	Vue.component('template-field-file',{
 		template: '#template-field-file',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
 				if (this.field.required != 'optional' && !this.file.value) {
 					this.error = 'This field is required'
@@ -36,12 +37,12 @@
 					// TODO
 				}
 
-				if (!this.field.value)
-					this.field.value = ''
+				if (!this.value)
+					this.value = ''
 
 				return true
 			},
-			add_file: function(id){
+			add_file(id) {
 
 				window.open('/laravel-filemanager?type=file', 'FileManager', 'width=900,height=600');
 				window.SetUrl = (items)=>{
@@ -49,7 +50,7 @@
 					for (var i = 0; i < items.length; i++) {
 
 						var url = items[i].url.replace(/^.*\/\/[^\/]+/, '')
-						this.field.value = decodeURIComponent(url)
+						this.value = decodeURIComponent(url)
 
 						break;
 					}

@@ -18,33 +18,39 @@
 <script>
 	Vue.component('template-field-color',{
 		template: '#template-field-color',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (!this.field.value)
-					this.field.value = '#000000'
+				if (!this.value)
+					this.value = '#000000'
 
 				return true
 			},
 		},
-		mounted: function(){
+		computed: {
+			default() {
+				return '#000000'
+			},
+		},
+		mounted() {
 			
 			let color = '#000000'
 
-			if (!this.field.value)
-				color = this.field.value
+			if (!this.value)
+				color = this.value
 
 			$('#' + this.field.db_title).spectrum({
 				color: color,
-				change: function(color) {
-					this.field.value = color.toHexString()
+				change(color) {
+					this.value = color.toHexString()
 				}
 			})
 		},

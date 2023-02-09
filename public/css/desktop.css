@@ -245,12 +245,14 @@ fieldset {
     height: 0.8333vw;
 }
 
-.checkbox-input:checked+.checkbox-rectangle {
+.checkbox-input:checked + .checkbox-rectangle,
+.checkbox-rectangle.active {
     background: #51225D;
     border: none;
 }
 
-.checkbox-input:checked+.checkbox-rectangle>.checkbox-mark {
+.checkbox-input:checked + .checkbox-rectangle > .checkbox-mark,
+.checkbox-rectangle.active > .checkbox-mark {
     display: block;
 }
 
@@ -767,8 +769,8 @@ td.td-content {
 }
 
 .dropdown-td-wrapper .photo-preview-img {
-    width: 2.2222vw;
-    height: 2.2222vw;
+    width: 1.5278vw;
+    height: 1.5278vw;
     margin-bottom: 0;
 }
 
@@ -1294,7 +1296,6 @@ select:focus {
 }
 
 .select-wrapper .form-control {
-    padding: 0 1.3889vw;
     height: 2.5vw;
 }
 
@@ -1504,7 +1505,6 @@ select:focus {
     padding: 0;
     display: block;
     text-align: left;
-    margin-bottom: 0.3472vw;
 }
 
 .field-title {
@@ -1968,4 +1968,20 @@ textarea.form-control {
 .btn-with-tip:hover .btn-tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+.field-repeat-values {
+	padding: 1.3889vw 1.3889vw;
+    background: #FFFFFF;
+    box-shadow: 0vw 0.9722vw 2.4306vw rgba(0, 1, 20, 0.02);
+    border-radius: 0.3472vw;
+    position: relative;
+	border: 1px solid #d0d0d0;
+	margin-bottom: 1.3889vw;
+}
+
+.field-repeat-btn {
+	position: absolute;
+    top: 0.6944vw;
+    right: 0.6944vw;
 }

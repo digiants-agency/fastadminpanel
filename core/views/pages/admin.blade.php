@@ -28,15 +28,17 @@
 
 @section('javascript')
 <script>
-	var languages = JSON.parse('{!! $languages !!}')
-	var ckeditor_path = '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}"; ?>/admin/upload-image'
+	const languages = JSON.parse('{!! $languages !!}')
+	const ckeditor_path = '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}"; ?>/admin/upload-image'
 </script>
 
 @foreach ($custom_components as $custom_component)
 	@include($custom_component['path'])
 @endforeach
 
+@include('fastadminpanel.mixins.recursive-field')
 @include('fastadminpanel.components.dropdown')
+@include('fastadminpanel.components.fields.repeat')
 @include('fastadminpanel.components.fields.checkbox')
 @include('fastadminpanel.components.fields.ckeditor')
 @include('fastadminpanel.components.fields.color')
@@ -52,7 +54,6 @@
 @include('fastadminpanel.components.fields.relationship')
 @include('fastadminpanel.components.fields.text')
 @include('fastadminpanel.components.fields.textarea')
-@include('fastadminpanel.components.fields')
 @include('fastadminpanel.components.single')
 @include('fastadminpanel.components.options')
 @include('fastadminpanel.components.sidebar')
@@ -109,9 +110,8 @@
 		],
 	})
 	
-
 	Vue.component("v-select", VueSelect.VueSelect);
-	
+
 	var app = new Vue({
 		router,
 		el: '#app',

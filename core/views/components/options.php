@@ -7,41 +7,41 @@
 </script>
 
 <script>
-	Vue.component('template-options',{
+	Vue.component('template-options', {
 		template: '#template-options',
 		props: [],
-		data: function () {
+		data() {
 			return {
 
 			}
 		},
 		methods: {
-			rm_language: function(){
+			async rm_language() {
 
-				var lang_tag = prompt('Enter language', '')
+				const lang_tag = prompt('Enter language', '')
 				
 				if (lang_tag) {
 
-					request('/admin/remove-language/' + lang_tag, {}, function(data){
-						if (data == 'Success') document.location.reload()
-						else alert('Error: ' + data)
+					const response = await req.delete('/admin/api/language/' + lang_tag, {
+						blocks: this.blocks,
 					})
+
+					document.location.reload()
 				}
 			},
-			add_language: function(){
+			async add_language() {
 
-				var lang_tag = prompt('Enter language', '')
+				const lang_tag = prompt('Enter language', '')
 				
 				if (lang_tag) {
-					request('/admin/add-language/' + lang_tag, {}, function(data){
-						if (data == 'Success') document.location.reload()
-						else alert('Error: ' + data)
+
+					const response = await req.post('/admin/api/language/' + lang_tag, {
+						blocks: this.blocks,
 					})
+
+					document.location.reload()
 				}
 			},
 		},
-		mounted: function(){
-			
-		}
 	})
 </script>

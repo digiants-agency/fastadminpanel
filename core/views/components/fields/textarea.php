@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="edit-field-inner">
-			<textarea v-on:input="change" :rows="textarea_height" class="form-control" v-model="field.value" maxlength="6500"></textarea>
+			<textarea v-on:input="change" :rows="textarea_height" class="form-control" v-model="value" maxlength="6500"></textarea>
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
@@ -19,33 +19,34 @@
 <script>
 	Vue.component('template-field-textarea',{
 		template: '#template-field-textarea',
-		props:['field'],
+		props: ['field', 'pointer'],
+		mixins: [recursiveFieldMixin],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 				textarea_height: 1,
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
-				if (this.field.required != 'optional' && !this.field.value) {
+				if (this.field.required != 'optional' && !this.value) {
 					this.error = 'This field is required'
 				} else if (this.field.required == 'required_once') {
 					// TODO
 				}
 									
-				if (this.field.value.length > 6500)
+				if (this.value.length > 6500)
 					this.error = 'More than maxlength (6500 symbols)'
 
 				if (this.error == '')
 					return true
 				return false
 			},
-			change: function(e){
+			change(e) {
 
-				let count = (this.field.value.match(/\n/g) || []).length
+				let count = (this.value.match(/\n/g) || []).length
 				
 				this.textarea_height = count + 1
 

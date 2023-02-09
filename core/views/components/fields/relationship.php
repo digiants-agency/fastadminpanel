@@ -60,29 +60,26 @@
 <script>
 	Vue.component('template-field-relationship',{
 		template: '#template-field-relationship',
-		props:['field', 'table_name'],
+		props: ['field', 'table_name', 'pointer'],
 		components: {},
-		data: function () {
+		data() {
 			return {
 				error: '',
 			}
 		},
 		methods: {
-			check: function(){
+			check() {
 
 				return true
 			},
-
-			add_group: function(){
+			add_group() {
 
 				this.field.value.push({
 					id: 0, 
 					fields: JSON.parse(JSON.stringify(this.field.values)), 
 					hash: Math.random() * Date.now()
 				})
-			}
-
+			},
 		},
-
 	})
 </script>

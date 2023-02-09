@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-edit">
+<template id="template-edit">
 	<div class="edit">
 		<div class="">
 			<router-link :to="'/admin/' + menu_item.table_name" class="btn btn-primary align-self-flex-start btn-edit">
@@ -38,7 +38,7 @@
 			</template>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-edit',{
 		template: '#template-edit',
