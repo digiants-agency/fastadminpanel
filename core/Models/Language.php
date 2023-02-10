@@ -39,4 +39,31 @@ class Language extends Model {
 		});
 	}
 
+	// public function fullfill_table($console) {
+
+	// 	$count = $console->ask('Languages count');
+
+	// 	if ($count > 0) {
+
+	// 		for ($i = 1; $i <= $count; $i++) {
+
+	// 			$this->create([
+	// 				'tag'		=> $console->ask("Language tag number $i"),
+	// 				'main_lang'	=> 0,
+	// 			]);
+	// 		}
+
+	// 		$tags = $this->select('tag')->get()->pluck('tag');
+	// 		$main_tag = $console->choice('Enter main language tag', $tags, 0);
+
+	// 		$this->where('tag', $main_tag)
+	// 		->update([
+	// 			'main_lang'	=> 1,
+	// 		]);
+
+	// 	} else {
+
+	// 		throw new \Exception("There are no languages created!");
+	// 	}
+	// }
 }
