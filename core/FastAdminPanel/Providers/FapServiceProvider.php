@@ -6,14 +6,24 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use App\FastAdminPanel\Commands\FastAdminPanelTranslate;
+use App\FastAdminPanel\Single\Single;
+use App\FastAdminPanel\Helpers\Lang;
+use App\FastAdminPanel\Helpers\JSAssembler;
+use App\FastAdminPanel\Helpers\ResizeImg;
+use App\FastAdminPanel\Helpers\Field;
+use App\FastAdminPanel\Helpers\Platform;
+use App\FastAdminPanel\Helpers\Convertor;
+use App\FastAdminPanel\Helpers\SEO;
 use View;
 
+// TODO: divide this large provider
 class FAPServiceProvider extends ServiceProvider {
 
 	public function boot() {
 
 		$this->app->bind('fastadminpanel:translate', function ($app) {
-			return new \App\FastAdminPanel\Commands\FastAdminPanelTranslate();
+			return new FastAdminPanelTranslate();
 		});
 		
 		$this->commands([
@@ -61,22 +71,22 @@ class FAPServiceProvider extends ServiceProvider {
 		$this->app->booting(function() {
 			$loader = AliasLoader::getInstance();
 
-			if (\App\FastAdminPanel\Single\Single::is_update()) {
+			if (Single::is_update()) {
 
 				$loader->alias('Single', \App\FastAdminPanel\Single\Saver\Single::class);
 
 			} else {
 
-				$loader->alias('Single', \App\FastAdminPanel\Single\Single::class);
+				$loader->alias('Single', Single::class);
 			}
 
-			$loader->alias('JSAssembler', \App\FastAdminPanel\Helpers\JSAssembler::class);
-			$loader->alias('Lang', \App\FastAdminPanel\Helpers\Lang::class);
-			$loader->alias('ResizeImg', \App\FastAdminPanel\Helpers\ResizeImg::class);
-			$loader->alias('Field', \App\FastAdminPanel\Helpers\Field::class);
-			$loader->alias('Platform', \App\FastAdminPanel\Helpers\Platform::class);
-			$loader->alias('Convertor', \App\FastAdminPanel\Helpers\Convertor::class);
-			$loader->alias('SEO', \App\FastAdminPanel\Helpers\SEO::class);
+			$loader->alias('Lang', 			Lang::class);
+			$loader->alias('JSAssembler', 	JSAssembler::class);
+			$loader->alias('ResizeImg', 	ResizeImg::class);
+			$loader->alias('Field', 		Field::class);
+			$loader->alias('Platform', 		Platform::class);
+			$loader->alias('Convertor', 	Convertor::class);
+			$loader->alias('SEO', 			SEO::class);
 		});
 	}
 }
