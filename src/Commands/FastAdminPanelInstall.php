@@ -93,38 +93,8 @@ class FastAdminPanelInstall extends Command {
 	private function publish_parts () {
 
 		$this->publish_parts_folder(
-			$this->path_package('/core/Commands'),
-			base_path('/app/FastAdminPanel/Commands')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Controllers'),
-			base_path('/app/FastAdminPanel/Controllers')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Helpers'),
-			base_path('/app/FastAdminPanel/Helpers')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Middleware'),
-			base_path('/app/FastAdminPanel/Middleware')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Models'),
-			base_path('/app/FastAdminPanel/Models')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Single'),
-			base_path('/app/FastAdminPanel/Single')
-		);
-
-		$this->publish_parts_folder(
-			$this->path_package('/core/Providers'),
-			base_path('/app/FastAdminPanel/Providers')
+			$this->path_package('/core/FastAdminPanel'),
+			base_path('/app/FastAdminPanel')
 		);
 
 		$this->publish_parts_folder(
