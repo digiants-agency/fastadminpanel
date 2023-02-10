@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use App\FastAdminPanel\Commands\FastAdminPanelTranslate;
 use App\FastAdminPanel\Single\Single;
-use App\FastAdminPanel\Helpers\Lang;
+use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Helpers\JSAssembler;
 use App\FastAdminPanel\Helpers\ResizeImg;
 use App\FastAdminPanel\Helpers\Field;
@@ -67,6 +67,8 @@ class FAPServiceProvider extends ServiceProvider {
 	}
 
 	public function register() {
+
+		$this->app->singleton('lang', \App\FastAdminPanel\Language\Lang::class);
 
 		$this->app->booting(function() {
 			$loader = AliasLoader::getInstance();

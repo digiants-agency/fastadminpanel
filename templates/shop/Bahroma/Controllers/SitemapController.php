@@ -31,19 +31,19 @@ class SitemapController extends Controller
 
 	private function add_url(&$map, $url, $priority) {
 
-		if (Lang::get_langs()->count() > 1) {
+		if (Lang::langs()->count() > 1) {
 
-			foreach (Lang::get_langs() as $l) {
+			foreach (Lang::langs() as $l) {
 				$map .= '<url>
-							<loc>'.Lang::get_url($l->tag, $this->domain.$url).'</loc>
+							<loc>'.Lang::url($l->tag, $this->domain.$url).'</loc>
 							<priority>'.$priority.'</priority>';
 
-				foreach (Lang::get_langs() as $lang) {
+				foreach (Lang::langs() as $lang) {
 
 					$map .= '<xhtml:link
 								rel="alternate"
 								hreflang="'.$lang->tag.'"
-								href="'.Lang::get_url($lang->tag, $this->domain.$url).'"/>';
+								href="'.Lang::url($lang->tag, $this->domain.$url).'"/>';
 				}
 				$map .= '</url>';
 			}
@@ -51,7 +51,7 @@ class SitemapController extends Controller
 		} else {
 
 			$map .= '<url>
-						<loc>'.Lang::get_url('ru', $this->domain.$url).'</loc>
+						<loc>'.Lang::url('ru', $this->domain.$url).'</loc>
 						<priority>'.$priority.'</priority>'.
 					'</url>';
 		}

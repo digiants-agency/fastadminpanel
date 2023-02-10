@@ -75,7 +75,7 @@
 
 				<div class="langs">
 					@foreach (Lang::all() as $lang)
-						<a href="{{ Lang::get_url($lang->tag) }}" class="lang @if($lang->tag == Lang::get()) active @endif">{{ $lang->tag }}</a>
+						<a href="{{ Lang::url($lang->tag) }}" class="lang @if($lang->tag == Lang::get()) active @endif">{{ $lang->tag }}</a>
 					@endforeach
 				</div>
 			</div>
@@ -144,7 +144,7 @@
 				<div class="header-menu-langs-and-user">
 					<div class="langs">
 						@foreach (Lang::all() as $lang)
-							<a href="{{ Lang::get_url($lang->tag) }}" class="lang @if($lang->tag == Lang::get()) active @endif">{{ $lang->tag }}</a>
+							<a href="{{ Lang::url($lang->tag) }}" class="lang @if($lang->tag == Lang::get()) active @endif">{{ $lang->tag }}</a>
 						@endforeach
 					</div>
 

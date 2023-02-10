@@ -61,7 +61,7 @@ class SitemapController extends Controller
 		$this->sitemap[] = [
 			'slug' 					=> $this->domain.$url, 
 			'priority' 				=> $priority, 
-			'is_multilanguage' 		=> $is_multilanguage && Lang::get_langs()->count() > 1,
+			'is_multilanguage' 		=> $is_multilanguage && Lang::langs()->count() > 1,
 		]; 
 	}
 

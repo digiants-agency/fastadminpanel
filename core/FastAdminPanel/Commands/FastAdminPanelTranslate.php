@@ -740,7 +740,7 @@ class FastAdminPanelTranslate extends Command {
 		
 		$this->info('Start translation...');
 		
-		$langs = Lang::get_langs()->pluck('tag')->all();
+		$langs = Lang::langs()->pluck('tag')->all();
 
 		if ($this->argument('argument') == 'admin'){
 			

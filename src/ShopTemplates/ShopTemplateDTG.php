@@ -61,7 +61,7 @@ class ShopTemplateDTG extends ShopTemplate{
 		}
 
 		$new_main_lang = $langs_new->where('main_lang', 1)->first()->tag;
-		Lang::change_main($new_main_lang);
+		Lang::main($new_main_lang);
 
 		foreach ($langs_old as $lang_old){
 

@@ -8,15 +8,15 @@
 
 @foreach ($sitemap as $link)
     @if ($link['is_multilanguage'])
-        @foreach (Lang::get_langs() as $lang)
+        @foreach (Lang::langs() as $lang)
             <url>
-                <loc>{{ Lang::get_url($lang->tag, $link['slug']) }}</loc>
+                <loc>{{ Lang::url($lang->tag, $link['slug']) }}</loc>
                 <priority>{{ $link['priority'] }}</priority>
-                    @foreach (Lang::get_langs() as $lang_for_children) 
+                    @foreach (Lang::langs() as $lang_for_children) 
                         <xhtml:link 
                             rel="alternate"
                             hreflang="{{ $lang_for_children->tag }}"
-                            href="{{ Lang::get_url($lang_for_children->tag, $link['slug']) }}"/>        
+                            href="{{ Lang::url($lang_for_children->tag, $link['slug']) }}"/>        
                     @endforeach
             </url>
         @endforeach

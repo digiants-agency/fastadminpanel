@@ -20,9 +20,9 @@
 	<meta property="og:image" content="{{url('/images/og.jpg')}}">
 @endif
 
-@if (Lang::get_langs()->count() > 1)
-	@foreach (Lang::get_langs() as $lang)
-		<link rel="alternate" hreflang="{{$lang->tag}}" href="{{Lang::get_url($lang->tag)}}"/>
+@if (Lang::langs()->count() > 1)
+	@foreach (Lang::langs() as $lang)
+		<link rel="alternate" hreflang="{{$lang->tag}}" href="{{Lang::url($lang->tag)}}"/>
 	@endforeach
 @endif
 
