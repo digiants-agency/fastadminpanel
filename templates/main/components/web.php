@@ -20,7 +20,6 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 Route::group([
 	'prefix' => Lang::prefix(),
 	'middleware' => [
-		\App\FastAdminPanel\Middleware\Lang::class,
 		\App\FastAdminPanel\Middleware\Convertor::class,
 		//\App\FastAdminPanel\Middleware\RedirectSEO::class,
 	]
