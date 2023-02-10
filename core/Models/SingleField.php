@@ -34,7 +34,7 @@ class SingleField extends MultilanguageModel {
 
 	public function multilanguage_save() {
 
-		if ($this->is_multilanguage == 1) {
+		if ($this->is_multilanguage == 0) {
 	
 			$langs = Lang::all();
 
