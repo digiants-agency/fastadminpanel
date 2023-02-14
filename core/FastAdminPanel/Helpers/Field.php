@@ -6,12 +6,6 @@ use DB;
 
 class Field
 {
-	public static function enterToBr($str)
-	{
-		return str_replace("\n", '<br>', str_replace('
-', '<br>', $str));
-	}
-
 	public static function bracketToSpan($str)
 	{
 		return str_replace("[", '<span>', str_replace(']', '</span>', $str));
