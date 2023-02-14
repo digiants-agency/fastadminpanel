@@ -7,9 +7,6 @@ Route::group([
 	'namespace'     => 'App\FastAdminPanel\Controllers',
 ], function() {
 
-	Route::get('/admin/newsletter/unsubscribe', 'NewsletterController@unsubscribe');
-	Route::get('/admin/newsletter/hit', 'NewsletterController@hit');
-
 	Route::post('/sign-in', 'FAPController@signIn');
 	Route::post('/admin/logout', 'FAPController@logout');
 	Route::get('/login', 'FAPController@login');
@@ -53,16 +50,6 @@ Route::group([
 		Route::post('/admin/db-remove-rows', 'ApiController@dbRemoveRows');
 
 		Route::post('/admin/upload-image', 'ApiController@uploadImage');
-
-		Route::post('/admin/newsletter/get', 'NewsletterController@get');
-		Route::post('/admin/newsletter/add', 'NewsletterController@add');
-		Route::post('/admin/newsletter/rm', 'NewsletterController@rm');
-		Route::post('/admin/newsletter/letter/add', 'NewsletterController@letterAdd');
-		Route::post('/admin/newsletter/letter/rm', 'NewsletterController@letterRm');
-		Route::post('/admin/newsletter/letter/save', 'NewsletterController@letterSave');
-		Route::post('/admin/newsletter/base/add', 'NewsletterController@baseAdd');
-		Route::post('/admin/newsletter/base/rm', 'NewsletterController@baseRm');
-		Route::post('/admin/newsletter/base/download', 'NewsletterController@baseDownload');
 
 		Route::post('/admin/get-mainpage', 'ApiController@getMainpage');
 

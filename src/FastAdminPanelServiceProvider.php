@@ -18,12 +18,8 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 		$this->app->bind('fastadminpanel:install', function ($app) {
 			return new \Digiants\FastAdminPanel\Commands\FastAdminPanelInstall();
 		});
-		$this->app->bind('newsletter:send', function ($app) {
-			return new \Digiants\FastAdminPanel\Commands\NewsletterSend();
-		});
 		$this->commands([
 			'fastadminpanel:install',
-			'newsletter:send'
 		]);
 
 		// $this->publishes([

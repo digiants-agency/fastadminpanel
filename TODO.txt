@@ -1,2 +1,0 @@
-1) Generate password and secret phrase
-2) Generate newsletter DB
