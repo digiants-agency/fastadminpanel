@@ -6,24 +6,24 @@ use App\FastAdminPanel\Models\SinglePage;
 use App\FastAdminPanel\Models\SingleField;
 use App\FastAdminPanel\Single\SingleRepeated;
 
-class Single {
-
+class Single
+{
 	protected $page;
 	protected $fields;
 
-	public function __construct($title, $sort, $parent = 0) {
-
+	public function __construct($title, $sort, $parent = 0)
+	{
 		$this->page = SinglePage::where('title', $title)
 		->first();
 
 		$fields = SingleField::where('single_page_id', $this->page->id)
 		->get();
 
-		$this->fields = $this->format_fields($fields);
+		$this->fields = $this->formatFields($fields);
 	}
 
-	public function field($field_block, $field_title, $type = null, $is_multilanguage = null, $default_val = '') {
-
+	public function field($field_block, $field_title, $type = null, $is_multilanguage = null, $default_val = '')
+	{
 		$field = $this->fields[0][$field_block . $field_title];
 
 		if ($field->type == 'repeat') {
@@ -31,11 +31,11 @@ class Single {
 			return new SingleRepeated($this->fields, $field->id, intval($field->value), []);
 		}
 
-		return $field->decode_value($field->value);
+		return $field->decodeValue($field->value);
 	}
 
-	protected function format_fields($fields) {
-
+	protected function formatFields($fields)
+	{
 		$blocks = [];
 
 		foreach ($fields as $field) {
@@ -51,8 +51,8 @@ class Single {
 		return $blocks;
 	}
 
-	public static function is_update() {
-
+	public static function isUpdate()
+	{
 		return isset($_GET['update']) && config('app.debug');
 	}
 }

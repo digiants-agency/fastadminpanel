@@ -7,25 +7,25 @@ use App\FastAdminPanel\Models\Language;
 use Illuminate\Http\Request;
 use App;
 
-class Lang {
-
+class Lang
+{
 	protected $lang = '';
 	protected $langs = [];
 	protected $host;
 	protected $model;
 
-	public function __construct(Request $request, Language $language) {
-		
+	public function __construct(Request $request, Language $language)
+	{
 		$this->model = $language;
 		$this->langs = $language->get();
 		$this->host = $request->getHost();
-		$this->lang = $this->find_lang($request, $this->langs);
+		$this->lang = $this->findLang($request, $this->langs);
 
 		App::setLocale($this->lang);
 	}
 
-	public function url($lang, $url = '') {
-
+	public function url($lang, $url = '')
+	{
 		$host = $this->host;
 
 		if ($url == '') {
@@ -57,13 +57,13 @@ class Lang {
 		return str_replace($host, "$host$prefix", $url);
 	}
 
-	public function get_url($lang, $url = '') {
-
+	public function getUrl($lang, $url = '')
+	{
 		return $this->url($lang, $url);
 	}
 
-	public function prefix($lang = '') {
-
+	public function prefix($lang = '')
+	{
 		if ($lang == '') {
 
 			$lang = $this->lang;
@@ -80,18 +80,18 @@ class Lang {
 		return $lang;
 	}
 
-	public function get() {
-
+	public function get()
+	{
 		return $this->lang;
 	}
 
-	public function tag() {
-
+	public function tag()
+	{
 		return $this->lang;
 	}
 
-	public function main($to = '') {
-
+	public function main($to = '')
+	{
 		if ($to == '') {
 
 			return $this->langs->firstWhere('main_lang', 1)->tag ?? '';
@@ -100,33 +100,33 @@ class Lang {
 		$this->model->main($to);
 	}
 
-	public function get_main() {
-
+	public function getMain()
+	{
 		return $this->main();
 	}
 
-	public function change_main($to) {
-
+	public function changeMain($to)
+	{
 		$this->main($to);
 	}
 
-	public function langs() {
-
+	public function langs()
+	{
 		return $this->langs;
 	}
 
-	public function all() {
-		
+	public function all()
+	{
 		return $this->langs;
 	}
 
-	public function get_langs() {
-
+	public function getLangs()
+	{
 		return $this->langs;
 	}
 
-	public function link($url) {
-
+	public function link($url)
+	{
 		if (mb_strpos($url, '#') === 0) {
 
 			return $url;
@@ -162,8 +162,8 @@ class Lang {
 		return "/$lang$url";
 	}
 
-	public function ending($is_multilanguage) {
-
+	public function ending($is_multilanguage)
+	{
 		if ($is_multilanguage) {
 
 			return '_' . $this->lang;
@@ -172,8 +172,8 @@ class Lang {
 		return '';
 	}
 
-	protected function find_lang($request, $langs) {
-
+	protected function findLang($request, $langs)
+	{
 		$lang = '';
 
 		$uri = $request->path();

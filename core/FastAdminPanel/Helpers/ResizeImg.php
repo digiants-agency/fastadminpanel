@@ -2,10 +2,10 @@
 
 namespace App\FastAdminPanel\Helpers;
 
-class ResizeImg {
-
-	public static function get ($path, $width, $height) {
-
+class ResizeImg
+{
+	public static function get($path, $width, $height)
+	{
 		$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
 		$site_path = public_path();

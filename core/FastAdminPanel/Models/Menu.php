@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Schema;
 use DB;
 
-class Menu extends Model {
-    
+class Menu extends Model
+{
     protected $table = 'menu';   
 
-    public function get_titles_menu_by_table($table) {
-        
+    public function getTitlesMenuByTable($table)
+	{
         $menu = $this->select('title', 'fields')
         ->where('table_name', $table)
         ->first();
@@ -33,8 +33,8 @@ class Menu extends Model {
         ];
     }
     
-	public function remove_tables($tag) {
-
+	public function removeTables($tag)
+	{
 		$menu = $this->select('table_name', 'multilanguage')->get();
 
 		foreach ($menu as $elm) {
@@ -46,8 +46,8 @@ class Menu extends Model {
 		}
 	}
 
-	public function add_tables($tag, $main_tag) {
-
+	public function addTables($tag, $main_tag)
+	{
 		$menu = $this->select('table_name', 'multilanguage')->get();
 
 		foreach ($menu as $elm) {

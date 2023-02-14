@@ -7,10 +7,10 @@ use App\FastAdminPanel\Single\Api\Getter;
 use App\FastAdminPanel\Single\Api\Setter;
 use Illuminate\Http\Request;
 
-class SingleController extends \App\Http\Controllers\Controller {
-
-	public function put(Request $request, SingleField $model, $id) {
-
+class SingleController extends \App\Http\Controllers\Controller
+{
+	public function put(Request $request, SingleField $model, $id)
+	{
 		$blocks = $request->get('blocks');
 
 		$setter = new Setter($model, $id);
@@ -20,8 +20,8 @@ class SingleController extends \App\Http\Controllers\Controller {
 		return $this->response();
 	}
 
-	public function get(SingleField $model, $id) {
-
+	public function get(SingleField $model, $id)
+	{
 		$getter = new Getter($model, $id);
 
 		$blocks = $getter->get();

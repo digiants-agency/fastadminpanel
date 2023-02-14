@@ -4,8 +4,8 @@ namespace App\FastAdminPanel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model {
-	
+class Language extends Model
+{
 	public $timestamps = false;
 
 	protected $table = 'languages';
@@ -15,16 +15,17 @@ class Language extends Model {
 		'main_lang',
 	];
 
-	public static function boot() {
+	public static function boot()
+	{
 		parent::boot();
 
 		static::deleting(function($lang) {
 
 			$menu = new Menu();
-			$menu->remove_tables($lang->tag);
+			$menu->removeTables($lang->tag);
 			
 			$field = new SingleField();
-			$field->remove_tables($lang->tag);
+			$field->removeTables($lang->tag);
 		});
 
 		static::creating(function($lang) {
@@ -32,15 +33,15 @@ class Language extends Model {
 			$main = Language::select('tag')->where('main_lang', 1)->first();
 
 			$menu = new Menu();
-			$menu->add_tables($lang->tag, $main->tag);
+			$menu->addTables($lang->tag, $main->tag);
 			
 			$field = new SingleField();
-			$field->add_tables($lang->tag, $main->tag);
+			$field->addTables($lang->tag, $main->tag);
 		});
 	}
 
-	public function main($to = '') {
-
+	public function main($to = '')
+	{
 		if ($to == '') {
 
 			return $this->where('main_lang', 1)->first();
@@ -56,7 +57,8 @@ class Language extends Model {
 		]);
 	}
 
-	// public function fullfill_table($console) {
+	// public function fullfill_table($console)
+	// {
 
 	// 	$count = $console->ask('Languages count');
 

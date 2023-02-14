@@ -8,8 +8,8 @@ class Translater
 	private static $imgs = [];
 	private static $links = [];
 
-	private static function encode_images ($text) {
-
+	private static function encodeImages($text)
+	{
 		Translater::$imgs = [];
 
 		$tags_mask = [
@@ -50,8 +50,8 @@ class Translater
 		return $text;
 	}
 
-	private static function decode_images ($text) {
-
+	private static function decodeImages($text)
+	{
 		$tags_mask_back = [
 			'☀','👆','☁','👇','☂','👈','✊','👉','✋','👊','👋','👌','☏','☐','☑','☒','☓','☔','☕','☖','☗','☘','☙','☚',
 		];
@@ -332,16 +332,15 @@ class Translater
 		return rtrim($fields_string, '&');
 	}
 
-	public static function tr ($content, $source, $target, $attempts = 5) {
-
-
+	public static function tr ($content, $source, $target, $attempts = 5)
+	{
 		sleep(1);
 
-		$content = Translater::encode_images($content);
+		$content = Translater::encodeImages($content);
 
 		if (mb_strlen($content) < 4000) {
 			$content = Translater::translate($source, $target, $content, $attempts);
-			return Translater::decode_images($content);
+			return Translater::decodeImages($content);
 		}
 		
 		$arraytext = array();
@@ -360,7 +359,7 @@ class Translater
 			$result .= Translater::translate($source, $target, $item, $attempts);
 		}
 
-		$result = Translater::decode_images($result);
+		$result = Translater::decodeImages($result);
 
 		return $result;
 	}

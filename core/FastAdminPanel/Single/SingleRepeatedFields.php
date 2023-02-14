@@ -4,21 +4,21 @@ namespace App\FastAdminPanel\Single;
 
 use App\FastAdminPanel\Single\SingleRepeated;
 
-class SingleRepeatedFields {
-
+class SingleRepeatedFields
+{
 	protected $fields;
 	protected $parent_id;
 	protected $pointer;
 
-	public function __construct($fields, $parent_id, $pointer) {
-
+	public function __construct($fields, $parent_id, $pointer)
+	{
 		$this->fields = $fields;
 		$this->parent_id = $parent_id;
 		$this->pointer = $pointer;
 	}
 
-	public function field($field_title, $type = '') {
-
+	public function field($field_title, $type = '')
+	{
 		$field = $this->fields[$this->parent_id][$field_title];
 
 		$value = json_decode($field->value);
@@ -33,6 +33,6 @@ class SingleRepeatedFields {
 			return new SingleRepeated($this->fields, $field->id, intval($value), $this->pointer);
 		}
 
-		return $field->decode_value($value);
+		return $field->decodeValue($value);
 	}
 }

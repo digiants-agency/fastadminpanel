@@ -7,10 +7,10 @@ use Auth;
 use Hash;
 use DB;
 
-class FAPController extends \App\Http\Controllers\Controller {
-
-	public function admin () {
-
+class FAPController extends \App\Http\Controllers\Controller
+{
+	public function admin()
+	{
 		$languages = DB::table('languages')->get();
 		$custom_components_path = resource_path('views/fastadminpanel/components/custom');
 		$custom_components_files = scandir($custom_components_path);
@@ -26,25 +26,19 @@ class FAPController extends \App\Http\Controllers\Controller {
 			}
 		}
 
-		$data = array(
+		return view('fastadminpanel.pages.admin')->with([
 			'languages'			=> $languages,
 			'custom_components'	=> $custom_components,
-		);
-
-		return view('fastadminpanel.pages.admin')->with($data);
+		]);
 	}
 
-	public function login () {
-
-
-		$data = array(
-		);
-
-		return view('fastadminpanel.pages.login')->with($data);
+	public function login()
+	{
+		return view('fastadminpanel.pages.login')->with([]);
 	}
 
-	public function sign_in () {
-
+	public function signIn()
+	{
 		$request = request();
 
 		$email = $request->get('email');
@@ -54,12 +48,14 @@ class FAPController extends \App\Http\Controllers\Controller {
 
 			return redirect('/admin');
 		}
+
 		setcookie('password', 'incorrect', time() + 3600 * 5);
+
 		return redirect('/login');
 	}
 
-	public function logout () {
-
+	public function logout()
+	{
 		$request = request();
 
 		Auth::logout();

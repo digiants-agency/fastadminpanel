@@ -6,19 +6,20 @@ use App\FastAdminPanel\Helpers\JSAssembler as FastAdminPanelHelpersJSAssembler;
 use Digiants\FastAdminPanel\Helpers\JSAssembler as HelpersJSAssembler;
 use Route;
 
-class JSAssembler {
-
+class JSAssembler
+{
     private static $js_file = [[],[],[]];
     private static $js_str = [[],[],[]];
 
     private static $script = '';
 
-    public static function add ($path, $index = 1) {
-
+    public static function add($path, $index = 1)
+	{
         JSAssembler::$js_file[$index][] = public_path().$path;
     }
 
-    public static function str ($view, $script, $index = 1) {
+    public static function str($view, $script, $index = 1)
+	{
         $parts = explode(':', $view);
 
         if (sizeof($parts) == 2)
@@ -32,8 +33,8 @@ class JSAssembler {
         JSAssembler::$js_str[$index][$parts[0]] = str_replace($tags, ['', ''], $script);
     }
     
-    public static function get () {
-        
+    public static function get()
+	{
         // need research of version collision
 
         if (isset(request()->route()->getAction()['controller']))
@@ -135,5 +136,4 @@ class JSAssembler {
         
         echo "<script src=\"/js/cache/".$page_name.".js?v=".filemtime('js/cache/'.$page_name.'.js')."\" ></script>";
     }
-
 }

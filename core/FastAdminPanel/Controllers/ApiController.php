@@ -8,10 +8,10 @@ use Schema;
 use Validator;
 use Lang;
 
-class ApiController extends \App\Http\Controllers\Controller {
-
-	public function update_dropdown () {
-
+class ApiController extends \App\Http\Controllers\Controller
+{
+	public function updateDropdown()
+	{
 		$dropdown = request()->get('dropdown');
 
 		DB::table('dropdown')->truncate();
@@ -32,8 +32,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		DB::table('dropdown')->insert($query);
 	}
 
-	public function get_menu () {
-
+	public function getMenu()
+	{
 		$menu = DB::table('menu')
 		->select(
 			'id', 
@@ -97,22 +97,22 @@ class ApiController extends \App\Http\Controllers\Controller {
 		);
 	}
 
-	public function db_select () {
+	public function dbSelect()
+	{
+		$table = $this->getVal('table');
+		$offset = $this->getVal('offset', 0);
+		$limit = $this->getVal('limit', 100);
+		$order = $this->getVal('order', 'id');
+		$sort_order = $this->getVal('sort_order', 'ASC');
+		$fields = $this->getVal('fields', '*');
+		$where = $this->getVal('where', '');
+		$relationships = $this->getVal('relationships', '');   // many
+		$editables = $this->getVal('editables', '');   // one to many (editable)
+		$join = $this->getVal('join', '');   // one to many (editable)
 
-		$table = $this->get_val('table');
-		$offset = $this->get_val('offset', 0);
-		$limit = $this->get_val('limit', 100);
-		$order = $this->get_val('order', 'id');
-		$sort_order = $this->get_val('sort_order', 'ASC');
-		$fields = $this->get_val('fields', '*');
-		$where = $this->get_val('where', '');
-		$relationships = $this->get_val('relationships', '');   // many
-		$editables = $this->get_val('editables', '');   // one to many (editable)
-		$join = $this->get_val('join', '');   // one to many (editable)
-
-		$full_table = $this->get_table(
-			$this->get_val('table'),
-			$this->get_val('language')
+		$full_table = $this->getTable(
+			$this->getVal('table'),
+			$this->getVal('language')
 		);
 
 		$values = DB::table($full_table)
@@ -192,9 +192,9 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				$tbl = $editable->table;
 
-				$vals = DB::table($this->get_table(
+				$vals = DB::table($this->getTable(
 					$editable->table,
-					$this->get_val('language')
+					$this->getVal('language')
 				))
 				->where("id_$table", $editable->id)
 				->get();
@@ -213,16 +213,16 @@ class ApiController extends \App\Http\Controllers\Controller {
 		];
 	}
 
-	public function db_count () {
-
-		$table = $this->get_val('table');
-		$language = $this->get_val('language');
+	public function dbCount()
+	{
+		$table = $this->getVal('table');
+		$language = $this->getVal('language');
 
 		return DB::selectOne("SELECT count(*) AS count FROM $table$language")->count;
 	}
 
-	private function get_val ($title, $default = '') {
-		
+	private function getVal($title, $default = '')
+	{
 		$r = request();
 		$val = $r->get($title);
 
@@ -231,8 +231,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return $default;
 	}
 
-	private function get_tables ($entity, $multilanguage = -1) {
-
+	private function getTables($entity, $multilanguage = -1)
+	{
 		$tables = [];
 
 		if ($multilanguage == -1) {
@@ -269,8 +269,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return $tables;
 	}
 
-	private function get_table ($table, $lang) {
-
+	private function getTable($table, $lang)
+	{
 		$element = DB::table('menu')
 		->select('multilanguage')
 		->where('table_name', $table)
@@ -284,11 +284,11 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return $table;
 	}
 
-	public function db_create_table () {
-
+	public function dbCreateTable()
+	{
 		$r = request();
 
-		$tables = $this->get_tables($r->get('table_name'), $r->get('multilanguage'));
+		$tables = $this->getTables($r->get('table_name'), $r->get('multilanguage'));
 
 		foreach ($tables as $table) {
 
@@ -296,7 +296,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 				$table->bigIncrements('id');
 				
 				foreach (json_decode($r->get('fields')) as $field) {
-					$this->add_field($table, $field);
+					$this->addField($table, $field);
 				}
 
 				$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
@@ -323,8 +323,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return 'Success';
 	}
 
-	private function add_field (&$table, $field) {
-
+	private function addField(&$table, $field)
+	{
 		if ($field->type == 'enum' || $field->type == 'password' || $field->type == 'text' || $field->type == 'email' || $field->type == 'color' || $field->type == 'file' || $field->type == 'photo') {
 
 			$table->string($field->db_title);
@@ -380,11 +380,11 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
-	public function db_remove_table () {
-
+	public function dbRemoveTable()
+	{
 		$r = request();
 
-		$tables = $this->get_tables($r->get('id'));
+		$tables = $this->getTables($r->get('id'));
 
 		foreach ($tables as $table)
 			Schema::dropIfExists($table);
@@ -394,8 +394,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return 'Success';
 	}
 
-	public function db_update_table () {
-
+	public function dbUpdateTable()
+	{
 		$r = request();
 
 		$fields_new = json_decode($r->get('fields'));
@@ -406,13 +406,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 		->first()
 		->fields);
 		
-		$tables = $this->get_tables($r->get('table_name'));
+		$tables = $this->getTables($r->get('table_name'));
 
 		foreach ($tables as $table) {
 
-			$this->remove_fields($table, json_decode($r->get('to_remove')), $fields_curr);
-			$this->rename_fields($table, $fields_new, $fields_curr);
-			$this->add_fields($table, $fields_new, $fields_curr);
+			$this->removeFields($table, json_decode($r->get('to_remove')), $fields_curr);
+			$this->renameFields($table, $fields_new, $fields_curr);
+			$this->addFields($table, $fields_new, $fields_curr);
 			
 			DB::table('menu')->
 			where('table_name', $r->get('table_name'))->
@@ -430,8 +430,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return 'Success';
 	}
 
-	private function remove_fields ($table_name, $array_ids_remove, $fields_curr) {
-		
+	private function removeFields($table_name, $array_ids_remove, $fields_curr)
+	{
 		foreach ($array_ids_remove as $id) {
 			foreach ($fields_curr as $field) {
 				if ($field->id == $id) {
@@ -458,8 +458,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
-	private function rename_fields ($table_name, $fields_new, $fields_curr) {
-
+	private function renameFields($table_name, $fields_new, $fields_curr)
+	{
 		foreach ($fields_new as $new) {
 			foreach ($fields_curr as $curr) {
 				
@@ -476,8 +476,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
-	private function add_fields ($table_name, $fields_new, $fields_curr) {
-
+	private function addFields($table_name, $fields_new, $fields_curr)
+	{
 		foreach ($fields_new as $new) {
 
 			$is_new = true;
@@ -492,24 +492,24 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			if ($is_new) {
 				Schema::table($table_name, function($table) use ($new) {
-					$this->add_field($table, $new);
+					$this->addField($table, $new);
 				});
 			}
 		}
 	}
 
-	public function db_copy () {
-
+	public function dbCopy()
+	{
 		$input = request()->all();
 
-		$this->db_copy_fields ($input['id'], $input['table']);
+		$this->dbCopyFields($input['id'], $input['table']);
 
 		return 'Success';
 	}
 
-	private function db_copy_fields ($input_id, $input_table) {
-
-		$tables = $this->get_tables($input_table);
+	private function dbCopyFields($input_id, $input_table)
+	{
+		$tables = $this->getTables($input_table);
 
 		foreach ($tables as $table) {
 
@@ -544,12 +544,12 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 
 		
-		$this->db_copy_many($input_id, $input_table, $new_id);
-		$this->db_copy_editable($input_id, $input_table, $new_id);
+		$this->dbCopyMany($input_id, $input_table, $new_id);
+		$this->dbCopyEditable($input_id, $input_table, $new_id);
 	}
 
-	private function db_copy_many ($id, $table, $new_id) {
-
+	private function dbCopyMany($id, $table, $new_id)
+	{
 		$field_properties = DB::table('menu')
 		->select('fields')
 		->where('table_name', $table)
@@ -581,8 +581,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		
 	}
 
-	private function db_copy_editable ($id, $table, $new_id) {
-
+	private function dbCopyEditable($id, $table, $new_id)
+	{
 		$editable = [];
 
 		$fields = DB::table('menu')
@@ -602,7 +602,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			foreach ($editable as $table_name) {
 
-				$tables = $this->get_tables($table_name);
+				$tables = $this->getTables($table_name);
 
 				$parents = [];
 
@@ -657,8 +657,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					foreach ($parents as $parent) {
 
-						$this->db_copy_many($parent['id'], $parent['table'], $parent['new_id']);
-						$this->db_copy_editable($parent['id'], $parent['table'], $parent['new_id']);
+						$this->dbCopyMany($parent['id'], $parent['table'], $parent['new_id']);
+						$this->dbCopyEditable($parent['id'], $parent['table'], $parent['new_id']);
 		
 					}
 				}
@@ -667,8 +667,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
-	public function save_editable () {
-
+	public function saveEditable()
+	{
 		$input = request()->all();
 
 		$menu = DB::table('menu')
@@ -692,7 +692,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		} else if ($menu->multilanguage == 1 && $field->lang == 0) {
 
-			foreach ($this->get_tables($input['table']) as $tbl) {
+			foreach ($this->getTables($input['table']) as $tbl) {
 
 				DB::table($tbl)
 				->where('id', $input['id'])
@@ -713,8 +713,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return $this->response();
 	}
 
-	private function db_remove_editable ($id, $table) {
-
+	private function dbRemoveEditable($id, $table)
+	{
 		$editable = [];
 
 		$fields = DB::table('menu')
@@ -734,7 +734,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 	
 			foreach ($editable as $table_name) {
 	
-				$tables = $this->get_tables($table_name);
+				$tables = $this->getTables($table_name);
 	
 				$parents = []; 
 	
@@ -766,8 +766,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 				if ($parents) {
 					foreach ($parents as $parent) {
 	
-						$this->db_remove_relationship_many($parent['id'], $parent['table']);
-						$this->db_remove_editable($parent['id'], $parent['table']);
+						$this->dbRemoveRelationshipMany($parent['id'], $parent['table']);
+						$this->dbRemoveEditable($parent['id'], $parent['table']);
 					}
 				}
 	
@@ -775,8 +775,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 	}
 
-	private function db_remove_relationship_many ($id, $table_name) {
-
+	private function dbRemoveRelationshipMany($id, $table_name)
+	{
 		$field_properties = DB::table('menu')
 		->select('fields')
 		->where('table_name', $table_name)
@@ -798,8 +798,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 	}
 
-	public function db_remove_row () {
-
+	public function dbRemoveRow()
+	{
 		$r = request();
 
 		$id = $r->get('id');
@@ -807,7 +807,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 		if ($lang != '') {
 
-			foreach ($this->get_tables($r->get('table_name')) as $table) {
+			foreach ($this->getTables($r->get('table_name')) as $table) {
 
 				DB::table($table)
 				->where('id', $id)
@@ -821,14 +821,14 @@ class ApiController extends \App\Http\Controllers\Controller {
 			->delete();
 		}
 		
-		$this->db_remove_relationship_many($id, $r->get('table_name'));
-		$this->db_remove_editable($id, $r->get('table_name'));
+		$this->dbRemoveRelationshipMany($id, $r->get('table_name'));
+		$this->dbRemoveEditable($id, $r->get('table_name'));
 
 		return 'Success';
 	}
 
-	public function db_remove_rows () {
-
+	public function dbRemoveRows()
+	{
 		$r = request();
 
 		$ids = json_decode($r->get('ids'));
@@ -837,7 +837,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 		if ($lang != '') {
 			foreach ($ids as $id) {
 
-				foreach ($this->get_tables($r->get('table_name')) as $table) {
+				foreach ($this->getTables($r->get('table_name')) as $table) {
 
 					DB::table($table)
 					->where('id', $id)
@@ -852,15 +852,15 @@ class ApiController extends \App\Http\Controllers\Controller {
 		}
 
 		foreach ($ids as $id) {
-			$this->db_remove_relationship_many($id, $r->get('table_name'));
-			$this->db_remove_editable($id, $r->get('table_name'));
+			$this->dbRemoveRelationshipMany($id, $r->get('table_name'));
+			$this->dbRemoveEditable($id, $r->get('table_name'));
 		}
 
 		return 'Success';
 	}
 	
-	public function upload_image () {
-
+	public function uploadImage()
+	{
 		$data = request()->all();
 		
 		$validator = Validator::make($data, [
@@ -884,20 +884,20 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return response()->json('{"error":"Error, file not found"}');
 	}
 
-	public function set_dynamic () {
-
+	public function setDynamic()
+	{
 		$input = request()->all();
 
 		$input['fields'] = json_decode($input['fields']);
 
 
-		$this->set_dynamic_fields($input);
+		$this->setDynamicFields($input);
 
 		return $this->response();
 	}
 
-	private function set_dynamic_fields ($input, $parent_table = false, $parent_id = false) {
-
+	private function setDynamicFields($input, $parent_table = false, $parent_id = false)
+	{
 		$menu = DB::table('menu')
 		->select('multilanguage')
 		->where('table_name', $input['table'])
@@ -971,7 +971,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			if ($input['id'] == 0) {
 
-				$tables = $this->get_tables($input['table']);
+				$tables = $this->getTables($input['table']);
 
 				foreach ($tables as $table) {
 					
@@ -989,7 +989,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 			} else {
 
-				$table_main = $this->get_table(
+				$table_main = $this->getTable(
 					$input['table'],
 					$input['language']
 				);
@@ -1000,7 +1000,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				if ($menu->multilanguage == 1 && !empty($update_multilanguage)) {
 
-					foreach ($this->get_tables($input['table']) as $table) {
+					foreach ($this->getTables($input['table']) as $table) {
 
 						if ($table_main == $table)
 							continue;
@@ -1045,7 +1045,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				} else if ($field->relationship_count == 'editable') {
 
-					$editable_ids = DB::table($this->get_table(
+					$editable_ids = DB::table($this->getTable(
 						$field->relationship_table_name,
 						$input['language']
 					))
@@ -1058,7 +1058,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 					$current_ids = array_column($field->value, 'id');
 					$diff_ids = array_diff($editable_ids->all(), $current_ids);
 
-					DB::table($this->get_table(
+					DB::table($this->getTable(
 						$field->relationship_table_name,
 						$input['language']
 					))
@@ -1075,7 +1075,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 							}
 						}
 
-						$this->set_dynamic_fields([
+						$this->setDynamicFields([
 							'fields'	=> $group->fields,
 							'language'	=> $input['language'],
 							'table'		=> $field->relationship_table_name,
@@ -1088,22 +1088,22 @@ class ApiController extends \App\Http\Controllers\Controller {
 		// editable and many relations END
 	}
 
-	public function get_dynamic () {
-
+	public function getDynamic()
+	{
 		$input = request()->all();
 
-		$fields = $this->get_dynamic_fields($input);
+		$fields = $this->getDynamicFields($input);
 
 		return $this->response($fields);
 	}
 
-	private function get_dynamic_fields ($input) {
-
+	private function getDynamicFields($input)
+	{
 		$menu = DB::table('menu')
 		->where('table_name', $input['table'])
 		->first();
 
-		$instance = DB::table($this->get_table(
+		$instance = DB::table($this->getTable(
 			$input['table'],
 			$input['language']
 		))
@@ -1119,7 +1119,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 				if ($field->relationship_count != 'editable') {
 
-					$field->values = DB::table($this->get_table(
+					$field->values = DB::table($this->getTable(
 						$field->relationship_table_name, 
 						$input['language']
 					))
@@ -1128,7 +1128,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					//for filters_fields
 					if ($field->relationship_table_name == 'filter_fields'){
-						$field->values = DB::table($this->get_table(
+						$field->values = DB::table($this->getTable(
 							$field->relationship_table_name, 
 							$input['language']
 						))
@@ -1191,7 +1191,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 					if ($input['id'] != 0) {
 
-						$editable_ids = DB::table($this->get_table(
+						$editable_ids = DB::table($this->getTable(
 							$field->relationship_table_name,
 							$input['language']
 						))
@@ -1203,7 +1203,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 						foreach ($editable_ids as $editable_id) {
 							
 							$field->value[] = [
-								'fields'	=> $this->get_dynamic_fields([
+								'fields'	=> $this->getDynamicFields([
 									'table'		=> $field->relationship_table_name,
 									'language'	=> $input['language'],
 									'id'		=> $editable_id,
@@ -1213,7 +1213,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 						}
 					}
 
-					$field->values = $this->get_dynamic_fields([
+					$field->values = $this->getDynamicFields([
 						'table'		=> $field->relationship_table_name,
 						'language'	=> $input['language'],
 						'id'		=> 0,
@@ -1381,8 +1381,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 		return response()->json($response, $code);
 	}
 
-	public function get_mainpage(){
-		
+	public function getMainpage()
+	{
         // $popproducts =  DB::select('
         //     SELECT products_'.Lang::get().'.title, products_'.Lang::get().'.slug, products_'.Lang::get().'.image, orders_product.slug, orders_product.title, 
         //     COUNT(*) as countorders FROM orders_product 

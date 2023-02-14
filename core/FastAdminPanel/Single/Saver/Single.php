@@ -6,14 +6,14 @@ use App\FastAdminPanel\Models\SinglePage;
 use App\FastAdminPanel\Models\SingleField;
 use Lang;
 
-class Single {
-
+class Single
+{
 	protected $page;
 
 	protected $sorts = [];
 
-	public function __construct($title, $sort, $parent = 0) {
-
+	public function __construct($title, $sort, $parent = 0)
+	{
 		$this->page = SinglePage::where('title', $title)->first();
 
 		if (empty($this->page)) {
@@ -29,8 +29,8 @@ class Single {
 		$this->page->save();
 	}
 
-	public function field($field_block, $field_title, $type = null, $is_multilanguage = null, $default_val = null) {
-
+	public function field($field_block, $field_title, $type = null, $is_multilanguage = null, $default_val = null)
+	{
 		if ($type === null || $is_multilanguage === null) {
 
 			return 'NOT saved';
@@ -68,7 +68,7 @@ class Single {
 
 				if ($type != $field_lang->type && $type != 'repeat') {
 
-					$field_lang->value = $field_lang->encode_value($default_val ?? $field_lang->default());
+					$field_lang->value = $field_lang->encodeValue($default_val ?? $field_lang->default());
 				}
 			}
 
@@ -78,7 +78,7 @@ class Single {
 
 			if (empty($field) && $type != 'repeat') {
 
-				$field_lang->value = $field_lang->encode_value($default_val ?? $field_lang->default());
+				$field_lang->value = $field_lang->encodeValue($default_val ?? $field_lang->default());
 			}
 
 			$field_lang->save();
@@ -89,6 +89,6 @@ class Single {
 			return [new SingleRepeated($this->page->id, $field_lang->id, $is_multilanguage)];
 		}
 
-		return $field_lang->saved_msg();
+		return $field_lang->savedMsg();
 	}
 }

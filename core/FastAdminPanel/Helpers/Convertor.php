@@ -8,7 +8,6 @@ use Route;
 
 class Convertor
 {
-
     private static $width = [
         'desktop'   => 1440,
         'mobile'    => 320,
@@ -21,8 +20,8 @@ class Convertor
     
     public static $views = [];
 
-    public static function create ($view, $style, $is_desktop = false) {
-                
+    public static function create($view, $style, $is_desktop = false)
+	{
         if ($is_desktop) {
 
             self::$views['desktop'][$view] = $style;
@@ -33,8 +32,8 @@ class Convertor
         }
     }
 
-    public static function convert() {
-
+    public static function convert()
+	{
         $cache_dir = public_path()."/css/cache";
         $css_dir = "/css/cache";
         
@@ -110,7 +109,7 @@ class Convertor
 
             foreach (self::$views[$device] as $view) {
 
-                $style_files[$device] .= ' ' . self::remove_tags($view);
+                $style_files[$device] .= ' ' . self::removeTags($view);
             }
         }
         
@@ -119,12 +118,12 @@ class Convertor
         $styles .= ' }';
 
         $styles .= '@media (max-width: 1600px) and (min-width: 1000px) { ';
-        $styles .= self::px_to_vw($style_files['desktop'], self::$width['desktop']);
+        $styles .= self::pxToVw($style_files['desktop'], self::$width['desktop']);
         $styles .= ' }';
 
-        $styles .= self::add_tablet_media(); 
+        $styles .= self::addTabletMedia(); 
         $styles .= '@media (max-width: 1000px) { ';
-        $styles .= self::px_to_vw($style_files['mobile'], self::$width['mobile']);
+        $styles .= self::pxToVw($style_files['mobile'], self::$width['mobile']);
         $styles .= ' }';
 
         file_put_contents($page_css, $styles);
@@ -133,13 +132,13 @@ class Convertor
         return "<link rel='stylesheet' href='".$css_dir."/".$page_name.".css?v=".filemtime($cache_dir.'/'.$page_name.'.css')."'>";
     }
 
-    public static function remove_tags($style) {
-
+    public static function removeTags($style)
+	{
         return str_replace(['</style>', '<style>'], ['',''], htmlspecialchars_decode($style));
     }
 
-    public static function px_to_vw($styles, $width) {
-
+    public static function pxToVw($styles, $width)
+	{
         preg_match_all('/[ :]{1}[-]{0,1}[0-9\.]+px/', $styles, $matches);
 
         for ($i = 0; $i < count($matches[0]); $i++) {
@@ -162,8 +161,8 @@ class Convertor
     }
 
 
-    public static function add_tablet_media() {
-
+    public static function addTabletMedia()
+	{
         return 
         '@media (min-width: calc(494px)) and (max-width: calc(1000px)) {
             body {

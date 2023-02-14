@@ -26,14 +26,14 @@ use DB;
 // enum
 // repeat
 
-class SingleField extends MultilanguageModel {
-	
+class SingleField extends MultilanguageModel
+{
 	public $timestamps = false;
 
 	protected $table = 'single_fields';
 
-	public function multilanguage_save() {
-
+	public function multilanguageSave()
+	{
 		if ($this->is_multilanguage == 0) {
 	
 			$langs = Lang::all();
@@ -63,8 +63,8 @@ class SingleField extends MultilanguageModel {
 		}
 	}
 
-	public function encode_value($value) {
-
+	public function encodeValue($value)
+	{
 		$value = $value === null ? $this->default() : $value;
 
 		return match($this->type) {
@@ -75,8 +75,8 @@ class SingleField extends MultilanguageModel {
 		};
 	}
 
-	public function decode_value($value) {
-
+	public function decodeValue($value)
+	{
 		return match($this->type) {
 			'repeat'		=> json_decode($value) ?? 0,
 			'checkbox'		=> !!$value,
@@ -87,8 +87,8 @@ class SingleField extends MultilanguageModel {
 		};
 	}
 
-	public function default() {
-
+	public function default()
+	{
 		return match($this->type) {
 			'text'			=> '',
 			'textarea'		=> '',
@@ -110,8 +110,8 @@ class SingleField extends MultilanguageModel {
 		};
 	}
 
-	public function defaults($length) {
-
+	public function defaults($length)
+	{
 		$vals = [];
 
 		for ($i = 0; $i < $length; $i++) {
@@ -122,8 +122,8 @@ class SingleField extends MultilanguageModel {
 		return $vals;
 	}
 
-	public function saved_msg() {
-
+	public function savedMsg()
+	{
 		return match($this->type) {
 			'checkbox'		=> false,
 			'date'			=> date('Y-m-d'),
@@ -133,15 +133,15 @@ class SingleField extends MultilanguageModel {
 		};
 	}
 
-	public function remove_tables($tag) {
-
+	public function removeTables($tag)
+	{
 		$table = substr($this->table, 0, -2);
 
 		Schema::dropIfExists("{$table}{$tag}");
 	}
 
-	public function add_tables($tag, $main_tag) {
-
+	public function addTables($tag, $main_tag)
+	{
 		$table = substr($this->table, 0, -2);
 				
 		Schema::dropIfExists("{$table}{$tag}");

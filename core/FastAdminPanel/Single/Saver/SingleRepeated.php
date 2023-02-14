@@ -5,8 +5,8 @@ namespace App\FastAdminPanel\Single\Saver;
 use App\FastAdminPanel\Models\SingleField;
 use Lang;
 
-class SingleRepeated {
-
+class SingleRepeated
+{
 	protected $single_page_id;
 	protected $parent_id;
 	protected $is_multilanguage;
@@ -14,15 +14,16 @@ class SingleRepeated {
 	protected $sorts = [];
 	protected $sort = 1;
 
-	public function __construct($single_page_id, $parent_id, $is_multilanguage) {
+	public function __construct($single_page_id, $parent_id, $is_multilanguage)
+	{
 
 		$this->single_page_id = $single_page_id;
 		$this->parent_id = $parent_id;
 		$this->is_multilanguage = $is_multilanguage;
 	}
 
-	public function field($field_title, $type) {
-
+	public function field($field_title, $type)
+	{
 		$this->sorts[$field_title] = $this->sort;
 		$this->sort++;
 
@@ -64,6 +65,6 @@ class SingleRepeated {
 			return [new SingleRepeated($this->single_page_id, $field_lang->id, $this->is_multilanguage)];
 		}
 
-		return $field_lang->saved_msg();
+		return $field_lang->savedMsg();
 	}
 }

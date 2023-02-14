@@ -4,22 +4,26 @@ namespace App\FastAdminPanel\Helpers;
 
 use DB;
 
-class Field {
-
-	public static function enter_to_br ($str) {
+class Field
+{
+	public static function enterToBr($str)
+	{
 		return str_replace("\n", '<br>', str_replace('
 ', '<br>', $str));
 	}
 
-	public static function bracket_to_span ($str) {
+	public static function bracketToSpan($str)
+	{
 		return str_replace("[", '<span>', str_replace(']', '</span>', $str));
 	}
 
-	public static function content_images ($str) {
+	public static function contentImages($str)
+	{
 		return str_replace("[images]", '<div class="content-images">', str_replace('[/images]', '</div>', $str));
 	}
 
-	public static function phone ($phone) {
+	public static function phone($phone)
+	{
 		return preg_replace('/[^0-9\+]/', '', $phone);
 	}
 }

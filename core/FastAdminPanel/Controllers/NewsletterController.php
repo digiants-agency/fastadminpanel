@@ -8,9 +8,10 @@ use Schema;
 use Validator;
 use Lang;
 
-class NewsletterController extends \App\Http\Controllers\Controller {
+class NewsletterController extends \App\Http\Controllers\Controller
+{
 
-	public function get () {
+	public function get() {
 
 		$data = [];
 
@@ -102,7 +103,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		return DB::table('newsletter_queue')->count();
 	}
 
-	public function letter_save () {
+	public function letterSave () {
 
 		$letter = request()->get('letter');
 
@@ -113,7 +114,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		]);
 	}
 
-	public function letter_rm () {
+	public function letterRm () {
 
 		DB::table('newsletter_templates')
 		->where('id', request()->get('id'))
@@ -122,7 +123,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		return DB::table('newsletter_templates')->get();
 	}
 
-	public function letter_add () {
+	public function letterAdd () {
 		
 		$subject = request()->get('subject');
 		$date = request()->get('date');
@@ -151,7 +152,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		return DB::table('newsletter_templates')->get();
 	}
 
-	public function base_add () {
+	public function baseAdd () {
 
 		$title = request()->get('title');
 		$date = request()->get('date');
@@ -206,7 +207,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		return DB::table('newsletter_bases')->get();
 	}
 
-	public function base_rm () {
+	public function baseRm () {
 
 		$id = request()->get('id');
 
@@ -221,7 +222,7 @@ class NewsletterController extends \App\Http\Controllers\Controller {
 		return DB::table('newsletter_bases')->get();
 	}
 
-	public function base_download () {
+	public function baseDownload () {
 
 		$id = request()->get('id');
 		$password = request()->get('password');

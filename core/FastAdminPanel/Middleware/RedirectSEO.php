@@ -13,15 +13,15 @@ class RedirectSEO
         
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$domain$_SERVER[REQUEST_URI]";
 
-        $filtered_url = preg_replace('/\/+/', '/', $url);
+        $filteredUrl = preg_replace('/\/+/', '/', $url);
         
-        if (mb_strpos($filtered_url, '%') === false)
-            $filtered_url = mb_strtolower($filtered_url);
+        if (mb_strpos($filteredUrl, '%') === false)
+            $filteredUrl = mb_strtolower($filteredUrl);
         
         if ($_SERVER['REQUEST_URI'] != '/')
-            $filtered_url = rtrim($filtered_url, '/');
+            $filteredUrl = rtrim($filteredUrl, '/');
         
-        $filtered_url = str_replace(
+        $filteredUrl = str_replace(
             [
                 $domain.'/index.php',
                 'http:/',
@@ -34,11 +34,11 @@ class RedirectSEO
                 'https://',
                 'https://'
             ], 
-            $filtered_url
+            $filteredUrl
         );
 
-        if ($filtered_url != $url) {
-            return redirect($filtered_url, 301);
+        if ($filteredUrl != $url) {
+            return redirect($filteredUrl, 301);
         }
 
         return $next($request);

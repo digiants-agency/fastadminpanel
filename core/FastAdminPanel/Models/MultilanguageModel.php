@@ -5,10 +5,10 @@ namespace App\FastAdminPanel\Models;
 use Illuminate\Database\Eloquent\Model;
 use Lang;
 
-class MultilanguageModel extends Model {
-
-	public function __construct($lang = '') {
-		
+class MultilanguageModel extends Model
+{
+	public function __construct($lang = '')
+	{
 		if ($lang == '') {
 			
 			$lang = Lang::get();

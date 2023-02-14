@@ -5,10 +5,10 @@ namespace App\FastAdminPanel\Controllers;
 use App\FastAdminPanel\Models\Language;
 use Illuminate\Http\Request;
 
-class LanguageController extends \App\Http\Controllers\Controller {
-
-	public function delete(Language $model, $tag) {
-
+class LanguageController extends \App\Http\Controllers\Controller
+{
+	public function delete(Language $model, $tag)
+	{
 		$lang = $model->where('tag', $tag)
 		->where('main_lang', '!=', 1)
 		->first();
@@ -21,8 +21,8 @@ class LanguageController extends \App\Http\Controllers\Controller {
 		return $this->response();
 	}
 
-	public function post(Language $model, $tag) {
-
+	public function post(Language $model, $tag)
+	{
 		$lang = $model->where('tag', $tag)->first();
 
 		if (empty($lang) && strlen($tag) == 2) {

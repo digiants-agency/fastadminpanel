@@ -18,10 +18,10 @@ use App\FastAdminPanel\Helpers\SEO;
 use View;
 
 // TODO: divide this large provider
-class FAPServiceProvider extends ServiceProvider {
-
-	public function boot() {
-
+class FAPServiceProvider extends ServiceProvider
+{
+	public function boot()
+	{
 		$this->app->bind('fastadminpanel:translate', function ($app) {
 			return new FastAdminPanelTranslate();
 		});
@@ -66,14 +66,14 @@ class FAPServiceProvider extends ServiceProvider {
 		});
 	}
 
-	public function register() {
-
+	public function register()
+	{
 		$this->app->singleton('lang', \App\FastAdminPanel\Language\Lang::class);
 
 		$this->app->booting(function() {
 			$loader = AliasLoader::getInstance();
 
-			if (Single::is_update()) {
+			if (Single::isUpdate()) {
 
 				$loader->alias('Single', \App\FastAdminPanel\Single\Saver\Single::class);
 

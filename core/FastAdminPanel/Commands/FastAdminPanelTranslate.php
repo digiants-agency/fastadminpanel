@@ -7,8 +7,8 @@ use DB;
 use Lang;
 use App\FastAdminPanel\Helpers\Translater;
 
-class FastAdminPanelTranslate extends Command {
-
+class FastAdminPanelTranslate extends Command
+{
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -26,7 +26,8 @@ class FastAdminPanelTranslate extends Command {
 	/**
 	 * Create a new command instance.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -34,7 +35,7 @@ class FastAdminPanelTranslate extends Command {
 	 * FAP Translator
 	 */
 
-	private $not_translate_cols = [
+	private $notTranslateCols = [
 		'id',
 		'ico',
 		'created_at',
@@ -128,7 +129,7 @@ class FastAdminPanelTranslate extends Command {
 		'icon'
 	];
 
-	private $not_translate_fields = [
+	private $notTranslateFields = [
 		'Theme (light,dark)',
 		'Button link',
 		'Phone placeholder',
@@ -220,8 +221,8 @@ class FastAdminPanelTranslate extends Command {
 		''
 	];
 
-	public function translate_single ($id) {
-
+	public function translateSingle($id)
+	{
 		set_time_limit(2500);
 
 		$langs = DB::table('languages')
@@ -238,17 +239,17 @@ class FastAdminPanelTranslate extends Command {
 		->where('single_page_id', $id)
 		->where('is_multilanguage', 1)
 		->whereRaw("(type = 'repeat' OR type = 'text' OR type = 'textarea' OR type = 'ckeditor')")
-		->whereNotIn('title', $this->not_translate_fields)
+		->whereNotIn('title', $this->notTranslateFields)
 		->get();
 
 		foreach ($langs as $lang) {
 
-			$this->translate_single_lang($single_fields, $main_tag, $lang->tag);
+			$this->translateSingleLang($single_fields, $main_tag, $lang->tag);
 		}
 	}
 
-	public function translate_single_lang ($single_fields, $main_tag, $tag) {
-			
+	public function translateSingleLang($single_fields, $main_tag, $tag)
+	{
 		foreach ($single_fields as $field) {
 			if ($field->type == 'text' || $field->type == 'textarea' || $field->type == 'ckeditor') {
 				
@@ -295,7 +296,7 @@ class FastAdminPanelTranslate extends Command {
 				$arr = json_decode($value);
 
 				foreach ($arr as &$f) {
-					if (!in_array($f->title, $this->not_translate_fields) && 
+					if (!in_array($f->title, $this->notTranslateFields) && 
 							($f->type == 'text' || $f->type == 'textarea' || $f->type == 'ckeditor')
 						) {
 						foreach ($f->values as &$v) {
@@ -313,8 +314,8 @@ class FastAdminPanelTranslate extends Command {
 		}
 	}
 
-	public function translate_table_row ($table) {
-
+	public function translateTableRow($table)
+	{
 		set_time_limit(2500);
 
 		$langs = DB::table('languages')
@@ -340,7 +341,7 @@ class FastAdminPanelTranslate extends Command {
 
 				$update = [];
 				foreach ($row as $coll => $cell) {
-					if (!in_array($coll, $this->not_translate_cols) && !empty($cell)) {
+					if (!in_array($coll, $this->notTranslateCols) && !empty($cell)) {
 						$cell = Translater::tr($cell, $main_tag, $lang->tag);
 					}
 					if ($coll != 'id')
@@ -356,8 +357,8 @@ class FastAdminPanelTranslate extends Command {
 		}
 	}
 
-	public function translate_languages ($lang) {
-
+	public function translateLanguages($lang)
+	{
 		if (empty($lang)) {
 
 			$langs = DB::table('languages')
@@ -366,17 +367,17 @@ class FastAdminPanelTranslate extends Command {
 
 			foreach ($langs as $lang) {
 
-				echo $this->translate_language($lang->tag), "\n";
+				echo $this->translateLanguage($lang->tag), "\n";
 				echo $lang->tag, "\n";
 			}
 		} else {
-			echo $this->translate_language($lang), "\n";
+			echo $this->translateLanguage($lang), "\n";
 			echo $lang, "\n";
 		}
 	}
 
-	public function translate_language ($tag) {		
-
+	public function translateLanguage($tag)
+	{
 		$counter_start = -1;
 		$counter = 0;
 
@@ -399,7 +400,7 @@ class FastAdminPanelTranslate extends Command {
 		->select('id', 'type')
 		->where('is_multilanguage', 1)
 		->whereRaw("(type = 'repeat' OR type = 'text' OR type = 'textarea' OR type = 'ckeditor')")
-		->whereNotIn('title', $this->not_translate_fields)
+		->whereNotIn('title', $this->notTranslateFields)
 		->get();
 
 		foreach ($single_fields as $field) {
@@ -457,7 +458,7 @@ class FastAdminPanelTranslate extends Command {
 				if(!empty($arr)){	
 					$update = false; 
 					foreach ($arr as &$f) {
-						if (!in_array($f->title, $this->not_translate_fields) && 
+						if (!in_array($f->title, $this->notTranslateFields) && 
 								($f->type == 'text' || $f->type == 'textarea' || $f->type == 'ckeditor')
 							) {
 							foreach ($f->values as &$v) {
@@ -503,7 +504,7 @@ class FastAdminPanelTranslate extends Command {
 					$update = [];
 					foreach ($row as $coll => $cell) {
 						$update_check = false;
-						if (!in_array($coll, $this->not_translate_cols) && !empty($cell)) {
+						if (!in_array($coll, $this->notTranslateCols) && !empty($cell)) {
 							if ($counter > $counter_start)
 							{
 								$cell = Translater::tr($cell, $main_tag, $tag);
@@ -525,8 +526,8 @@ class FastAdminPanelTranslate extends Command {
 		return 'Success';
 	}
 
-	public function translate_table ($table) {
-
+	public function translateTable($table)
+	{
 		$counter = 0;
 
 		set_time_limit(2500);
@@ -559,7 +560,7 @@ class FastAdminPanelTranslate extends Command {
 	
 					$update = [];
 					foreach ($row as $coll => $cell) {
-						if (!in_array($coll, $this->not_translate_cols) && !empty($cell) && mb_strpos($coll, 'id_') !== 0) {
+						if (!in_array($coll, $this->notTranslateCols) && !empty($cell) && mb_strpos($coll, 'id_') !== 0) {
 							$cell = Translater::tr($cell, $main_tag, $lang->tag);
 
 							echo ++$counter, "\n";
@@ -580,8 +581,8 @@ class FastAdminPanelTranslate extends Command {
 		}
 	}
 
-	public function translate_admin () {
-
+	public function translateAdmin()
+	{
 		$lang_from = 'ru';
 		$lang_to = 'sv';
 
@@ -736,27 +737,27 @@ class FastAdminPanelTranslate extends Command {
 	/**
 	 * Execute the console command.
 	 */
-	public function handle() {
-		
+	public function handle()
+	{
 		$this->info('Start translation...');
 		
 		$langs = Lang::langs()->pluck('tag')->all();
 
 		if ($this->argument('argument') == 'admin'){
 			
-			$this->translate_admin();
+			$this->translateAdmin();
 
 		} elseif (is_numeric($this->argument('argument'))) {
 
-			$this->translate_single($this->argument('argument'));
+			$this->translateSingle($this->argument('argument'));
 
 		} elseif (in_array($this->argument('argument'), $langs) || empty($this->argument('argument'))) {
 			
-			$this->translate_languages($this->argument('argument'));
+			$this->translateLanguages($this->argument('argument'));
 
 		} else {
 			
-			$this->translate_table($this->argument('argument'));
+			$this->translateTable($this->argument('argument'));
 		}
 
 	}
