@@ -48,4 +48,9 @@ class SingleRepeated implements \Iterator
 	{
 		return $this->position < $this->length;
 	} 
+
+	public function count() {
+
+		return $this->length;
+	}
 }

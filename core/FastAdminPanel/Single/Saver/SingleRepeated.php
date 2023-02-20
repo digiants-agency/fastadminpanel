@@ -62,7 +62,7 @@ class SingleRepeated
 
 		if ($type == 'repeat') {
 
-			return [new SingleRepeated($this->single_page_id, $field_lang->id, $this->is_multilanguage)];
+			return collect([new SingleRepeated($this->single_page_id, $field_lang->id, $this->is_multilanguage)]);
 		}
 
 		return $field_lang->savedMsg();

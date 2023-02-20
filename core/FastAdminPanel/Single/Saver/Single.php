@@ -86,7 +86,7 @@ class Single
 
 		if ($type == 'repeat') {
 
-			return [new SingleRepeated($this->page->id, $field_lang->id, $is_multilanguage)];
+			return collect([new SingleRepeated($this->page->id, $field_lang->id, $is_multilanguage)]);
 		}
 
 		return $field_lang->savedMsg();
