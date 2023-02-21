@@ -14,6 +14,7 @@ class Single
 	public function __construct($title, $sort, $parent = 0)
 	{
 		$this->page = SinglePage::where('title', $title)
+		->where('parent', $parent)
 		->first();
 
 		$fields = SingleField::where('single_page_id', $this->page->id)
