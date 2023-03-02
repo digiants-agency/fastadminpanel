@@ -1,27 +1,30 @@
 <?php 
 
-namespace App\FastAdminPanel\Single\Api;
+namespace App\FastAdminPanel\Services\Single;
 
-class Getter
+use App\FastAdminPanel\Services\Service;
+use App\FastAdminPanel\Models\SingleField;
+
+class SingleGetService extends Service
 {
-	protected $fields;
-	protected $formatted_fields;
+	protected $model;
 
-	public function __construct($model, $page_id)
+	public function __construct(SingleField $model)
 	{
+		$this->model = $model;
+	}
 
-		$this->fields = $model->where('single_page_id', $page_id)
+	public function get(int $pageId)
+	{
+		$fields = $this->model->where('single_page_id', $pageId)
 		->orderBy('sort', 'ASC')
 		->get();
 
-		$this->formatted_fields = $this->formatFields($this->fields);
-	}
+		$formattedFields = $this->formatFields($fields);
 
-	public function get()
-	{
 		$blocks = [];
 
-		foreach ($this->formatted_fields[0] as $field) {
+		foreach ($formattedFields[0] as $field) {
 
 			if ($field->type != 'repeat') {
 
@@ -29,7 +32,7 @@ class Getter
 
 			} else {
 
-				$value = $this->repeat([], $field->decodeValue($field->value), $field->id);
+				$value = $this->repeat($formattedFields, [], $field->decodeValue($field->value), $field->id);
 			}
 
 			if (empty($blocks[$field->block_title])) {
@@ -48,9 +51,9 @@ class Getter
 		return $blocks;
 	}
 
-	protected function repeat($fields, $length, $parent_id)
+	protected function repeat($formattedFields, $fields, $length, $parent_id)
 	{
-		foreach ($this->formatted_fields[$parent_id] as $field) {
+		foreach ($formattedFields[$parent_id] as $field) {
 
 			if ($field->type != 'repeat') {
 
@@ -66,7 +69,7 @@ class Getter
 
 			} else {
 
-				$value = $this->repeat([], $field->decodeValue($field->value), $field->id);
+				$value = $this->repeat($formattedFields, [], $field->decodeValue($field->value), $field->id);
 			}
 
 			$fields[] = [

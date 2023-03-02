@@ -2,29 +2,25 @@
 
 namespace App\FastAdminPanel\Controllers;
 
-use App\FastAdminPanel\Models\SingleField;
-use App\FastAdminPanel\Single\Api\Getter;
-use App\FastAdminPanel\Single\Api\Setter;
+use App\FastAdminPanel\Services\Single\SingleGetService;
+use App\FastAdminPanel\Services\Single\SingleSetService;
 use Illuminate\Http\Request;
 
 class SingleController extends \App\Http\Controllers\Controller
 {
-	public function put(Request $request, SingleField $model, $id)
+	// TODO: validate parameters
+	public function put(Request $request, SingleSetService $service, $id)
 	{
 		$blocks = $request->get('blocks');
 
-		$setter = new Setter($model, $id);
-
-		$setter->set($blocks);
+		$service->set($blocks);
 
 		return $this->response();
 	}
 
-	public function get(SingleField $model, $id)
+	public function get(SingleGetService $service, $id)
 	{
-		$getter = new Getter($model, $id);
-
-		$blocks = $getter->get();
+		$blocks = $service->get($id);
 
 		return $this->response($blocks);
 	}

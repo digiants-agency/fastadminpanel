@@ -1,16 +1,17 @@
 <?php
 
-namespace App\FastAdminPanel\Single\Api;
+namespace App\FastAdminPanel\Services\Single;
 
-class Setter
+use App\FastAdminPanel\Services\Service;
+use App\FastAdminPanel\Models\SingleField;
+
+class SingleSetService extends Service
 {
-	protected $page_id;
 	protected $model;
 
-	public function __construct($model, $page_id)
+	public function __construct(SingleField $model)
 	{
 		$this->model = $model;
-		$this->page_id = $page_id;
 	}
 
 	public function set($blocks)
@@ -20,7 +21,7 @@ class Setter
 
 			foreach ($block as $block_field) {
 
-				$field = $this->model->where('id', $block_field['id'])->first();
+				$field = $this->model->find($block_field['id']);
 
 				if ($block_field['type'] != 'repeat') {
 
@@ -42,7 +43,7 @@ class Setter
 	{
 		foreach ($block_fields as $block_field) {
 
-			$field = $this->model->where('id', $block_field['id'])->first();
+			$field = $this->model->find($block_field['id']);
 
 			if ($block_field['type'] != 'repeat') {
 
