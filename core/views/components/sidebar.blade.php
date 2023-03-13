@@ -161,9 +161,7 @@
 			},
 			logout: function() {
 				request('/admin/logout');
-				this.refresh()
-				location.reload()
-
+				document.location.reload()
 			},
 
 			get_language: function(){
