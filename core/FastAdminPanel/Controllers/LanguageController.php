@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class LanguageController extends \App\Http\Controllers\Controller
 {
-	public function delete(Language $model, $tag)
+	public function delete($tag)
 	{
-		$lang = $model->where('tag', $tag)
+		$lang = Language::where('tag', $tag)
 		->where('main_lang', '!=', 1)
 		->first();
 
@@ -21,13 +21,13 @@ class LanguageController extends \App\Http\Controllers\Controller
 		return $this->response();
 	}
 
-	public function post(Language $model, $tag)
+	public function post($tag)
 	{
-		$lang = $model->where('tag', $tag)->first();
+		$lang = Language::where('tag', $tag)->first();
 
 		if (empty($lang) && strlen($tag) == 2) {
 
-			$model->create([
+			Language::create([
 				'tag'		=> $tag,
 				'main_lang'	=> 0,
 			]);

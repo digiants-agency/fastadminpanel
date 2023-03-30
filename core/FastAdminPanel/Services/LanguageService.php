@@ -1,27 +1,29 @@
 <?php 
 
-namespace App\FastAdminPanel\Language;
+namespace App\FastAdminPanel\Services;
 
 use App\FastAdminPanel\Models\Menu;
 use App\FastAdminPanel\Models\Language;
+use App\FastAdminPanel\Services\FastAdminPanelService;
 use Illuminate\Http\Request;
 use App;
 
-class Lang
+class LanguageService
 {
 	protected $lang = '';
 	protected $langs = [];
 	protected $host;
-	protected $model;
 
-	public function __construct(Request $request, Language $language)
+	public function __construct(Request $request, FastAdminPanelService $fastAdminPanelService)
 	{
-		$this->model = $language;
-		$this->langs = $language->get();
+		$this->langs = Language::get();
 		$this->host = $request->getHost();
 		$this->lang = $this->findLang($request, $this->langs);
 
-		App::setLocale($this->lang);
+		if (!$fastAdminPanelService->isAdminPanel($request)) {
+
+			App::setLocale($this->lang);
+		}
 	}
 
 	public function url($lang, $url = '')
@@ -62,6 +64,11 @@ class Lang
 		return $this->url($lang, $url);
 	}
 
+	public function is($lang)
+	{
+		return $this->lang == $lang;
+	}
+
 	public function prefix($lang = '')
 	{
 		if ($lang == '') {
@@ -97,7 +104,15 @@ class Lang
 			return $this->langs->firstWhere('main_lang', 1)->tag ?? '';
 		}
 
-		$this->model->main($to);
+		Language::where('main_lang', 1)
+		->update([
+			'main_lang'	=> 0,
+		]);
+
+		Language::where('tag', $to)
+		->update([
+			'main_lang'	=> 1,
+		]);
 	}
 
 	public function getMain()

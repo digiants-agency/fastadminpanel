@@ -40,23 +40,6 @@ class Language extends Model
 		});
 	}
 
-	public function main($to = '')
-	{
-		if ($to == '') {
-
-			return $this->where('main_lang', 1)->first();
-		}
-
-		$this->update([
-			'main_lang'	=> 0,
-		]);
-
-		$this->where('tag', $to)
-		->update([
-			'main_lang'	=> 1,
-		]);
-	}
-
 	// public function fullfill_table($console)
 	// {
 

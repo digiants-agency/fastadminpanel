@@ -108,6 +108,11 @@ class FastAdminPanelInstall extends Command {
 		);
 
 		$this->publish_parts_folder(
+			$this->path_package('/core/lang'),
+			base_path('/lang')
+		);
+
+		$this->publish_parts_folder(
 			$this->path_package('/public'),
 			public_path('/vendor/fastadminpanel')
 		);
@@ -115,6 +120,11 @@ class FastAdminPanelInstall extends Command {
 		copy(
 			$this->path_package('/core/routes.php'),
 			base_path('/routes/fap.php')
+		);
+
+		copy(
+			$this->path_package('/core/fap.php'),
+			base_path('/config/fap.php')
 		);
 
 		// register provider

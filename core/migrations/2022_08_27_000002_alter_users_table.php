@@ -17,6 +17,7 @@ return new class extends Migration
 
 			Schema::table('users', function (Blueprint $table) {
 				$table->integer('id_roles')->default(1);
+				$table->string('admin_lang_tag', 2)->default('en');
 			});
 		}
 	}
@@ -32,6 +33,7 @@ return new class extends Migration
 
 			Schema::table('users', function (Blueprint $table) {
 				$table->dropColumn('id_roles');
+				$table->dropColumn('admin_lang_tag');
 			});
 		}
 	}

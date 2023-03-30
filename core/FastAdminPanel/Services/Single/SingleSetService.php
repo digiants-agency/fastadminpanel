@@ -2,10 +2,9 @@
 
 namespace App\FastAdminPanel\Services\Single;
 
-use App\FastAdminPanel\Services\Service;
 use App\FastAdminPanel\Models\SingleField;
 
-class SingleSetService extends Service
+class SingleSetService
 {
 	protected $model;
 

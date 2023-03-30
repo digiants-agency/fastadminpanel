@@ -68,7 +68,7 @@ class FAPServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-		$this->app->singleton('lang', \App\FastAdminPanel\Language\Lang::class);
+		$this->app->singleton('lang', \App\FastAdminPanel\Services\LanguageService::class);
 
 		$this->app->booting(function() {
 			$loader = AliasLoader::getInstance();

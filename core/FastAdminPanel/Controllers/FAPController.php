@@ -5,6 +5,7 @@ namespace App\FastAdminPanel\Controllers;
 use App\User;
 use Auth;
 use Hash;
+use App;
 use DB;
 
 class FAPController extends \App\Http\Controllers\Controller
@@ -25,6 +26,8 @@ class FAPController extends \App\Http\Controllers\Controller
 				];
 			}
 		}
+
+		App::setLocale(Auth::user()->admin_lang_tag);
 
 		return view('fastadminpanel.pages.admin')->with([
 			'languages'			=> $languages,
