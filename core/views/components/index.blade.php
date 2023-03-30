@@ -3,15 +3,15 @@
 		<h1 v-text="this.menu_item.title"></h1>
 		<div class="index">
 			<div class="index-body">
-				<div class="index-title">Список</div>
+				<div class="index-title">{{ __('fastadminpanel.list') }}</div>
 				<router-link :to="'/admin/' + menu_item.table_name + '/create'" class="btn btn-add">
-					Добавить +
+					{{ __('fastadminpanel.add') }}
 				</router-link>
 				<div id="datatable_wrapper">
 					<div id="datatable_filter">
 						<div class="datatables-sort">
 							<label>
-								<span>Сортировать:</span>
+								<span>{{ __('fastadminpanel.sort') }}</span>
 								<div class="select-wrapper">
 									<select v-on:change="get_fields_instances" v-model="order">
 										<option v-for="field in menu_item.fields" v-if="field.show_in_list != 'no'" :value="field.db_title" v-text="field.title"></option>
@@ -28,8 +28,8 @@
 								</div>
 								<div class="select-wrapper">
 									<select v-on:change="get_fields_instances" v-model="sort_order">
-										<option value="DESC">Descending</option>
-										<option value="ASC">Ascending</option>
+										<option value="DESC">{{ __('fastadminpanel.asc') }}</option>
+										<option value="ASC">{{ __('fastadminpanel.desc') }}</option>
 									</select>
 
 									<div class="select-arrow-block">
@@ -44,7 +44,7 @@
 							</label>
 						</div>
 						<label class="index-search-wrapper">
-							Искать:
+							{{ __('fastadminpanel.search') }}
 							<input class="index-search" type="text" v-model="search">
 							<svg class="index-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path d="M13.9145 13.0897L9.84765 9.0228C10.619 8.0705 11.0833 6.85982 11.0833 5.54169C11.0833 2.48602 8.59733 0 5.54166 0C2.48599 0 0 2.48602 0 5.54169C0 8.59736 2.48602 11.0834 5.54169 11.0834C6.85982 11.0834 8.0705 10.619 9.0228 9.84768L13.0897 13.9146C13.2036 14.0285 13.3883 14.0285 13.5022 13.9146L13.9146 13.5022C14.0285 13.3883 14.0285 13.2036 13.9145 13.0897ZM5.54169 9.9167C3.12917 9.9167 1.16668 7.9542 1.16668 5.54169C1.16668 3.12917 3.12917 1.16668 5.54169 1.16668C7.9542 1.16668 9.91669 3.12917 9.91669 5.54169C9.91669 7.9542 7.9542 9.9167 5.54169 9.9167Z" fill="#51225D"/>
@@ -104,7 +104,7 @@
 													<rect width="12" height="12" fill="white"/>
 													</clipPath>
 												</svg>
-												<div class="btn-tooltip">Редактировать</div>
+												<div class="btn-tooltip">{{ __('fastadminpanel.edit') }}</div>
 											</router-link>
 											
 											<div class="btn btn-small btn-blue td-actions-delete btn-with-tip" v-on:click="copy(instance.id)" >
@@ -112,14 +112,14 @@
 													<path d="M7.13278 2.25003C8.30429 2.25003 9.25781 3.20355 9.25781 4.37506V9.5H10.1328C10.8913 9.5 11.5078 8.88358 11.5078 8.12506V1.37506C11.5078 0.616547 10.8913 3.05176e-05 10.1328 3.05176e-05H3.88284C3.12433 3.05176e-05 2.50781 0.616547 2.50781 1.37506V2.25003H7.13278Z" fill="black"/>
 													<path d="M0.507843 10.625C0.507843 11.3845 1.12335 12 1.88278 12H7.13278C7.8923 12 8.50781 11.3845 8.50781 10.625V4.37503C8.50781 3.61551 7.8923 3 7.13278 3H1.88278C1.12335 3 0.507843 3.61551 0.507843 4.37503V10.625Z" fill="black"/>
 												</svg>
-												<div class="btn-tooltip">Копировать</div>
+												<div class="btn-tooltip">{{ __('fastadminpanel.copy') }}</div>
 											</div>
 											
 											<div class="btn btn-small btn-danger td-actions-delete btn-with-tip" v-on:click="remove_row(instance.id)">
 												<svg class="btn-svg" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
 													<path d="M4.88111 4.00017L7.8722 1.00895C7.95447 0.926606 7.99987 0.816752 8 0.699614C8 0.582411 7.9546 0.472427 7.8722 0.390216L7.61008 0.128167C7.52767 0.0456305 7.41782 0.000427246 7.30055 0.000427246C7.18348 0.000427246 7.07363 0.0456305 6.99122 0.128167L4.00013 3.11919L1.00891 0.128167C0.926634 0.0456305 0.816715 0.000427246 0.699512 0.000427246C0.582439 0.000427246 0.47252 0.0456305 0.390244 0.128167L0.128 0.390216C-0.0426667 0.560883 -0.0426667 0.838476 0.128 1.00895L3.11915 4.00017L0.128 6.99126C0.0456585 7.07373 0.000325203 7.18358 0.000325203 7.30072C0.000325203 7.41786 0.0456585 7.52771 0.128 7.61012L0.390179 7.87217C0.472455 7.95464 0.582439 7.99991 0.699447 7.99991C0.81665 7.99991 0.926569 7.95464 1.00885 7.87217L4.00006 4.88108L6.99115 7.87217C7.07356 7.95464 7.18341 7.99991 7.30049 7.99991H7.30062C7.41776 7.99991 7.52761 7.95464 7.61002 7.87217L7.87213 7.61012C7.95441 7.52778 7.9998 7.41786 7.9998 7.30072C7.9998 7.18358 7.95441 7.07373 7.87213 6.99132L4.88111 4.00017Z" fill="#F8F9FB"/>
 												</svg>
-												<div class="btn-tooltip">Удалить</div>
+												<div class="btn-tooltip">{{ __('fastadminpanel.delete') }}</div>
 											</div>
 
 										</div>
@@ -152,13 +152,13 @@
 								</svg>
 							</div>
 						</div>
-						<div class="index-pagination-show">Showing <span v-text="(offset + 1)"></span> to <span v-text="(offset + instances.length)"></span> <span v-if="count > 0">of <span v-text="count"></span> entries</span></div>
+						<div class="index-pagination-show">{{ __('fastadminpanel.showing') }} <span v-text="(offset + 1)"></span> {{ __('fastadminpanel.to') }} <span v-text="(offset + instances.length)"></span> <span v-if="count > 0">{{ __('fastadminpanel.of') }} <span v-text="count"></span> {{ __('fastadminpanel.entries') }}</span></div>
 
 					</div>
 				</div>
 				<div class="mass-delete-col">
 					<button class="btn btn-danger" v-on:click="delete_checked">
-						Delete checked
+						{{ __('fastadminpanel.delete_checked') }}
 					</button>
 				</div>
 			</div>

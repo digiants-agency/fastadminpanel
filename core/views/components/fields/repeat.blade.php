@@ -15,7 +15,7 @@
 					</component>
 				</div>
 			</template>
-			<div class="btn btn-add" v-on:click="add">Добавить +</div>
+			<div class="btn btn-add" v-on:click="add">{{ __('fastadminpanel.add_field') }} +</div>
 		</div>
 	</div>
 </template>

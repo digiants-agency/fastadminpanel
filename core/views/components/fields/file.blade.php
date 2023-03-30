@@ -12,7 +12,7 @@
 
 		<div class="edit-field-inner">
 			<input class="form-control" type="text" :id="field.db_title" v-model="value" v-on:change="error = ''">
-			<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">Добавить</div>
+			<div class="btn btn-primary add-file-btn" v-on:click="add_file(field.db_title)">{{ __('fastadminpanel.add_field') }}</div>
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 			check() {
 
 				if (this.field.required != 'optional' && !this.file.value) {
-					this.error = 'This field is required'
+					this.error = '{{ __('fastadminpanel.required_field') }}'
 				} else if (this.field.required == 'required_once') {
 					// TODO
 				}

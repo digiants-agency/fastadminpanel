@@ -1,13 +1,13 @@
 <script type="text/x-template" id="template-menu">
 	<div class="table-edit">
-		<h1>Create or edit CRUD menu item</h1>
+		<h1>{{__('fastadminpanel.gen_desc')}}</h1>
 		<div class="menu-table">
 			<div class="form-group">
-				<label class="menu-item-title">Menu item</label>
+				<label class="menu-item-title">{{__('fastadminpanel.gen_item')}}</label>
 				<div class="menu-item-input">
 					<div class="select-wrapper">
 						<select v-on:change="set_menu_item" class="form-control">
-							<option :value="-1">New</option>
+							<option :value="-1">{{__('fastadminpanel.new')}}</option>
 							<option :value="index" v-for="(item, index) in menu" v-if="item.type == 'multiple'" v-text="item.title"></option>
 						</select>
 						<div class="select-arrow-block">
@@ -22,24 +22,24 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="menu-item-title">CRUD name</label>
+				<label class="menu-item-title">{{__('fastadminpanel.crud_name')}}</label>
 				<div class="menu-item-input">
 					<input v-model="menu_item_edit.table_name" class="form-control" placeholder="ex. books or products (used to generate DB table)" type="text" :disabled="action != 'create'">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="menu-item-title">CRUD title</label>
+				<label class="menu-item-title">{{__('fastadminpanel.crud_title')}}</label>
 				<div class="menu-item-input">
 					<input v-model="menu_item_edit.title" class="form-control" placeholder="Menu title (used for menu item)" type="text">
 				</div>
 			</div>
 			<div class="form-group disabled">
-				<label class="menu-item-title">Soft delete?</label>
+				<label class="menu-item-title">{{__('fastadminpanel.soft_delete')}}</label>
 				<div class="menu-item-input">
 					<div class="select-wrapper">
 						<select v-model="menu_item_edit.is_soft_delete" class="form-control">
-							<option value="0">No</option>
-							<option value="1">Yes</option>
+							<option value="0">{{__('fastadminpanel.no')}}</option>
+							<option value="1">{{__('fastadminpanel.yes')}}</option>
 						</select>
 						<div class="select-arrow-block">
 							<svg class="select-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,12 +54,12 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="menu-item-title">Is dev</label>
+				<label class="menu-item-title">{{__('fastadminpanel.is_dev')}}</label>
 				<div class="menu-item-input">
 					<div class="select-wrapper">
 						<select v-model="menu_item_edit.is_dev" class="form-control">
-							<option value="0">No</option>
-							<option value="1">Yes</option>
+							<option value="0">{{__('fastadminpanel.no')}}</option>
+							<option value="1">{{__('fastadminpanel.yes')}}</option>
 						</select>
 						<div class="select-arrow-block">
 							<svg class="select-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,12 +74,12 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="menu-item-title">Multilanguage</label>
+				<label class="menu-item-title">{{__('fastadminpanel.multilang')}}</label>
 				<div class="menu-item-input">
 					<div class="select-wrapper">
 						<select v-model="menu_item_edit.multilanguage" class="form-control">
-							<option :value="0">No</option>
-							<option :value="1">Yes</option>
+							<option :value="0">{{__('fastadminpanel.no')}}</option>
+							<option :value="1">{{__('fastadminpanel.yes')}}</option>
 						</select>
 						<div class="select-arrow-block">
 							<svg class="select-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,7 +125,7 @@
 					<input class="form-control" type="text" v-model="menu_item_edit.icon">
 					<div class="photo-preview-wrapper">
 						<img :src="menu_item_edit.icon" alt="" class="photo-preview-img">
-						<div class="btn btn-primary" v-on:click="add_photo()">Добавить</div>
+						<div class="btn btn-primary" v-on:click="add_photo()">Add</div>
 					</div>
 				</div>
 			</div>

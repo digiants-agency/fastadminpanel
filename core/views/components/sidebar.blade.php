@@ -6,14 +6,14 @@
 				<a href="/" target="_blank">
 					<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
 				</a>
-				<a href="/admin" class="sidebar-header-title">Admin Panel</a>
+				<a href="/admin" class="sidebar-header-title">{{ __('fastadminpanel.admin_panel') }}</a>
 			</div>
 		@endif
 
 		<div class="sidebar-menu">
 			<div class="sidebar-menu-items">
-				<router-link to="/admin/dropdown" class="sidebar-menu-item" v-if="is_dev">Dropdown</router-link>
-				<router-link to="/admin/options" class="sidebar-menu-item" v-if="is_dev">Options</router-link>
+				<router-link to="/admin/dropdown" class="sidebar-menu-item" v-if="is_dev">{{ __('fastadminpanel.dropdown') }}</router-link>
+				<router-link to="/admin/options" class="sidebar-menu-item" v-if="is_dev">{{ __('fastadminpanel.options') }}</router-link>
 
 				<template v-for="item in dropdown_menu">
 					<div class="sidebar-menu-item-parent" :class="{active: sub_is_active(item.children) || item.active}" v-if="!item.table_name">
@@ -91,7 +91,7 @@
 					<rect width="16" height="16" fill="white"/>
 					</clipPath>
 				</svg>
-				Выйти
+				{{ __('fastadminpanel.sign_out') }}
 			</div>
 		</div>
 	</div>
@@ -161,7 +161,9 @@
 			},
 			logout: function() {
 				request('/admin/logout');
-				document.location.reload()
+				this.refresh()
+				location.reload()
+
 			},
 
 			get_language: function(){

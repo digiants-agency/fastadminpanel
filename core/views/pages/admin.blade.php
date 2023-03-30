@@ -13,7 +13,7 @@
 			<a href="/" target="_blank">
 				<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
 			</a>
-            <a href="/admin" class="sidebar-header-title">Admin Panel</a>
+            <a href="/admin" class="sidebar-header-title">{{ __('fastadminpanel.admin_panel') }}</a>
 		</div>
 	</div>
 @endif

@@ -8,7 +8,7 @@
 			</div>
 		</div>
 
-		<button class="btn btn-primary" v-on:click="save()">Сохранить</button>
+		<button class="btn btn-primary" v-on:click="save()">{{ __('fastadminpanel.save') }}</button>
 	</div>
 </template>
 

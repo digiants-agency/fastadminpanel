@@ -22,7 +22,7 @@
 					</div>
 				</div>
 			</template>
-			<div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery()">Добавить</div>
+			<div class="btn btn-primary gallery-margin-top" v-on:click="add_gallery()">{{ __('fastadminpanel.add_field') }}</div>
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>

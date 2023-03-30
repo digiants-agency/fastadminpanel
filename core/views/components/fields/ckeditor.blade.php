@@ -49,7 +49,7 @@
 
 					if (this.field.required != 'optional') {
 
-						this.error = 'This field is required'
+						this.error = '{{ __('fastadminpanel.required_field') }}'
 
 					} else if (this.field.required == 'required_once') {
 						

@@ -46,10 +46,8 @@
             <div class="itemstosale">
                 <div v-for="product in products" :key='product.id'class="product">
                     <a v-bind:href="'/product/'+product.slug" target="_blank"><img v-bind:src="product.image" alt=""></a>
-                    <a v-bind:href="'/product/'+product.slug" class="product-slug" target="_blank">
-                        {{product.title}}
-                    </a>
-                    <div class="product-count">Продано: {{ product.count }}</div>
+                    <a v-bind:href="'/product/'+product.slug" class="product-slug" target="_blank" v-text="product.title"></a>
+                    <div class="product-count" v-text="'Продано: ' + product.count"></div>
                 </div>
             </div>
         </div>

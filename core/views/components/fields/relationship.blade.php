@@ -25,7 +25,7 @@
 				</div>
 			</div>
 
-			<div class="btn btn-add" v-on:click="add_group" v-if="table_name != 'orders'">Добавить +</div>
+			<div class="btn btn-add" v-on:click="add_group" v-if="table_name != 'orders'">{{ __('fastadminpanel.add_field') }} +</div>
 		</div>
 		
 		<div class="form-group" v-else>
@@ -34,7 +34,7 @@
 			</div>
 			<div>
 				<div class="select-wrapper" v-if="field.relationship_count == 'single'">
-					<v-select class="form-control" :options="[].concat.apply([{id: 0, title: 'Не выбрано'}], field.values)" label="title" :reduce="title => title.id" v-model="field.value"></v-select>
+					<v-select class="form-control" :options="[].concat.apply([{id: 0, title: '{{ __('fastadminpanel.choose_select') }}'}], field.values)" label="title" :reduce="title => title.id" v-model="field.value"></v-select>
 
 					<div class="select-arrow-block">
 						<svg class="select-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">

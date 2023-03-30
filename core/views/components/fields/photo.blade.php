@@ -14,7 +14,7 @@
 			<input class="form-control" type="text" :id="field.db_title" v-model="value" v-on:change="error = ''">
 			<div class="photo-preview-wrapper">
 				<img :src="value" alt="" class="photo-preview-img">
-				<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">Добавить</div>
+				<div class="btn btn-primary" v-on:click="add_photo(field.db_title)">{{ __('fastadminpanel.add_field') }}</div>
 			</div>
 			<div class="input-error" v-text="error"></div>
 		</div>

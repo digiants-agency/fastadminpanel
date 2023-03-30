@@ -31,7 +31,7 @@
 			check() {
 
 				if (!$.isNumeric(this.value))
-					this.error = 'Field must be numeric. Use "." instead of ","'
+					this.error = '{{ __('fastadminpanel.numeric_field') }}'
 
 				if (this.error == '')
 					return true

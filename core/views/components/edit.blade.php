@@ -5,14 +5,14 @@
 				<svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M0.54038 4.54038C0.28654 4.79422 0.28654 5.20578 0.540381 5.45962L4.67696 9.59619C4.9308 9.85004 5.34235 9.85004 5.59619 9.59619C5.85004 9.34235 5.85004 8.9308 5.59619 8.67696L1.91924 5L5.59619 1.32305C5.85003 1.0692 5.85003 0.657647 5.59619 0.403807C5.34235 0.149966 4.9308 0.149966 4.67695 0.403807L0.54038 4.54038ZM9 4.35L1 4.35L1 5.65L9 5.65L9 4.35Z" fill="white"/>
 				</svg>
-				Назад
+				{{ __('fastadminpanel.back') }}
 			</router-link>
 			
 			<div class="space-between">
 				
-				<h1 v-if="id == 0">Добавить новый</h1>
-				<h1 v-else-if="menu_item.table_name == 'orders'">Данные клиента</h1> <!-- for tim -->
-				<h1 v-else>Редактировать</h1>
+				<h1 v-if="id == 0">{{ __('fastadminpanel.add_new') }}</h1>
+				<h1 v-else-if="menu_item.table_name == 'orders'">{{ __('fastadminpanel.client_data') }}</h1> <!-- for tim -->
+				<h1 v-else>{{ __('fastadminpanel.edit') }}</h1>
 			</div>
 		</div>
 
@@ -31,10 +31,10 @@
 
 
 		<div class="edit-fields-btns">
-			<button v-if="id == 0" class="btn btn-primary" v-on:click="save(true)">Создать</button>
+			<button v-if="id == 0" class="btn btn-primary" v-on:click="save(true)">{{ __('fastadminpanel.create') }}</button>
 			<template v-else>
-				<button class="btn btn-primary" v-on:click="save(false)">Сохранить изменения</button>
-				<button class="btn btn-primary" v-on:click="save(true)">Сохранить и закрыть</button>
+				<button class="btn btn-primary" v-on:click="save(false)">{{ __('fastadminpanel.save_adj') }}</button>
+				<button class="btn btn-primary" v-on:click="save(true)">{{ __('fastadminpanel.save_adj_close') }}</button>
 			</template>
 		</div>
 	</div>

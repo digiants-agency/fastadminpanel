@@ -2,15 +2,15 @@
 	<div class="table-edit">
 		<div>
 			<div class="col-sm-12">
-				<h1>Редактировать выпадающие списки</h1>
+				<h1>Edit dropdowns</h1>
 			</div>
 			<div class="table-wrapper">
 				<table class="table">
 					<tr>
 						<td class="table-header-title">ID</td>
-						<td class="table-header-title">Название</td>
-						<td class="table-header-title">Приоритет</td>
-						<td class="table-header-title">Иконка</td>
+						<td class="table-header-title">Title</td>
+						<td class="table-header-title">Priority</td>
+						<td class="table-header-title">Icon</td>
 						<td class="table-header-title"></td>
 					</tr>
 
@@ -20,12 +20,12 @@
 						</td>
 						<td>
 							<div class="dropdown-td-wrapper">
-								<input v-model="elm.title" type="text" class="form-control title" placeholder="Название">
+								<input v-model="elm.title" type="text" class="form-control title" placeholder="Title">
 							</div>
 						</td>
 						<td>
 							<div class="dropdown-td-wrapper">
-								<input v-model="elm.sort" type="text" class="form-control title" placeholder="Приоритет">
+								<input v-model="elm.sort" type="text" class="form-control title" placeholder="Priority">
 							</div>
 						</td>
 						<td>
@@ -34,7 +34,7 @@
 									<input class="form-control" type="text" v-model="elm.icon">
 									<div class="photo-preview-wrapper">
 										<img :src="elm.icon" alt="" class="photo-preview-img">
-										<div class="btn btn-primary" v-on:click="add_photo(index)">Добавить</div>
+										<div class="btn btn-primary" v-on:click="add_photo(index)">Add</div>
 									</div>
 								</div>
 							</div>
@@ -51,12 +51,12 @@
 					</tr>
 				</table>
 
-				<button v-on:click="add" type="button" class="btn btn-add">Добавить выпадающий список +</button>
+				<button v-on:click="add" type="button" class="btn btn-add">Add dropdown +</button>
 
 				</div>
 			</div>
 			
-			<button v-on:click="update()" class="btn btn-primary">Сохранить</button>
+			<button v-on:click="update()" class="btn btn-primary">Save</button>
 		</div>
 
 	</div>

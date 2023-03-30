@@ -36,4 +36,4 @@
 	<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor.css" />
 @endif
 
-<title>Admin panel</title>
+<title>{{ __('fastadminpanel.admin_panel') }}</title>

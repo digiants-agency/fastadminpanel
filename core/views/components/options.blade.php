@@ -1,8 +1,7 @@
 <script type="text/x-template" id="template-options">
 	<div class="options">
-		<div class="btn btn-primary" v-on:click="rm_language">Delete language</div>
-		<div class="btn btn-primary" v-on:click="add_language">Add language</div>
-		<div>Add or remove language you can directly in your DB</div>
+		<div class="btn btn-primary" v-on:click="rm_language">{{__('fastadminpanel.delete_lang')}}</div>
+		<div class="btn btn-primary" v-on:click="add_language">{{__('fastadminpanel.add_lang')}}</div>
 	</div>
 </script>
 
