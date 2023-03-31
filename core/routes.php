@@ -25,9 +25,9 @@ Route::group([
 			'prefix' => Lang::prefix(),
 		], function() {
 
-			Route::get('/admin/api/single/{id}',	[SingleController::class, 'get']);
-			Route::put('/admin/api/single/{id}',	[SingleController::class, 'put']);
-			Route::delete('/admin/api/single/{id}',	[SingleController::class, 'delete']);
+			Route::get('/admin/api/single/{id}',	[SingleController::class, 'show']);
+			Route::put('/admin/api/single/{id}',	[SingleController::class, 'update']);
+			Route::delete('/admin/api/single/{id}',	[SingleController::class, 'destroy']);
 		});
 
 		Route::post('/admin/api/language/{tag}', 	[LanguageController::class, 'post']);
