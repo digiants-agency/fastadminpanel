@@ -15,7 +15,7 @@ class FastAdminPanelService
 
 	public function isSingleSaving()
 	{
-		return !is_null($this->request->query('update')) && config('app.debug');
+		return !is_null($this->request->query(config('fap.single_save_query'))) && config('app.debug');
 	}
 
 	public function isAdminPanel()
