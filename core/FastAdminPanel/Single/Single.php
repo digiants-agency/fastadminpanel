@@ -51,9 +51,4 @@ class Single
 
 		return $blocks;
 	}
-
-	public static function isUpdate()
-	{
-		return isset($_GET['update']) && config('app.debug');
-	}
 }

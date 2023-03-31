@@ -20,7 +20,7 @@ class LanguageService
 		$this->host = $request->getHost();
 		$this->lang = $this->findLang($request, $this->langs);
 
-		if (!$fastAdminPanelService->isAdminPanel($request)) {
+		if (!$fastAdminPanelService->isAdminPanel()) {
 
 			App::setLocale($this->lang);
 		}

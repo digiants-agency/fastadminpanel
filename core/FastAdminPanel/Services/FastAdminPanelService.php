@@ -6,13 +6,20 @@ use Illuminate\Http\Request;
 
 class FastAdminPanelService
 {
-	public function isSingleSaving(Request $request)
+	protected $request;
+
+	public function __construct(Request $request)
 	{
-		// $request->query('accountId');
+		$this->request = $request;
 	}
 
-	public function isAdminPanel(Request $request)
+	public function isSingleSaving()
 	{
-		return $request->is(config('fap.panel_url') . '/*') || $request->is(config('fap.panel_url'));
+		return !is_null($this->request->query('update')) && config('app.debug');
+	}
+
+	public function isAdminPanel()
+	{
+		return $this->request->is(config('fap.panel_url') . '/*') || $this->request->is(config('fap.panel_url'));
 	}
 }

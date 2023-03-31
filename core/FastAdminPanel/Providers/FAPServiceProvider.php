@@ -15,11 +15,20 @@ use App\FastAdminPanel\Helpers\Field;
 use App\FastAdminPanel\Helpers\Platform;
 use App\FastAdminPanel\Helpers\Convertor;
 use App\FastAdminPanel\Helpers\SEO;
+use App\FastAdminPanel\Services\LanguageService;
+use App\FastAdminPanel\Services\FastAdminPanelService;
 use View;
 
 // TODO: divide this large provider
 class FAPServiceProvider extends ServiceProvider
 {
+	public $bindings = [
+    ];
+ 
+    public $singletons = [
+        'lang' => LanguageService::class,
+    ];
+
 	public function boot()
 	{
 		$this->app->bind('fastadminpanel:translate', function ($app) {
@@ -68,12 +77,13 @@ class FAPServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-		$this->app->singleton('lang', \App\FastAdminPanel\Services\LanguageService::class);
-
 		$this->app->booting(function() {
+
 			$loader = AliasLoader::getInstance();
 
-			if (Single::isUpdate()) {
+			$fastAdminPanelService = $this->app->make(FastAdminPanelService::class);
+
+			if ($fastAdminPanelService->isSingleSaving()) {
 
 				$loader->alias('Single', \App\FastAdminPanel\Single\Saver\Single::class);
 
