@@ -11,7 +11,7 @@
     }],
     "require": {
         "doctrine/dbal": "^2.9",
-        "unisharp/laravel-filemanager": "v3.0.5",
+        "unisharp/laravel-filemanager": "dev-master",
         "jenssegers/agent": "dev-master"
     },
     "autoload": {
