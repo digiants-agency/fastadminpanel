@@ -11,8 +11,8 @@
     }],
     "require": {
         "doctrine/dbal": "^2.9",
-        "unisharp/laravel-filemanager": "dev-main",
-        "jenssegers/agent": "dev-main"
+        "unisharp/laravel-filemanager": "dev-master",
+        "jenssegers/agent": "dev-master"
     },
     "autoload": {
         "psr-4": {
