@@ -2,14 +2,8 @@
 
 namespace Digiants\FastAdminPanel\Commands;
 
-use App\FastAdminPanel\Helpers\Single;
-use App\FastAdminPanel\Models\Language;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateBahroma;
-use Digiants\FastAdminPanel\ShopTemplates\ShopTemplateDTG;
 use Digiants\FastAdminPanel\Templates\TemplateComponents;
 use Digiants\FastAdminPanel\Templates\TemplateDefault;
 use Artisan;
@@ -50,7 +44,6 @@ class FastAdminPanelInstall extends Command {
 		
 		$this->add_user();
 		$type_template = $this->import_template();
-		$this->import_shop($type_template);
 	}
 
 	private function template_add_folder ($path) {
@@ -166,31 +159,6 @@ class FastAdminPanelInstall extends Command {
 		}
 
 		return $type;
-	}
-
-	private function import_shop($type){
-
-		if (empty($type))
-			return;
-
-		$answer = $this->ask('Import shop template (if previous been yes) (Y/n)?');
-
-		if ($answer != 'n') {
-
-			if ($type == 'Default'){
-				$shop_template = new ShopTemplateBahroma();
-
-				$status = $shop_template->import_shop();
-	
-			} else {
-				$shop_template = new ShopTemplateDTG();
-
-				$status = $shop_template->import_shop();
-	
-			}
-
-			$this->info($status);	
-		}
 	}
 
 	private function add_user() {

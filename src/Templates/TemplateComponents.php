@@ -6,7 +6,7 @@ class TemplateComponents extends Template{
 
 	protected function template_path_package ($path) {
 
-		return base_path("vendor/sv-digiants/fastadminpanel/templates/main/components" . $path);
+		return base_path("vendor/sv-digiants/fastadminpanel/templates/components" . $path);
 	}
 
 	public function import () {
@@ -22,6 +22,7 @@ class TemplateComponents extends Template{
 			'desktop-src.css',
 			'mobile-src.css',
 		];
+
 		foreach ($css as $path) {
 			copy(
 				$this->template_path_package("/css/$path"),
@@ -45,6 +46,7 @@ class TemplateComponents extends Template{
 			'pages/index.blade.php',
 			'pages/sitemap.blade.php',
 		];
+
 		foreach ($views as $path) {
 			copy(
 				$this->template_path_package("/views/$path"),
@@ -53,8 +55,10 @@ class TemplateComponents extends Template{
 		}
 
 		// routes
-		if (file_exists(base_path("/routes/web.php")))
+		if (file_exists(base_path("/routes/web.php"))) {
 			unlink(base_path("/routes/web.php"));
+		}
+
 		copy(
 			$this->template_path_package("/web.php"),
 			base_path("/routes/web.php")
@@ -94,17 +98,20 @@ class TemplateComponents extends Template{
 		copy(
 			$this->template_path_package("/Components/Inc/Footer.php"),
 			base_path("/app/View/Components/Inc/Footer.php")
-		);copy(
+		);
+		copy(
 			$this->template_path_package("/Components/Inc/Header.php"),
 			base_path("/app/View/Components/Inc/Header.php")
-		);copy(
+		);
+		copy(
 			$this->template_path_package("/Components/Inc/Pagination.php"),
 			base_path("/app/View/Components/Inc/Pagination.php")
 		);
 		
 		// rm default view
-		if (file_exists(base_path("/resources/views/welcome.blade.php")))
+		if (file_exists(base_path("/resources/views/welcome.blade.php"))) {
 			unlink(base_path("/resources/views/welcome.blade.php"));
+		}
 	}
     
 }

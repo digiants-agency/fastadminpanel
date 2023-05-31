@@ -14,7 +14,6 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 
 		Schema::defaultStringLength(191);
 
-		// Register commands
 		$this->app->bind('fastadminpanel:install', function ($app) {
 			return new \Digiants\FastAdminPanel\Commands\FastAdminPanelInstall();
 		});
