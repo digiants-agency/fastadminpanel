@@ -254,7 +254,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
     if (is_mobile){
 

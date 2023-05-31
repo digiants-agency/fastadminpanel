@@ -52,7 +52,7 @@
 @endcss
 
 
-@js
+@startjs
     <script>
         
         $('input[name="delivery"]').on('change', async function(){

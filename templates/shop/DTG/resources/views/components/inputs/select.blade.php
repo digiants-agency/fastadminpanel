@@ -174,7 +174,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
     
     function select_click(elm){

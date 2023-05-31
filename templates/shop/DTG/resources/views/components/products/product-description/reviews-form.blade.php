@@ -70,7 +70,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
     
     async function submit_reviews_form(e){

@@ -57,7 +57,7 @@ class FAPServiceProvider extends ServiceProvider
 			return '<?php Convertor::create($view_name, ob_get_clean(), false); ?>';
 		});
 
-		Blade::directive('js', function ($index) {
+		Blade::directive('startjs', function ($index) {
 			
 			return '<?php $position_js = '.($index ? $index : '1').'; ob_start(); ?>';
 		});

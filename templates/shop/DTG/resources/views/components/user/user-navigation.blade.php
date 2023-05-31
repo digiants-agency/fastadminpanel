@@ -146,7 +146,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     async function change_user_menu(route){

@@ -118,7 +118,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     $('.counter-symbol').on('click', function(){

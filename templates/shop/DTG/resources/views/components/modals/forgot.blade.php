@@ -271,7 +271,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     function open_forgot_modal(){

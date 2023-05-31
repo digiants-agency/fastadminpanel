@@ -164,7 +164,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
 
     $('.login-modal-recall').on('click', function(){

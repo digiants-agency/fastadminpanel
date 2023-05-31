@@ -410,7 +410,7 @@
 @endcss
 
 
-@js
+@startjs
 
 <script>
     ! function() {

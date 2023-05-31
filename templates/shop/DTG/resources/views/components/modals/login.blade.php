@@ -268,7 +268,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     function open_login_modal(){

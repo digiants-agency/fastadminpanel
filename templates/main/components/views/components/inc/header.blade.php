@@ -19,7 +19,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
 </script>

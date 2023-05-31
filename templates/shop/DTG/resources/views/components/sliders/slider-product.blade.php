@@ -447,7 +447,7 @@
 
 <?php JSAssembler::add('/js/slider.js'); ?>
 
-@js
+@startjs
 
 <script>
 

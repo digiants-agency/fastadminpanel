@@ -144,7 +144,7 @@
 
 
 
-@js
+@startjs
 <script>
     
     $('.horizontal-form').on('submit', async function(e){

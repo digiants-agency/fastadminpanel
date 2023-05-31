@@ -217,7 +217,7 @@
 
 @endcss
 
-@js
+@startjs
 <script>
      
 

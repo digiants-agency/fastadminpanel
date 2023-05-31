@@ -714,7 +714,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 	
 	$('.search-icon').on('click', function(){

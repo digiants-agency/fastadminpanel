@@ -33,7 +33,7 @@
 @endcss
 
 
-@js('0')
+@startjs('0')
 
 <script>
 

@@ -129,7 +129,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
 
     async function make_filters(loader = true) {

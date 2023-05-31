@@ -61,7 +61,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
     
     function open_filters(){

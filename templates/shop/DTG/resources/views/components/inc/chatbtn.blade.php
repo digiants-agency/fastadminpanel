@@ -303,7 +303,7 @@
 
 @endcss
 
-@js
+@startjs
 
 <script>
 

@@ -36,7 +36,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
     
     async function make_sort(elm){

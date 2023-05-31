@@ -55,7 +55,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
     
     async function show_more_reviews(elm){

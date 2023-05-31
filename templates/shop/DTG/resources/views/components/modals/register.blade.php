@@ -272,7 +272,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     function open_register_modal(){

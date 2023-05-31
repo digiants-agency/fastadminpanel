@@ -100,7 +100,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
 
     async function edit_user(form, route) {

@@ -308,7 +308,7 @@
 @endcss
 
 
-@js
+@startjs
 <script>
 
     $('.contacts-form').on('submit', async function(e){

@@ -172,7 +172,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
     
     $('.callback-form').on('submit', async function(e){

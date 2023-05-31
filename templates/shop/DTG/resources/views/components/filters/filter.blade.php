@@ -197,7 +197,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     function toggle_filter(elm) {

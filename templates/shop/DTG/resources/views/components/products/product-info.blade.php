@@ -164,7 +164,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 
     function add_product(id_product){

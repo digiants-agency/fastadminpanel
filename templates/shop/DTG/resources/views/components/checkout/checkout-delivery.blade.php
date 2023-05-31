@@ -160,7 +160,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 
 <script>
 

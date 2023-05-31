@@ -23,7 +23,7 @@
 </style>
 @endcss
 
-@js
+@startjs
 <script>
 	$('#checkout-form').on('submit', async function(e){
 		e.preventDefault()
