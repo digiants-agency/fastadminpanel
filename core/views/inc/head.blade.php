@@ -28,7 +28,7 @@
 <script src="/vendor/fastadminpanel/ckeditor/ckeditor.js"></script>
 <script src="/vendor/fastadminpanel/js/ckeditor-vue.js"></script>
 
-@if (Agent::isMobile() && !Agent::isTablet())
+@if (Platform::mobile())
 	<link rel="stylesheet" href="<?php include 'vendor/fastadminpanel/css/converter-mobile.php' ?>">
 	<link rel="stylesheet" href="/vendor/fastadminpanel/css/ckeditor-mobile.css" />
 @else

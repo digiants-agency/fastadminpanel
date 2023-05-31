@@ -27,10 +27,10 @@
 @endif
 
 <script>
-var is_mobile = {{(Agent::isMobile() && !Agent::isTablet()) ? 'true' : 'false'}}
+var is_mobile = {{ Platform::mobile() ? 'true' : 'false'}}
 </script>
 
-@if (Agent::isMobile() && !Agent::isTablet())
+@if (Platform::mobile())
 	<link rel="stylesheet" href="<?php include 'css/converter-mobile.php' ?>">
 @else
 	<link rel="stylesheet" href="<?php include 'css/converter-desktop.php' ?>">

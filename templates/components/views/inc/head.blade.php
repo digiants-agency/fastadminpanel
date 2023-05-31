@@ -23,6 +23,6 @@
 @endif
 
 <script>
-	var is_mobile = {{(Agent::isMobile() && !Agent::isTablet()) ? 'true' : 'false'}}
+	var is_mobile = {{ Platform::mobile() ? 'true' : 'false'}}
 	var lang = document.querySelector('html').getAttribute('lang')
 </script>
