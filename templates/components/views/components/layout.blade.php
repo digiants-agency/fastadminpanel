@@ -26,6 +26,8 @@
 
 		<x-inc.footer />
 
+		{{ $javascript }}
+		
 	</body>
     
 </html>
