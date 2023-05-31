@@ -12,9 +12,8 @@
     "require": {
         "doctrine/dbal": "^2.9",
         "unisharp/laravel-filemanager": "2.6.0",
-        "jenssegers/agent": "2.6.4"
+        "mobiledetect/mobiledetectlib": "^3.74"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Digiants\\FastAdminPanel\\": "src/"

@@ -2,17 +2,18 @@
 
 namespace App\FastAdminPanel\Helpers;
 
-use Agent;
+use Detection\MobileDetect;
 
 class Platform
 {
-
 	private static $is_mobile = null;
 
 	public static function init()
 	{
+		$detect = new MobileDetect();
+		
 		if (self::$is_mobile === null) {
-			if (Agent::isMobile() && !Agent::isTablet()) {
+			if ($detect->isMobile() && !$detect->isTablet()) {
 				self::$is_mobile = true;
 			} else {
 				self::$is_mobile = false;
@@ -36,7 +37,8 @@ class Platform
 
 	public static function tablet()
 	{
-		return Agent::isTablet();
+		$detect = new MobileDetect();
+		return $detect->isTablet();
 	}
 
 	public static function iphone()
