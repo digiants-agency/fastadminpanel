@@ -6,6 +6,10 @@ class ResizeImg
 {
 	public static function get($path, $width, $height)
 	{
+		if (!function_exists('imagewebp')) {
+			return $path;
+		}
+		
 		$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
 		$site_path = public_path();
