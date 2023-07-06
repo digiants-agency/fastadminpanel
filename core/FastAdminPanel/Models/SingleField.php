@@ -81,7 +81,7 @@ class SingleField extends MultilanguageModel
 			'repeat'		=> json_decode($value) ?? 0,
 			'checkbox'		=> !!$value,
 			'gallery'		=> json_decode($value) ?? [],
-			'money'			=> intval($value),
+			'money'			=> floatval($value),
 			'number'		=> intval($value),
 			default			=> $value,
 		};
