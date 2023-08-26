@@ -1985,3 +1985,59 @@ textarea.form-control {
     top: 10px;
     right: 10px;
 }
+
+.edit-settings {
+    list-style: none;
+    cursor: pointer;
+    position: relative;
+    padding-left: 30px;
+}
+
+.edit-settings-dots {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 10px;
+    transform: rotate(90deg);
+}
+
+.edit-settings-options {
+    position: absolute;
+    right: 10px;
+    top: calc(100% - 10px);
+    list-style: none;
+    background: #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.11);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.edit-settings:hover .edit-settings-options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.edit-settings-option,
+.edit-settings-option a {
+    font-size: 14px;
+    line-height: 18px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    color: #171219;
+    transition: .3s;
+}
+
+.edit-settings-option:last-child {
+    margin-bottom: 0;
+}
+
+.edit-settings-option:hover,
+.edit-settings-option a:hover {
+    color: #51225D;
+}

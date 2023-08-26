@@ -43,4 +43,8 @@ return [
 	'numeric_field'		=> 'Field must be numeric. Use "." instead of ","',
 	'add_field'			=> 'Add',
 	'choose_select'		=> 'Please, choose',
+	'import_xlsx'		=> 'Import xlsx',
+	'import'			=> 'Import',
+	'export_xlsx'		=> 'Export xlsx',
+	'file'				=> 'File',
 ];

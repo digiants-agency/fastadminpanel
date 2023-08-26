@@ -12,7 +12,8 @@
     "require": {
         "doctrine/dbal": "^2.9",
         "unisharp/laravel-filemanager": "2.6.0",
-        "mobiledetect/mobiledetectlib": "^3.74"
+        "mobiledetect/mobiledetectlib": "^3.74",
+        "maatwebsite/excel": "^3.1"
     },
     "autoload": {
         "psr-4": {

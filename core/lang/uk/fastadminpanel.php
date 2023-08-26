@@ -43,4 +43,8 @@ return [
 	'numeric_field'		=> 'Це поле повинне бути числом. Використовуйте "." замість ","',
 	'add_field'			=> 'Додати',
 	'choose_select'		=> 'Будь-ласка, оберіть',
+	'import_xlsx'		=> 'Імпорт xlsx',
+	'import'			=> 'Імпорт',
+	'export_xlsx'		=> 'Експорт xlsx',
+	'file'				=> 'Файл',
 ];

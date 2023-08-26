@@ -1,6 +1,23 @@
 <script type="text/x-template" id="template-index">
 	<div class="index">
-		<h1 v-text="this.menu_item.title"></h1>
+		<div class="space-between">
+			<h1 v-text="this.menu_item.title"></h1>
+			
+			<ul class="edit-settings">
+				<li>
+					<div class="edit-settings-dots">...</div>
+					<ul class="edit-settings-options">
+						<li class="edit-settings-option">
+							<router-link :to="'/admin/import/' + menu_item.table_name">{{ __('fastadminpanel.import_xlsx') }}</router-link>
+						</li>
+						<li class="edit-settings-option">
+							<a :href="'/admin/export/' + menu_item.table_name">{{ __('fastadminpanel.export_xlsx') }}</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+		</div>
 		<div class="index">
 			<div class="index-body">
 				<div class="index-title">{{ __('fastadminpanel.list') }}</div>

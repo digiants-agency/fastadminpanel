@@ -53,6 +53,9 @@ Route::group([
 
 		Route::post('/admin/get-mainpage', 'ApiController@getMainpage');
 
+		Route::get('/admin/export/{table}', 'ImportExportController@export')->name('admin-export');
+		Route::post('/admin/import/{table}', 'ImportExportController@import')->name('admin-import');	
+		
 		Route::get('/admin/{any}', 'FAPController@admin')->where('any', '.*');
 	});
 });

@@ -61,6 +61,7 @@
 @include('fastadminpanel.components.edit')
 @include('fastadminpanel.components.main')
 @include('fastadminpanel.components.index')
+@include('fastadminpanel.components.import')
 
 <script>
 
@@ -94,6 +95,10 @@
 				path: '/admin/:table_name',
 				name: 'index',
 				component: Vue.options.components['template-index'],
+			}, {
+				path: '/admin/import/:table_name',
+				name: 'import',
+				component: Vue.options.components['template-import'],
 			}, {
 				path: '/admin/:table_name/create',
 				name: 'create',

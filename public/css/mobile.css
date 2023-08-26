@@ -2046,3 +2046,59 @@ textarea.form-control {
     top: 1.5625vw;
     right: 1.5625vw;
 }
+
+.edit-settings {
+    list-style: none;
+    cursor: pointer;
+    position: relative;
+    padding-left: 9.375vw;
+}
+
+.edit-settings-dots {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 6.25vw;
+    line-height: 8.75vw;
+    margin-bottom: 3.125vw;
+    transform: rotate(90deg);
+}
+
+.edit-settings-options {
+    position: absolute;
+    right: 3.125vw;
+    top: calc(100% - 3.125vw);
+    list-style: none;
+    background: #FFFFFF;
+    border-radius: 1.5625vw;
+    padding: 3.125vw 4.6875vw;
+    box-shadow: 0vw 1.25vw 4.0625vw rgba(0, 0, 0, 0.11);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.edit-settings:hover .edit-settings-options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.edit-settings-option,
+.edit-settings-option a {
+    font-size: 4.375vw;
+    line-height: 5.625vw;
+    margin-bottom: 2.5vw;
+    white-space: nowrap;
+    color: #171219;
+    transition: .3s;
+}
+
+.edit-settings-option:last-child {
+    margin-bottom: 0;
+}
+
+.edit-settings-option:hover,
+.edit-settings-option a:hover {
+    color: #51225D;
+}
