@@ -6,16 +6,13 @@ use App\FastAdminPanel\Models\SingleField;
 
 class SingleGetService
 {
-	protected $model;
-
-	public function __construct(SingleField $model)
+	public function __construct()
 	{
-		$this->model = $model;
 	}
 
 	public function get(int $pageId)
 	{
-		$fields = $this->model->where('single_page_id', $pageId)
+		$fields = SingleField::where('single_page_id', $pageId)
 		->orderBy('sort', 'ASC')
 		->get();
 
@@ -39,12 +36,10 @@ class SingleGetService
 				$blocks[$field->block_title] = [];
 			}
 
-			$blocks[$field->block_title][] = [
-				'id'				=> $field->id,
-				'title'				=> $field->title,
-				'type'				=> $field->type,
-				'value'				=> $value,
-			];
+			$newField = $field->toArray();
+			$newField['value'] = $value;
+
+			$blocks[$field->block_title][] = $newField;
 		}
 
 		return $blocks;
@@ -71,12 +66,10 @@ class SingleGetService
 				$value = $this->repeat($formattedFields, [], $field->decodeValue($field->value), $field->id);
 			}
 
-			$fields[] = [
-				'id'				=> $field->id,
-				'title'				=> $field->title,
-				'type'				=> $field->type,
-				'value'				=> $value,
-			];
+			$newField = $field->toArray();
+			$newField['value'] = $value;
+
+			$fields[] = $newField;
 		}
 
 		return [

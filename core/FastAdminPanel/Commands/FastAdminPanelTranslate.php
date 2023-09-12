@@ -3,9 +3,13 @@
 namespace App\FastAdminPanel\Commands;
 
 use Illuminate\Console\Command;
-use DB;
-use Lang;
 use App\FastAdminPanel\Helpers\Translater;
+use App\FastAdminPanel\Models\Language;
+use App\FastAdminPanel\Models\Menu;
+use App\FastAdminPanel\Models\SingleField;
+use App\FastAdminPanel\Models\SinglePage;
+use App\FastAdminPanel\Services\Single\SingleGetService;
+use DB;
 
 class FastAdminPanelTranslate extends Command
 {
@@ -23,12 +27,23 @@ class FastAdminPanelTranslate extends Command
 	 */
 	protected $description = 'Translate language of FastAdminPanel.';
 
+	protected $translater;
+	protected $languagesToTranslate;
+	protected $mainTag;
+	
 	/**
 	 * Create a new command instance.
 	 */
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->translater = new Translater();
+
+		$languages = Language::get();
+		
+		$this->languagesToTranslate = $languages->where('main_lang', '!=', 1);
+		$this->mainTag = $languages->where('main_lang', 1)->first()->tag;
 	}
 
 	/*
@@ -132,6 +147,10 @@ class FastAdminPanelTranslate extends Command
 	private $notTranslateFields = [
 		'Theme (light,dark)',
 		'Button link',
+		'Посилання',
+		'Номер',
+		'Зображення',
+		'Зображення моб',
 		'Phone placeholder',
 		'Call phone',
 		'Schedule content',
@@ -221,366 +240,234 @@ class FastAdminPanelTranslate extends Command
 		''
 	];
 
-	public function translateSingle($id)
+	public function translateSingle($id, $toLang = '')
 	{
-		set_time_limit(2500);
+		$singleGetService = new SingleGetService();
 
-		$langs = DB::table('languages')
-		->where('main_lang', '!=', 1)
-		->get();
-
-		$main_tag = DB::table('languages')
-		->where('main_lang', 1)
-		->first()
-		->tag;
-
-		$single_fields = DB::table('single_field')
-		->select('id', 'type')
-		->where('single_page_id', $id)
-		->where('is_multilanguage', 1)
-		->whereRaw("(type = 'repeat' OR type = 'text' OR type = 'textarea' OR type = 'ckeditor')")
-		->whereNotIn('title', $this->notTranslateFields)
-		->get();
-
-		foreach ($langs as $lang) {
-
-			$this->translateSingleLang($single_fields, $main_tag, $lang->tag);
+		if (!empty($toLang)) {
+			$this->languagesToTranslate = $this->languagesToTranslate->where('tag', $toLang);
 		}
-	}
 
-	public function translateSingleLang($single_fields, $main_tag, $tag)
-	{
-		foreach ($single_fields as $field) {
-			if ($field->type == 'text' || $field->type == 'textarea' || $field->type == 'ckeditor') {
-				
-				if ($field->type == 'text') $field_type = 'varchar';
-				else $field_type = 'text';
+		$singlePage = $singleGetService->get($id);
 
-				$value = DB::table("single_{$field_type}_{$main_tag}")
-				->select('value')
-				->where('field_id', $field->id)
-				->first();
+		foreach ($this->languagesToTranslate as $languageTranslate) {
 
-				if (!empty($value)) {
-					
-					$cell = DB::table("single_{$field_type}_{$tag}")
-					->where('field_id', $field->id)
-					->first();
-
-					if (empty($cell)) {
-
-						DB::table("single_{$field_type}_{$tag}")
-						->insert([
-							'field_id'	=> $field->id,
-							'value'		=> Translater::tr($value->value, $main_tag, $tag),
-						]);
-
-					} else {
-
-						DB::table("single_{$field_type}_{$tag}")
-						->where('field_id', $field->id)
-						->update([
-							'value'	=> Translater::tr($value->value, $main_tag, $tag),
-						]);
-					}
+			foreach ($singlePage as $singleBlocks) {
+			
+				foreach ($singleBlocks as $singleField) {
+					$this->translateField($singleField, $this->mainTag, $languageTranslate->tag);
 				}
-
-			} else if ($field->type == 'repeat') {
-
-				$value = DB::table("single_text_{$main_tag}")
-				->select('value')
-				->where('field_id', $field->id)
-				->first()
-				->value;
-
-				$arr = json_decode($value);
-
-				foreach ($arr as &$f) {
-					if (!in_array($f->title, $this->notTranslateFields) && 
-							($f->type == 'text' || $f->type == 'textarea' || $f->type == 'ckeditor')
-						) {
-						foreach ($f->values as &$v) {
-							$v = Translater::tr($v, $main_tag, $tag);
-						}
-					}
-				}
-
-				DB::table("single_text_{$tag}")
-				->where('field_id', $field->id)
-				->update([
-					'value'	=> json_encode($arr, JSON_UNESCAPED_UNICODE),
-				]);
 			}
 		}
 	}
 
-	public function translateTableRow($table)
+	protected function translateField($field, $mainTag, $tag)
 	{
-		set_time_limit(2500);
+		if ($field['type'] == 'repeat') {
+			foreach ($field['value']['fields'] as $repeatedField) {
+				$this->translateField($repeatedField, $mainTag, $tag);
+			}
+			$field['value'] = $field['value']['length'];
+		}
 
-		$langs = DB::table('languages')
-		->where('main_lang', '!=', 1)
-		->get();
+		$translatedField = (new SingleField($tag))
+		->where('id', $field['id'])
+		->first();
 
-		$main_tag = DB::table('languages')
-		->where('main_lang', 1)
-		->first()
-		->tag;
+		if ($field['is_multilanguage'] && 
+			!in_array($field['title'], $this->notTranslateFields) && 
+			in_array($field['type'], ['text', 'textarea', 'ckeditor']) && 
+			!empty($field['value']) &&
+			!is_numeric($field['value'])
+		) {
 
-		foreach ($langs as $lang) {
-			
-			$menu_row = DB::table('menu')
+			if (is_array($field['value'])) {
+				
+				$repeatedValues = [];
+				
+				foreach ($field['value'] as $value) {
+					
+					$translatedValue = $this->translater->tr($value, $mainTag, $tag);
+					$repeatedValues[] = $translatedValue;
+
+					$this->info($translatedValue);
+				}
+
+				$field['value'] = json_encode($repeatedValues, JSON_UNESCAPED_UNICODE);
+
+			} else {
+				
+				$field['value'] = $this->translater->tr($field['value'], $mainTag, $tag);
+
+				$this->info($field['value']);
+			}
+		}
+		
+		if (empty($translatedField)) {
+			$translatedField = new SingleField($tag, $field);
+		} else {
+			$translatedField->value = $field['value'];
+		}
+
+		$translatedField->save();
+	}
+
+	public function translateTable($table, $toLang = '')
+	{
+		if (!empty($toLang)) {
+			$this->languagesToTranslate = $this->languagesToTranslate->where('tag', $toLang);
+		}
+
+		foreach ($this->languagesToTranslate as $lang) {
+							
+			$menuRow = DB::table('menu')
 			->where('table_name', $table)
 			->first();
 
-			if ($menu_row->multilanguage == 1) {
+			if (empty($menuRow)) {
+				$this->error('Table or language not found');
+				return;
+			}
 
-				$row = DB::table("{$table}_$main_tag")
-				->where('id', request()->get('id'))
+			$menuRowFields = json_decode($menuRow->fields);
+
+			if ($menuRow->multilanguage == 1) {
+
+				$tableRowsIds = DB::table("{$table}_{$this->mainTag}")
+				->select('id')
+				->get()->pluck('id');
+
+				foreach ($tableRowsIds as $rowId) {
+					
+					$row = DB::table("{$table}_{$this->mainTag}")
+					->where('id', $rowId)
+					->first();
+	
+					$update = [];
+
+					foreach ($row as $coll => $cell) {
+						
+						$isCellMultilanguage = false;
+
+						foreach ($menuRowFields as $menuRowField) {
+							if (isset($menuRowField->db_title) && $menuRowField->db_title == $coll) {
+								$isCellMultilanguage = $menuRowField->lang == 1;
+								break;
+							}
+						}
+
+						if (!in_array($coll, $this->notTranslateCols) && 
+							mb_strpos($coll, 'id_') !== 0 && 
+							!empty($cell) && 
+							!is_numeric($cell) &&
+							$isCellMultilanguage
+						) {
+							$cell = $this->translater->tr($cell, $this->mainTag, $lang->tag);
+							$this->info($cell);
+						}
+
+						if ($coll == 'id') {
+							continue;
+						}
+
+						$update[$coll] = $cell;
+					}
+
+					DB::table("{$table}_{$lang->tag}")
+					->where('id', $row->id)
+					->update($update);
+				}
+			}
+		}
+	}
+
+	public function translateTableRow($tableName, $id)
+	{
+		set_time_limit(2500);
+
+		foreach ($this->languagesToTranslate as $lang) {
+			
+			$menuRow = DB::table('menu')
+			->where('table_name', $tableName)
+			->first();
+
+			if ($menuRow->multilanguage == 1) {
+
+				$row = DB::table("{$tableName}_{$this->mainTag}")
+				->where('id', $id)
 				->first();
 
 				$update = [];
+
 				foreach ($row as $coll => $cell) {
+
 					if (!in_array($coll, $this->notTranslateCols) && !empty($cell)) {
-						$cell = Translater::tr($cell, $main_tag, $lang->tag);
+						$cell = $this->translater->tr($cell, $this->mainTag, $lang->tag);
 					}
-					if ($coll != 'id')
-						$update[$coll] = $cell;
+
 					if ($coll == 'id') {
 						continue;
 					}
+
+					$update[$coll] = $cell;
 				}
-				DB::table("{$table}_{$lang->tag}")
+
+				DB::table("{$tableName}_{$lang->tag}")
 				->where('id', $row->id)
 				->update($update);
 			}
 		}
 	}
 
-	public function translateLanguages($lang)
+	public function translateLanguages($language)
 	{
-		if (empty($lang)) {
+		if (empty($language)) {
 
-			$langs = DB::table('languages')
-			->where('main_lang', '!=', 1)
-			->get();
+			foreach ($this->languagesToTranslate as $language) {
 
-			foreach ($langs as $lang) {
-
-				echo $this->translateLanguage($lang->tag), "\n";
-				echo $lang->tag, "\n";
+				$this->translateLanguage($language->tag);
+				$this->info($language->tag);
 			}
+
 		} else {
-			echo $this->translateLanguage($lang), "\n";
-			echo $lang, "\n";
+
+			$this->translateLanguage($language);
+			$this->info($language);
 		}
 	}
 
 	public function translateLanguage($tag)
 	{
-		$counter_start = -1;
-		$counter = 0;
-
 		$tag = mb_strtolower($tag);
 
-		$lang = DB::table('languages')
-		->where('tag', $tag)
-		->where('main_lang', '!=', 1)
+		$language = $this->languagesToTranslate->where('tag', $tag)
 		->first();
 
-		if (empty($lang))
-			return 'Language doesnt exist or you try translate main language';
-
-		$main_tag = DB::table('languages')
-		->where('main_lang', 1)
-		->first()
-		->tag;
-
-		$single_fields = DB::table('single_field')
-		->select('id', 'type')
-		->where('is_multilanguage', 1)
-		->whereRaw("(type = 'repeat' OR type = 'text' OR type = 'textarea' OR type = 'ckeditor')")
-		->whereNotIn('title', $this->notTranslateFields)
-		->get();
-
-		foreach ($single_fields as $field) {
-			if ($field->type == 'text' || $field->type == 'textarea' || $field->type == 'ckeditor') {
-				
-				if ($field->type == 'text') $field_type = 'varchar';
-				else $field_type = 'text';
-
-				$value = DB::table("single_{$field_type}_{$main_tag}")
-				->select('value')
-				->where('field_id', $field->id)
-				->first();
-
-				if ($counter > $counter_start)
-				{
-					if (!empty($value)) {
-
-						$cell = DB::table("single_{$field_type}_{$tag}")
-						->where('field_id', $field->id)
-						->first();
-	
-						$v = Translater::tr($value->value, $main_tag, $tag);
-
-						if (empty($cell)) {
-	
-							DB::table("single_{$field_type}_{$tag}")
-							->insert([
-								'field_id'	=> $field->id,
-								'value'		=> $v,
-							]);
-	
-						} else {
-	
-							DB::table("single_{$field_type}_{$tag}")
-							->where('field_id', $field->id)
-							->update([
-								'value'	=> $v,
-							]);
-						}
-					}
-				}
-				
-				echo ++$counter, $v ?? 0, "\n";
-				
-
-			} else if ($field->type == 'repeat') {
-
-				$value = DB::table("single_text_{$main_tag}")
-				->select('value')
-				->where('field_id', $field->id)
-				->first()
-				->value;
-				$arr = json_decode($value);
-				print_r($arr);
-				if(!empty($arr)){	
-					$update = false; 
-					foreach ($arr as &$f) {
-						if (!in_array($f->title, $this->notTranslateFields) && 
-								($f->type == 'text' || $f->type == 'textarea' || $f->type == 'ckeditor')
-							) {
-							foreach ($f->values as &$v) {
-								if ($counter > $counter_start)
-								{
-									$v = Translater::tr($v, $main_tag, $tag);
-									$update = true;
-								}
-								echo ++$counter, $v, "\n";
-							}
-						}
-					}
-
-					if($update){
-						DB::table("single_text_{$tag}")
-						->where('field_id', $field->id)
-						->update([
-							'value'	=> json_encode($arr, JSON_UNESCAPED_UNICODE),
-						]);
-					}
-				}
-			}
+		if (empty($language)) {
+			$this->error('Language doesnt exist or you try translate main language');
+			return;
 		}
 
-		$menu = DB::table('menu')->get();
+		$singlePagesIds = SinglePage::get(['id'])
+		->pluck('id')
+		->all();
 
-		foreach ($menu as $elm) {
-			if ($elm->multilanguage == 1) {
-				$table = DB::table("{$elm->table_name}_$main_tag")->get();
-				$table_tr = DB::table("{$elm->table_name}_$tag")->get();
-				$check = true;
-				if(isset($table_tr->title) && (isset($table->title))){
-					if($table->title != $table_tr->title) $check = false;
-				}
-				if(isset($table_tr->name) && (isset($table->name))){
-					if($table->name != $table_tr->name) $check = false;
-				}
-				if(isset($table_tr->content) && (isset($table->content))){
-					if($table->content != $table_tr->content) $check = false;
-				}
-				if($check)
-				foreach ($table as &$row) {
-					$update = [];
-					foreach ($row as $coll => $cell) {
-						$update_check = false;
-						if (!in_array($coll, $this->notTranslateCols) && !empty($cell)) {
-							if ($counter > $counter_start)
-							{
-								$cell = Translater::tr($cell, $main_tag, $tag);
-								$update_check = true;
-							}
-							echo ++$counter, $cell, "\n";
-						}
-						if ($update_check && $coll != 'id')
-							$update[$coll] = $cell;
-					}
-					if(!empty($update))
-					DB::table("{$elm->table_name}_$tag")
-					->where('id', $row->id)
-					->update($update);
-				}
-			}
+		foreach ($singlePagesIds as $singlePageId) {
+			$this->translateSingle($singlePageId, $tag);
 		}
 
-		return 'Success';
+		$tableNames = Menu::get(['table_name'])
+		->pluck('table_name')
+		->all();
+
+		foreach ($tableNames as $tableName) {
+			$this->translateTable($tableName, $tag);
+		}
+
+		$this->info('Success');
 	}
 
-	public function translateTable($table)
-	{
-		$counter = 0;
-
-		set_time_limit(2500);
-
-		$langs = DB::table('languages')
-		->where('main_lang', '!=', 1)
-		->get();
-
-		$main_tag = DB::table('languages')
-		->where('main_lang', 1)
-		->first()
-		->tag;
-
-		foreach ($langs as $lang) {
-							
-			$menu_row = DB::table('menu')
-			->where('table_name', $table)
-			->first();
-
-			if ($menu_row->multilanguage == 1) {
-
-				$table_count_rows = DB::table("{$table}_$main_tag")
-				->select('id')
-				->get()->pluck('id');
-
-				foreach($table_count_rows as $row_id){
-					$row = DB::table("{$table}_$main_tag")
-					->where('id', $row_id)
-					->first();
-	
-					$update = [];
-					foreach ($row as $coll => $cell) {
-						if (!in_array($coll, $this->notTranslateCols) && !empty($cell) && mb_strpos($coll, 'id_') !== 0) {
-							$cell = Translater::tr($cell, $main_tag, $lang->tag);
-
-							echo ++$counter, "\n";
-							echo $cell, "\n";
-						}
-						if ($coll != 'id')
-							$update[$coll] = $cell;
-						if ($coll == 'id') {
-							continue;
-						}
-					}
-					DB::table("{$table}_{$lang->tag}")
-					->where('id', $row->id)
-					->update($update);
-				}
-				
-			}
-		}
-	}
-
+	// ** DEPRECATED **
 	public function translateAdmin()
 	{
 		$lang_from = 'ru';
@@ -593,14 +480,14 @@ class FastAdminPanelTranslate extends Command
 		foreach ($menu as $menu_item) {
 			if ($menu_item->title != 'Menu' && $menu_item->title != 'Roles') {
 
-				$new_title = Translater::tr($menu_item->title, $lang_from, $lang_to);
-				echo $new_title . "\n";
+				$new_title = $this->translater->tr($menu_item->title, $lang_from, $lang_to);
+				$this->info($new_title);
 
 				$fields = json_decode($menu_item->fields);
 
 				foreach ($fields as &$field) {
-					$field->title = Translater::tr($field->title, $lang_from, $lang_to);
-					echo $field->title . "\n";
+					$field->title = $this->translater->tr($field->title, $lang_from, $lang_to);
+					$this->info($field->title);
 				}
 
 
@@ -619,8 +506,8 @@ class FastAdminPanelTranslate extends Command
 		$dropdown = DB::table('dropdown')->get();
 
 		foreach ($dropdown as $dropdown_item) {
-			$new_title = Translater::tr($dropdown_item->title, $lang_from, $lang_to);
-			echo $new_title . "\n";
+			$new_title = $this->translater->tr($dropdown_item->title, $lang_from, $lang_to);
+			$this->info($new_title);
 
 			DB::table('dropdown')
 			->where('id', $dropdown_item->id)
@@ -636,8 +523,8 @@ class FastAdminPanelTranslate extends Command
 
 		foreach ($single_page as $single_page_item) {
 
-			$new_title = Translater::tr($single_page_item->title, $lang_from, $lang_to);
-			echo $new_title . "\n";
+			$new_title = $this->translater->tr($single_page_item->title, $lang_from, $lang_to);
+			$this->info($new_title);
 
 			DB::table('single_page')
 			->where('id', $single_page_item->id)
@@ -652,11 +539,11 @@ class FastAdminPanelTranslate extends Command
 
 		foreach ($single_field as $single_field_item) {
 
-			$new_title = Translater::tr($single_field_item->title, $lang_from, $lang_to);
-			echo $new_title . "\n";
+			$new_title = $this->translater->tr($single_field_item->title, $lang_from, $lang_to);
+			$this->info($new_title);
 
-			$new_block_title = Translater::tr($single_field_item->block_title, $lang_from, $lang_to);
-			echo $new_block_title . "\n";
+			$new_block_title = $this->translater->tr($single_field_item->block_title, $lang_from, $lang_to);
+			$this->info($new_block_title);
 
 			DB::table('single_field')
 			->where('id', $single_field_item->id)
@@ -673,7 +560,7 @@ class FastAdminPanelTranslate extends Command
 		->where('type', 'repeat')
 		->get()->pluck('id');
 
-		$langs = Lang::all();
+		$langs = Language::get();
 
 		foreach ($langs as $lang) {
 
@@ -687,8 +574,8 @@ class FastAdminPanelTranslate extends Command
 
 				foreach ($single_repeated_item_value as &$single_repeated_item_keys) {
 					
-					$new_title = Translater::tr($single_repeated_item_keys->title, $lang_from, $lang_to);
-					echo $new_title."\n";
+					$new_title = $this->translater->tr($single_repeated_item_keys->title, $lang_from, $lang_to);
+					$this->info($new_title);
 
 					$single_repeated_item_keys->title = $new_title;
 				}
@@ -713,8 +600,8 @@ class FastAdminPanelTranslate extends Command
 
 			foreach ($single_repeated_item_value as &$single_repeated_item_keys) {
 				
-				$new_title = Translater::tr($single_repeated_item_keys->title, $lang_from, $lang_to);
-				echo $new_title."\n";
+				$new_title = $this->translater->tr($single_repeated_item_keys->title, $lang_from, $lang_to);
+				$this->info($new_title);
 
 				$single_repeated_item_keys->title = $new_title;
 			}
@@ -741,7 +628,7 @@ class FastAdminPanelTranslate extends Command
 	{
 		$this->info('Start translation...');
 		
-		$langs = Lang::langs()->pluck('tag')->all();
+		$langs = Language::get()->pluck('tag')->all();
 
 		if ($this->argument('argument') == 'admin'){
 			
@@ -762,5 +649,3 @@ class FastAdminPanelTranslate extends Command
 
 	}
 }
-
-

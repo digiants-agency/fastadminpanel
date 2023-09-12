@@ -32,6 +32,18 @@ class SingleField extends MultilanguageModel
 
 	protected $table = 'single_fields';
 
+	protected $fillable = [
+		'id',
+		'is_multilanguage',
+		'type',
+		'title',
+		'block_title',
+		'single_page_id',
+		'sort',
+		'parent_id',
+		'value',
+	];
+
 	public function multilanguageSave()
 	{
 		if ($this->is_multilanguage == 0) {
@@ -68,7 +80,7 @@ class SingleField extends MultilanguageModel
 		$value = $value === null ? $this->default() : $value;
 
 		return match($this->type) {
-			'repeat'		=> json_encode($value),
+			'repeat'		=> json_encode($value, JSON_UNESCAPED_UNICODE),
 			'checkbox'		=> $value ? 1 : 0,
 			'gallery'		=> json_encode($value, JSON_UNESCAPED_UNICODE),
 			default			=> $value,

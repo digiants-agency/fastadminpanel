@@ -52,7 +52,7 @@ class SingleSetService
 
 				$formatted = array_map($func, $block_field['value']);
 				
-				$field->value = json_encode($formatted);
+				$field->value = json_encode($formatted, JSON_UNESCAPED_UNICODE);
 
 			} else {
 
