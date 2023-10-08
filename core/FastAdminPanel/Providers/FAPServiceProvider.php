@@ -7,7 +7,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use App\FastAdminPanel\Commands\FastAdminPanelTranslate;
-use App\FastAdminPanel\Single\Single;
+use App\FastAdminPanel\Facades\Single as SingleFacade;
 use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Helpers\JSAssembler;
 use App\FastAdminPanel\Helpers\ResizeImg;
@@ -16,7 +16,7 @@ use App\FastAdminPanel\Helpers\Platform;
 use App\FastAdminPanel\Helpers\Convertor;
 use App\FastAdminPanel\Helpers\SEO;
 use App\FastAdminPanel\Services\LanguageService;
-use App\FastAdminPanel\Services\FastAdminPanelService;
+use App\FastAdminPanel\Single\Single as Single;
 use View;
 
 // TODO: divide this large provider
@@ -26,7 +26,8 @@ class FAPServiceProvider extends ServiceProvider
     ];
  
     public $singletons = [
-        'lang' => LanguageService::class,
+        'lang' 		=> LanguageService::class,
+		'single' 	=> Single::class,
     ];
 
 	public function boot()
@@ -81,17 +82,7 @@ class FAPServiceProvider extends ServiceProvider
 
 			$loader = AliasLoader::getInstance();
 
-			$fastAdminPanelService = $this->app->make(FastAdminPanelService::class);
-
-			if ($fastAdminPanelService->isSingleSaving()) {
-
-				$loader->alias('Single', \App\FastAdminPanel\Single\Saver\Single::class);
-
-			} else {
-
-				$loader->alias('Single', Single::class);
-			}
-
+			$loader->alias('Single', 		SingleFacade::class);
 			$loader->alias('Lang', 			Lang::class);
 			$loader->alias('JSAssembler', 	JSAssembler::class);
 			$loader->alias('ResizeImg', 	ResizeImg::class);

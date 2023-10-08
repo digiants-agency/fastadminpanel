@@ -30,23 +30,13 @@ return new class extends Migration
 		});
 
 		DB::table('menu')->insert([
-			'title'             => 'Menu',
-			'table_name'        => 'menu',
-			'fields'            => '[]',
-			'is_dev'            => '1',
-			'multilanguage'     => '0',
-			'is_soft_delete'    => '0',
-			'sort'              => '0',
-		]);
-
-		DB::table('menu')->insert([
 			'title'             => 'Roles',
 			'table_name'        => 'roles',
 			'fields'            => '[{"id":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"title","title":"Title"}]',
 			'is_dev'            => '1',
 			'multilanguage'     => '0',
 			'is_soft_delete'    => '0',
-			'sort'              => '1',
+			'sort'              => '0',
 		]);
 
 		DB::table('menu')->insert([
@@ -56,7 +46,7 @@ return new class extends Migration
 			'is_dev'            => '0',
 			'multilanguage'     => '0',
 			'is_soft_delete'    => '0',
-			'sort'              => '2',
+			'sort'              => '1',
 		]);
 	}
 

@@ -13,11 +13,6 @@ class FastAdminPanelService
 		$this->request = $request;
 	}
 
-	public function isSingleSaving()
-	{
-		return !is_null($this->request->query(config('fap.single_save_query'))) && config('app.debug');
-	}
-
 	public function isAdminPanel()
 	{
 		return $this->request->is(config('fap.panel_url') . '/*') || $this->request->is(config('fap.panel_url'));

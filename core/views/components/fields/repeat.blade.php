@@ -11,6 +11,7 @@
 						:is="'template-field-' + subfield.type"
 						:field="subfield"
 						:pointer="[...(pointer ?? []), i - 1]"
+						:key="subfield.id"
 						v-for="subfield in field.value.fields">
 					</component>
 				</div>

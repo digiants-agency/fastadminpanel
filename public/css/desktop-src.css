@@ -352,6 +352,16 @@ fieldset {
     padding-right: 20px;
 }
 
+.sidebar-menu-item:not(.child):last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-menu-items-dev {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #E3E3E3;
+}
+
 .sidebar-menu-item,
 .sidebar-menu-item a {
     font-style: normal;
@@ -909,9 +919,6 @@ td.td-content {
     margin-bottom: 15px;
 }
 
-.flex {
-    display: flex;
-}
 
 .single-block-title {
     font-style: normal;
@@ -1379,12 +1386,34 @@ select:focus {
     transition: .3s;
 }
 
+.menu-table-editblocks {
+    padding: 20px 30px;
+    background: #FFFFFF;
+    box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
 .menu-table-editfields {
     padding: 30px 40px;
     background: #FFFFFF;
     box-shadow: 0px 14px 35px rgba(0, 1, 20, 0.02);
     border-radius: 15px;
     margin-bottom: 20px;
+}
+
+.menu-table-editblocks .menu-table-editfields {
+    border: 1px solid #E3E3E3;
+    padding: 20px 30px;
+    margin-bottom: 0 !important;
+}
+
+#addBlock {
+    margin-bottom: 20px;
+}
+
+.menu-table-editblocks .menu-table-editfields .menu-table-field {
+    width: auto;
 }
 
 .menu-table-editfields td {
@@ -1797,7 +1826,7 @@ select:focus {
 }
 
 textarea.form-control {
-    height: 58px !important;
+    min-height: 58px !important;
 }
 
 .graph {
@@ -2040,4 +2069,42 @@ textarea.form-control {
 .edit-settings-option:hover,
 .edit-settings-option a:hover {
     color: #51225D;
+}
+
+.flex {
+    display: flex;
+}
+
+.a-center {
+    align-items: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.table-col {
+    width: 160px !important;
+    margin-right: 10px;
+    padding: 5px 5px !important;
+}
+
+.table-col-last {
+    width: 100px !important;
+    margin-right: 0;
+    flex: 1;
+    align-self: flex-end;
+}
+
+.create-single-block-title-wrapper {
+    margin-bottom: 20px !important;
+}
+
+.menu-table-editblocks .menu-table-editfields .table {
+    margin-bottom: 15px !important;
+}
+
+.menu-table-editfields .menu-table-editfields {
+    margin-top: 15px;
+    margin-bottom: 10px !important;
 }

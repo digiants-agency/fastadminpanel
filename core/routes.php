@@ -49,6 +49,9 @@ Route::group([
 		Route::post('/admin/db-remove-row', 'ApiController@dbRemoveRow');
 		Route::post('/admin/db-remove-rows', 'ApiController@dbRemoveRows');
 
+		Route::post('/admin/single-edit', [SingleController::class, 'singleEdit']);
+		Route::post('/admin/single-remove', [SingleController::class, 'singleRemove']);
+
 		Route::post('/admin/upload-image', 'ApiController@uploadImage');
 
 		Route::post('/admin/get-mainpage', 'ApiController@getMainpage');

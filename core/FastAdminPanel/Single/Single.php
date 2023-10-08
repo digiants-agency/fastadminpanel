@@ -3,52 +3,88 @@
 namespace App\FastAdminPanel\Single;
 
 use App\FastAdminPanel\Models\SinglePage;
-use App\FastAdminPanel\Models\SingleField;
-use App\FastAdminPanel\Single\SingleRepeated;
+use App\FastAdminPanel\Services\Single\SingleGetService;
 
 class Single
 {
 	protected $page;
 	protected $fields;
+	protected $service;
 
-	public function __construct($title, $sort, $parent = 0)
+	public function __construct()
 	{
-		$this->page = SinglePage::where('title', $title)
-		->where('parent', $parent)
-		->first();
-
-		$fields = SingleField::where('single_page_id', $this->page->id)
-		->get();
-
-		$this->fields = $this->formatFields($fields);
+		$this->service = new SingleGetService();
 	}
 
-	public function field($field_block, $field_title, $type = null, $is_multilanguage = null, $default_val = '')
+	public function get(string $slug)
 	{
-		$field = $this->fields[0][$field_block . $field_title];
+		$singlePageId = SinglePage::where('slug', $slug)->value('id');
 
-		if ($field->type == 'repeat') {
-
-			return new SingleRepeated($this->fields, $field->id, intval($field->value), []);
-		}
-
-		return $field->decodeValue($field->value);
+		$singlePage = $this->service->get($singlePageId);
+		
+		return $this->formatFields($singlePage);
 	}
 
-	protected function formatFields($fields)
+	protected function formatFields($blocks)
 	{
-		$blocks = [];
+		$formattedBlocks = [];
 
-		foreach ($fields as $field) {
+		foreach ($blocks as $block) {
 
-			if (empty($blocks[$field->parent_id])) {
+			$fields = [];
 
-				$blocks[$field->parent_id] = [];
+			foreach ($block->fields as $field) {
+
+				if ($field->type == 'repeat') {
+
+					$fields[$field->slug] = $this->formatRepeat($field);
+
+				} else {
+
+					$fields[$field->slug] = $field->value;
+				}
 			}
 
-			$blocks[$field->parent_id][$field->block_title . $field->title] = $field;
+			$formattedBlocks[$block->slug] = $fields;
+		}
+		
+		return $formattedBlocks;
+	}
+
+	protected function formatRepeat($field)
+	{
+		$formattedValues = [];
+
+		foreach ($field['value']['fields'] as $repeatedField) {
+			
+			$formattedRepeat = $repeatedField['type'] == 'repeat' ? $this->formatRepeat($repeatedField) : [];
+			
+			$repeatedFieldValueIndex = 0;
+
+			foreach ($repeatedField['value'] as $repeatedFieldValue) {
+
+				$formattedValues[$repeatedFieldValueIndex][$repeatedField['slug']] = $repeatedField['type'] == 'repeat' ? 
+					$this->transpose($formattedRepeat[$repeatedFieldValueIndex] ?? []) :
+					$repeatedFieldValue;
+
+				$repeatedFieldValueIndex += 1;
+			}
 		}
 
-		return $blocks;
+		return $formattedValues;
+	}
+
+	protected function transpose($array)
+	{
+		$result = [];
+		$keys = array_keys($array);
+
+		for ($row = 0; $row < count(reset($array)); $row++) {
+			foreach ($keys as $key) {
+				$result[$row][$key] = $array[$key][$row];
+			}
+		}
+
+		return $result;
 	}
 }

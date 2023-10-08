@@ -1,13 +1,13 @@
-<script type="text/x-template" id="template-options">
-	<div class="options">
+<template id="template-settings">
+	<div class="settings">
 		<div class="btn btn-primary" v-on:click="rm_language">{{__('fastadminpanel.delete_lang')}}</div>
 		<div class="btn btn-primary" v-on:click="add_language">{{__('fastadminpanel.add_lang')}}</div>
 	</div>
-</script>
+</template>
 
 <script>
-	Vue.component('template-options', {
-		template: '#template-options',
+	Vue.component('template-settings', {
+		template: '#template-settings',
 		props: [],
 		data() {
 			return {

@@ -2,6 +2,8 @@
 
 namespace App\FastAdminPanel\Controllers;
 
+use App\FastAdminPanel\Models\Menu;
+use App\FastAdminPanel\Models\SinglePage;
 use App\User;
 use DB;
 use Schema;
@@ -34,8 +36,7 @@ class ApiController extends \App\Http\Controllers\Controller
 
 	public function getMenu()
 	{
-		$menu = DB::table('menu')
-		->select(
+		$menu = Menu::select(
 			'id', 
 			'table_name',
 			'title',
@@ -44,7 +45,7 @@ class ApiController extends \App\Http\Controllers\Controller
 			'multilanguage',
 			'is_soft_delete',
 			'sort',
-			'parent',
+			'parent AS dropdown_id',
 			'icon',
 			DB::raw('"multiple" AS type')
 		)->get();
@@ -73,22 +74,36 @@ class ApiController extends \App\Http\Controllers\Controller
 		}
 
 		foreach ($dropdown as &$dd){
-			$dd->count = $menu->where('parent', $dd->id)->sum('count');
+			$dd->count = $menu->where('dropdown_id', $dd->id)->sum('count');
 		}
+
+		$single = SinglePage::select(
+			'id',
+			'id AS table_name',
+			'title',
+			'slug',
+			'sort',
+			'dropdown_id',
+			'icon',
+			DB::raw('0 AS is_dev'),
+			DB::raw('"single" AS type')
+		)
+		->with(['blocks' => function ($q) {
+			$q->with(['fields' => function($q) {
+				$q->with(['fields' => function($q) {
+					$q->orderBy('sort', 'ASC');
+				}])
+				->where('parent_id', 0)
+				->orderBy('sort', 'ASC');
+			}])
+			->orderBy('sort', 'ASC');
+		}])
+		->get();
 
 		return response()->json(
 			[
 				'menu'		=> array_values(
-					DB::table('single_pages')
-					->select(
-						'id AS table_name',
-						'title',
-						'sort',
-						'parent',
-						DB::raw('0 AS is_dev'),
-						DB::raw('"single" AS type')
-					)->get()
-					->merge($menu)
+					$single->concat($menu)
 					->sortBy('sort')
 					->toArray()
 				),

@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-menu">
+<template id="template-menu">
 	<div class="table-edit">
 		<h1>{{__('fastadminpanel.gen_desc')}}</h1>
 		<div class="menu-table">
@@ -236,7 +236,7 @@
 					<td class="menu-table-field">
 						<div class="menu-table-field-td-wrapper">
 							<input v-if="field.type != 'relationship' && field.type != 'enum'" v-model="field.db_title" type="text" class="form-control title" placeholder="Название">
-							<div v-else-if="field.type == 'relationship'">
+							<div v-else-if="field.type == 'relationship'" class="w-100">
 								<div class="select-wrapper">
 
 									<select v-model="field.relationship_count" class="form-control type" title="One to many require Single relation on other table">
@@ -353,7 +353,7 @@
 			</div>
 		</div>
 	</div>
-</script>
+</template>
 	
 <script>
 	Vue.component('template-menu',{

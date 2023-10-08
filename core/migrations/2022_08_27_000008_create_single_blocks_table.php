@@ -13,14 +13,14 @@ return new class extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('single_pages', function (Blueprint $table) {
+		Schema::create('single_blocks', function (Blueprint $table) {
 			$table->id();
 			$table->string("title")->default("");
 			$table->string("slug")->default("")->unique();
 			$table->integer("sort")->default(0);
-			$table->integer('dropdown_id')->default(0);
-			$table->string('icon')->default("")->nullable();
+			$table->integer('single_page_id')->default(0);
 
+			$table->index("single_page_id");
 			$table->index("slug");
 		});
 	}
@@ -32,6 +32,6 @@ return new class extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('single_pages');
+		Schema::dropIfExists('single_blocks');
 	}
 };

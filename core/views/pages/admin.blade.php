@@ -13,7 +13,7 @@
 			<a href="/" target="_blank">
 				<img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="sidebar-logo">
 			</a>
-            <a href="/admin" class="sidebar-header-title">{{ __('fastadminpanel.admin_panel') }}</a>
+            <router-link to="/admin" class="sidebar-header-title">{{ __('fastadminpanel.admin_panel') }}</router-link>
 		</div>
 	</div>
 @endif
@@ -55,7 +55,9 @@
 @include('fastadminpanel.components.fields.text')
 @include('fastadminpanel.components.fields.textarea')
 @include('fastadminpanel.components.single')
-@include('fastadminpanel.components.options')
+@include('fastadminpanel.components.singlefields')
+@include('fastadminpanel.components.singlepage')
+@include('fastadminpanel.components.settings')
 @include('fastadminpanel.components.sidebar')
 @include('fastadminpanel.components.menu')
 @include('fastadminpanel.components.edit')
@@ -80,25 +82,25 @@
 				name: 'dropdown',
 				component: Vue.options.components['template-dropdown'],
 			}, {
-				path: '/admin/single/:single_id',
-				name: 'single',
-				component: Vue.options.components['template-single'],
-			}, {
 				path: '/admin/menu',
 				name: 'menu',
 				component: Vue.options.components['template-menu'],
 			}, {
-				path: '/admin/options',
-				name: 'options',
-				component: Vue.options.components['template-options'],
+				path: '/admin/single',
+				name: 'single',
+				component: Vue.options.components['template-single'],
+			}, {
+				path: '/admin/settings',
+				name: 'settings',
+				component: Vue.options.components['template-settings'],
+			}, {
+				path: '/admin/single/:single_id',
+				name: 'singlepage',
+				component: Vue.options.components['template-singlepage'],
 			}, {
 				path: '/admin/:table_name',
 				name: 'index',
 				component: Vue.options.components['template-index'],
-			}, {
-				path: '/admin/import/:table_name',
-				name: 'import',
-				component: Vue.options.components['template-import'],
 			}, {
 				path: '/admin/:table_name/create',
 				name: 'create',
@@ -107,7 +109,11 @@
 				path: '/admin/:table_name/edit/:edit_id',
 				name: 'edit',
 				component: Vue.options.components['template-edit'],
-			},{
+			},  {
+				path: '/admin/import/:table_name',
+				name: 'import',
+				component: Vue.options.components['template-import'],
+			}, {
 				path: '/admin',
 				name: 'main',
 				component: Vue.options.components['template-main'],
@@ -121,7 +127,7 @@
 		router,
 		el: '#app',
 		data: {
-			is_dev: location.pathname == '/admin/dev',
+			is_dev: {{ config('app.debug') ? 1 : 0 }},
 			menu: [],
 			languages: languages,
 			dropdown: [],

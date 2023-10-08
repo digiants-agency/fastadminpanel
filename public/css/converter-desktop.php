@@ -29,4 +29,4 @@ if ($time_source > $time_result) {
 	file_put_contents($style_result_path, $css_px);
 }
 
-echo "/$style_result_path";
+echo "/$style_result_path?v=$time_source";

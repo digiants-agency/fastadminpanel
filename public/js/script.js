@@ -216,10 +216,10 @@ const lang = {
 
 const req = {
 	loadCount: 0,
-	async request(method, endpoint, obj, isFile = false, isLoader = true) {
+	async request(method, endpoint, obj, isFile = false, isLoader = true, isMultilanguage = true) {
 		try {
 
-			if (!lang.is_main()) {
+			if (isMultilanguage && !lang.is_main()) {
 
 				endpoint = '/' + lang.get() + endpoint
 			}
@@ -298,21 +298,21 @@ const req = {
 
 		return {success: false, message: "Fatal error", data: {}}
 	},
-	async post(endpoint, obj, isFile = false, isLoader = true) {
+	async post(endpoint, obj, isFile = false, isLoader = true, isMultilanguage = true) {
 
-		return await this.request("POST", endpoint, obj, isFile, isLoader)
+		return await this.request("POST", endpoint, obj, isFile, isLoader, isMultilanguage)
 	},
-	async get(endpoint, obj, isFile = false, isLoader = true) {
+	async get(endpoint, obj, isFile = false, isLoader = true, isMultilanguage = true) {
 
-		return await this.request("GET", endpoint, obj, isFile, isLoader)
+		return await this.request("GET", endpoint, obj, isFile, isLoader, isMultilanguage)
 	},
-	async put(endpoint, obj, isFile = false, isLoader = true) {
+	async put(endpoint, obj, isFile = false, isLoader = true, isMultilanguage = true) {
 
-		return await this.request("PUT", endpoint, obj, isFile, isLoader)
+		return await this.request("PUT", endpoint, obj, isFile, isLoader, isMultilanguage)
 	},
-	async delete(endpoint, obj, isFile = false, isLoader = true) {
+	async delete(endpoint, obj, isFile = false, isLoader = true, isMultilanguage = true) {
 
-		return await this.request("DELETE", endpoint, obj, isFile, isLoader)
+		return await this.request("DELETE", endpoint, obj, isFile, isLoader, isMultilanguage)
 	},
 	serialize(obj, prefix) {
 		let str = [], p;
