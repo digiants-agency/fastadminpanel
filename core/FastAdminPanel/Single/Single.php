@@ -10,6 +10,7 @@ class Single
 	protected $page;
 	protected $fields;
 	protected $service;
+	protected $singles = [];
 
 	public function __construct()
 	{
@@ -18,11 +19,16 @@ class Single
 
 	public function get(string $slug)
 	{
-		$singlePageId = SinglePage::where('slug', $slug)->value('id');
+		if (!isset($this->singles[$slug])) {
+			
+			$singlePageId = SinglePage::where('slug', $slug)->value('id');
 
-		$singlePage = $this->service->get($singlePageId);
+			$singlePage = $this->service->get($singlePageId);
+
+			$this->singles[$slug] = $this->formatFields($singlePage);
+		}
 		
-		return $this->formatFields($singlePage);
+		return $this->singles[$slug];
 	}
 
 	protected function formatFields($blocks)
