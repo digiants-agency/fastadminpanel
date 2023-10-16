@@ -16,7 +16,7 @@ return new class extends Migration
 		Schema::create('single_blocks', function (Blueprint $table) {
 			$table->id();
 			$table->string("title")->default("");
-			$table->string("slug")->default("")->unique();
+			$table->string("slug")->default("");
 			$table->integer("sort")->default(0);
 			$table->integer('single_page_id')->default(0);
 
