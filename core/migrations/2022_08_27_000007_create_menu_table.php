@@ -23,21 +23,12 @@ return new class extends Migration
 			$table->integer('multilanguage');
 			$table->integer('is_soft_delete');
 			$table->integer('sort');
-			$table->integer('parent')->default(0);
+			$table->integer('dropdown_id')->default(0);
 			$table->string('icon')->default('')->nullable();
+			$table->string("model");
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
-
-		DB::table('menu')->insert([
-			'title'             => 'Menu',
-			'table_name'        => 'menu',
-			'fields'            => '[]',
-			'is_dev'            => '1',
-			'multilanguage'     => '0',
-			'is_soft_delete'    => '0',
-			'sort'              => '0',
-		]);
 
 		DB::table('menu')->insert([
 			'title'             => 'Roles',
@@ -46,7 +37,9 @@ return new class extends Migration
 			'is_dev'            => '1',
 			'multilanguage'     => '0',
 			'is_soft_delete'    => '0',
-			'sort'              => '1',
+			'sort'              => '0',
+			'icon'				=> '',
+			'model'				=> '',
 		]);
 
 		DB::table('menu')->insert([
@@ -56,7 +49,9 @@ return new class extends Migration
 			'is_dev'            => '0',
 			'multilanguage'     => '0',
 			'is_soft_delete'    => '0',
-			'sort'              => '2',
+			'sort'              => '1',
+			'icon'				=> '/vendor/fastadminpanel/icons/1/15.svg',
+			'model'				=> '',
 		]);
 	}
 

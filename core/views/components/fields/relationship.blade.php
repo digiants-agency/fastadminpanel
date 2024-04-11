@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-relationship">
+<template id="template-field-relationship">
 	<div>
 
 		<div v-if="field.relationship_count == 'editable'">
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-relationship',{
 		template: '#template-field-relationship',

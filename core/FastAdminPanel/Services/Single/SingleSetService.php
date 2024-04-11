@@ -18,50 +18,50 @@ class SingleSetService
 		// TODO: reduce number of requests to DB
 		foreach ($blocks as $block) {
 
-			foreach ($block as $block_field) {
+			foreach ($block['fields'] as $field) {
 
-				$field = $this->model->find($block_field['id']);
+				$singleField = $this->model->find($field['id']);
 
-				if ($block_field['type'] != 'repeat') {
+				if ($field['type'] != 'repeat') {
 
-					$field->value = $field->encodeValue($block_field['value'] ?? null);
+					$singleField->value = $singleField->encodeValue($field['value'] ?? null);
 
 				} else {
 
-					$this->repeat($block_field['value']['fields']);
+					$this->repeat($field['value']['fields']);
 
-					$field->value = $field->encodeValue($block_field['value']['length']);
+					$singleField->value = $singleField->encodeValue($field['value']['length']);
 				}
 
-				$field->multilanguageSave();
+				$singleField->multilanguageSave();
 			}			
 		}
 	}
 
-	protected function repeat($block_fields)
+	protected function repeat($fields)
 	{
-		foreach ($block_fields as $block_field) {
+		foreach ($fields as $field) {
 
-			$field = $this->model->find($block_field['id']);
+			$singleField = $this->model->find($field['id']);
 
-			if ($block_field['type'] != 'repeat') {
+			if ($field['type'] != 'repeat') {
 
-				$func = function ($item) use (&$func, $field) {
-					return is_array($item) ? array_map($func, $item) : $field->encodeValue($item);
+				$func = function ($item) use (&$func, $singleField) {
+					return is_array($item) ? array_map($func, $item) : $singleField->encodeValue($item);
 				};
 
-				$formatted = array_map($func, $block_field['value']);
+				$formatted = array_map($func, $field['value']);
 				
-				$field->value = json_encode($formatted, JSON_UNESCAPED_UNICODE);
+				$singleField->value = json_encode($formatted, JSON_UNESCAPED_UNICODE);
 
 			} else {
 
-				$this->repeat($block_field['value']['fields']);
+				$this->repeat($field['value']['fields']);
 
-				$field->value = $field->encodeValue($block_field['value']['length']);
+				$singleField->value = $singleField->encodeValue($field['value']['length']);
 			}
 
-			$field->multilanguageSave();
+			$singleField->multilanguageSave();
 		}
 	}
 }

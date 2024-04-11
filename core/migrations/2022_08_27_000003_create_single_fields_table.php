@@ -25,14 +25,15 @@ return new class extends Migration
 					$table->tinyInteger("is_multilanguage")->default(0);
 					$table->string("type")->default('text');
 					$table->string("title");
-					$table->string("block_title");
-					$table->integer("single_page_id");
+					$table->string("slug");
+					$table->integer("single_block_id");
 					$table->integer("sort")->default(0);
 					$table->integer("parent_id")->default(0);
 					$table->text("value")->default('');
 
-					$table->index("single_page_id");
+					$table->index("single_block_id");
 					$table->index("parent_id");
+					$table->index("slug");
 				});
 			}
 		}

@@ -1,5 +1,5 @@
 <template id="template-field-repeat">
-	<div class="field-repeat">
+	<div class="form-group field-repeat">
 		<h1 v-text="field.title"></h1>
 		<div class="field-repeat-groups">
 			<template v-for="i in length">
@@ -11,6 +11,7 @@
 						:is="'template-field-' + subfield.type"
 						:field="subfield"
 						:pointer="[...(pointer ?? []), i - 1]"
+						:key="subfield.id"
 						v-for="subfield in field.value.fields">
 					</component>
 				</div>

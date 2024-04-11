@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-ckeditor">
+<template id="template-field-ckeditor">
 	<div class="form-group">
 		
 		<div class="field-title">
@@ -15,7 +15,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-ckeditor', {
 		template: '#template-field-ckeditor',

@@ -1,9 +1,12 @@
 <?php 
 
 return [
-    'admin_panel' 		=> 'Адмін панель',
+	'admin_panel' 		=> 'Адмін панель',
 	'dropdown'			=> 'Випадаюче меню',
-	'options'			=> 'Опції',
+	'settings'			=> 'Налаштування',
+	'docs'				=> 'Документація',
+	'menu'				=> 'Меню',
+	'single'			=> 'Single',
 	'sign_out'			=> 'Вийти',
 	'save'				=> 'Зберегти',
 	'delete_lang'		=> 'Видалити мову',
@@ -18,6 +21,10 @@ return [
 	'no'				=> 'Ні',
 	'is_dev'			=> 'Для розробників',
 	'multilang'			=> 'Мультимовність',
+	'gen_single_desc'	=> 'Створити чи редагувати Single',
+	'gen_single_item'	=> 'Виберіть Single',
+	'single_name'		=> 'Назва Single (API ID)',
+	'single_title'		=> 'Назва Single',
 	'list'				=> 'Список',
 	'add'				=> 'Додати +',
 	'sort'				=> 'Сортування:',

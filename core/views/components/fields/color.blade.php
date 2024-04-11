@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-color">
+<template id="template-field-color">
 	<div class="form-group">
 		<div class="field-title">
 			<label class="edit-field-title control-label" v-text="field.title"></label>
@@ -14,7 +14,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-color',{
 		template: '#template-field-color',

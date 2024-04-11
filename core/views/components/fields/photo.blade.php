@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-photo">
+<template id="template-field-photo">
 	<div class="form-group" v-on:dragenter="dragenter" v-on:dragleave="dragleave" v-on:dragover="dragover" v-on:drop="drop">
 		
 		<div class="field-title">
@@ -19,7 +19,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-photo',{
 		template: '#template-field-photo',

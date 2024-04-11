@@ -58,7 +58,11 @@
 				if (response.success) {
 					location.href = '/admin/' + this.menu_item.table_name
 				} else {
-					alert('Error')
+					if (response.data.error) {
+						alert(response.data.error)
+					} else {
+						alert('Error')
+					}
 				}
 			},
 			find_menu_elm: function(){

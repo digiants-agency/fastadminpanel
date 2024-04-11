@@ -9,7 +9,9 @@
 <main class="login-form">
     <div class="login-form-fields">
         <div class="login-form-logo-wrapper">
-            <img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="login-form-logo">
+            <a href="/">
+                <img src="/vendor/fastadminpanel/images/logo.svg" alt="" class="login-form-logo">
+            </a>
             <div class="login-title">Admin Panel</div>
         </div>
         <div class="login-form-title">Log In</div>

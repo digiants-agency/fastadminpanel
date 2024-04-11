@@ -2,6 +2,7 @@
 
 namespace App\FastAdminPanel\Services\Single;
 
+use App\FastAdminPanel\Models\SingleBlock;
 use App\FastAdminPanel\Models\SingleField;
 
 class SingleGetService
@@ -12,34 +13,33 @@ class SingleGetService
 
 	public function get(int $pageId)
 	{
-		$fields = SingleField::where('single_page_id', $pageId)
+		$blocks = SingleBlock::where('single_page_id', $pageId)
 		->orderBy('sort', 'ASC')
 		->get();
 
-		$formattedFields = $this->formatFields($fields);
+		$fields = SingleField::whereIn('single_block_id', $blocks->pluck('id'))
+		->orderBy('sort', 'ASC')
+		->get()->groupBy('single_block_id');
 
-		$blocks = [];
+		foreach ($blocks as $block) {
 
-		foreach ($formattedFields[0] as $field) {
+			$formattedFields = $this->formatFields($fields[$block->id]);
 
-			if ($field->type != 'repeat') {
+			foreach ($formattedFields[0] as $field) {
 
-				$value = $field->decodeValue($field->value);
+				if ($field->type != 'repeat') {
+	
+					$value = $field->decodeValue($field->value);
+	
+				} else {
 
-			} else {
-
-				$value = $this->repeat($formattedFields, [], $field->decodeValue($field->value), $field->id);
+					$value = $this->repeat($formattedFields, [], $field->decodeValue($field->value), $field->id);
+				}
+	
+				$field->value = $value;
 			}
 
-			if (empty($blocks[$field->block_title])) {
-
-				$blocks[$field->block_title] = [];
-			}
-
-			$newField = $field->toArray();
-			$newField['value'] = $value;
-
-			$blocks[$field->block_title][] = $newField;
+			$block->fields = $formattedFields[0];
 		}
 
 		return $blocks;
@@ -93,7 +93,7 @@ class SingleGetService
 	
 					$this->repairFieldsByDfs($value[$i], $length[$i]);
 	
-				} else if (!is_array($value[$i]) || count($value[$i]) != $length[$i]) {
+				} else if (!isset($value[$i]) || !is_array($value[$i]) || count($value[$i]) != $length[$i]) {
 	
 					$value[$i] = array_fill(0, $length[$i], "");
 				}

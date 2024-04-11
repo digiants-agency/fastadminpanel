@@ -36,5 +36,4 @@ class SEO
 
 		return '<link rel="next" href="'.self::$href_next.'">';
 	}
-
 }

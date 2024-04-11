@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-menu">
+<template id="template-menu">
 	<div class="table-edit">
 		<h1>{{__('fastadminpanel.gen_desc')}}</h1>
 		<div class="menu-table">
@@ -100,10 +100,10 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="menu-item-title">Parent</label>
+				<label class="menu-item-title">Dropdown</label>
 				<div class="menu-item-input">
 					<div class="select-wrapper">
-						<select v-model="menu_item_edit.parent" class="form-control">
+						<select v-model="menu_item_edit.dropdown_id" class="form-control">
 							<option value="0">None</option>
 							<option :value="elm.id" v-for="elm in dropdown" v-text="elm.title"></option>
 						</select>
@@ -236,7 +236,7 @@
 					<td class="menu-table-field">
 						<div class="menu-table-field-td-wrapper">
 							<input v-if="field.type != 'relationship' && field.type != 'enum'" v-model="field.db_title" type="text" class="form-control title" placeholder="Название">
-							<div v-else-if="field.type == 'relationship'">
+							<div v-else-if="field.type == 'relationship'" class="w-100">
 								<div class="select-wrapper">
 
 									<select v-model="field.relationship_count" class="form-control type" title="One to many require Single relation on other table">
@@ -353,7 +353,7 @@
 			</div>
 		</div>
 	</div>
-</script>
+</template>
 	
 <script>
 	Vue.component('template-menu',{
@@ -371,6 +371,8 @@
 					multilanguage: 1,
 					sort: 10,
 					fields: [],
+					dropdown_id: 0,
+					icon: '',
 				},
 				menu_item_edit: {
 					table_name: '',
@@ -380,6 +382,7 @@
 					multilanguage: 1,
 					sort: 10,
 					fields: [],
+					dropdown_id: 0,
 					icon: '',
 				},
 				dropdown: [],
@@ -424,29 +427,29 @@
 
 				this.menu_item_edit.fields.push({id: id, required: 'optional', is_visible: true, lang: 1, show_in_list: 'no'})
 			},
-			create_crud: function(){
+			async create_crud() {
 				
-				request('/admin/db-create-table', {
+				const response = await req.post('/admin/db-create-table', {
 					table_name: this.menu_item_edit.table_name, 
 					title: this.menu_item_edit.title,
 					is_soft_delete: this.menu_item_edit.is_soft_delete,
 					is_dev: this.menu_item_edit.is_dev,
 					multilanguage: this.menu_item_edit.multilanguage,
 					sort: this.menu_item_edit.sort,
-					parent: this.menu_item_edit.parent,
-					fields: JSON.stringify(this.menu_item_edit.fields),
+					dropdown_id: this.menu_item_edit.dropdown_id,
+					fields: this.menu_item_edit.fields,
 					icon: this.menu_item_edit.icon
-				}, (data)=>{
-					if (data == 'Success') {
-						location.reload()
-					}
 				})
+
+				if (response.success) {
+					location.reload();
+				} else {
+					alert(response.data.message);
+				}
 			},
-			update_crud: function(){
+			async update_crud() {
 
-				// this.fix_ids()
-
-				request('/admin/db-update-table', {
+				const response = await req.post('/admin/db-update-table', {
 					id: this.menu_item_edit.id,
 					table_name: this.menu_item_edit.table_name, 
 					title: this.menu_item_edit.title,
@@ -454,27 +457,31 @@
 					is_dev: this.menu_item_edit.is_dev,
 					multilanguage: this.menu_item_edit.multilanguage,
 					sort: this.menu_item_edit.sort,
-					parent: this.menu_item_edit.parent,
-					fields: JSON.stringify(this.menu_item_edit.fields),
-					to_remove: JSON.stringify(this.to_remove),
+					dropdown_id: this.menu_item_edit.dropdown_id,
+					fields: this.menu_item_edit.fields,
+					to_remove: this.to_remove,
 					icon: this.menu_item_edit.icon
-				}, (data)=>{
-					if (data == 'Success') {
-						location.reload()
-					}
 				})
+
+				if (response.success) {
+					location.reload();
+				} else {
+					alert(response.data.message);
+				}
 			},
-			remove_crud: function(){
+			async remove_crud() {
 
 				if (confirm("Are you sure?")) {
-					request('/admin/db-remove-table', {
-						id: this.menu_item_edit.id,
-						table_name: this.menu_item_edit.table_name, 
-					}, (data)=>{
-						if (data == 'Success') {
-							location.reload()
-						}
+
+					const response = await req.post('/admin/db-remove-table', {
+						table_name: this.menu_item_edit.table_name,
 					})
+					
+					if (response.success) {
+						location.reload()
+					} else {
+						alert(response.data.message)
+					}
 				}
 			},
 			get_fields_by_table_name: function(table_name){

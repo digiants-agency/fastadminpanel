@@ -6,7 +6,7 @@ class TemplateDefault extends Template{
 
 	protected function template_path_package ($path) {
 
-		return base_path("vendor/sv-digiants/fastadminpanel/templates/default" . $path);
+		return base_path("vendor/digiants-agency/fastadminpanel/templates/default" . $path);
 	}
 
 	public function import () {

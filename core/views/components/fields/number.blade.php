@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-number">
+<template id="template-field-number">
 	<div class="form-group">
 		
 		<div class="field-title">
@@ -15,7 +15,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-number',{
 		template: '#template-field-number',

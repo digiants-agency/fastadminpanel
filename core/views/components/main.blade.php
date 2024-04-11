@@ -1,7 +1,7 @@
 <script type="text/x-template" id="template-main">
     <div class="row">
 
-        <div class="blocks-wrapper" v-if="allproducts || productsale || callbackall || allorders || orderstoday || ordersmonth">
+        {{-- <div class="blocks-wrapper" v-if="allproducts || productsale || callbackall || allorders || orderstoday || ordersmonth">
 
             <h1>Общая информация</h1>
             <div class="blocks">
@@ -50,12 +50,12 @@
                     <div class="product-count" v-text="'Продано: ' + product.count"></div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script> --}}
 
 <script>
     Vue.component('template-main', {
@@ -76,82 +76,82 @@
         },
         created: function(){
 
-            this.get_mainpage()
+            // this.get_mainpage()
 
         },
         methods: {
 
-            get_mainpage: async function() {
+            // get_mainpage: async function() {
                 
-                const response = await post('/admin/get-mainpage', {}, false, false)
-                if (response.success){
+            //     const response = await post('/admin/get-mainpage', {}, false, false)
+            //     if (response.success){
 
-                    this.allproducts = response.data.firstblock.allproducts;
-                    this.productsale = response.data.firstblock.productsale;
-                    this.callbackall = response.data.firstblock.callbackall;
-                    this.allorders = response.data.firstblock.allorders;
-                    this.orderstoday = response.data.firstblock.orderstoday;
-                    this.ordersmonth = response.data.firstblock.ordersmonth;
-                    this.products = response.data.popproducts;
+            //         this.allproducts = response.data.firstblock.allproducts;
+            //         this.productsale = response.data.firstblock.productsale;
+            //         this.callbackall = response.data.firstblock.callbackall;
+            //         this.allorders = response.data.firstblock.allorders;
+            //         this.orderstoday = response.data.firstblock.orderstoday;
+            //         this.ordersmonth = response.data.firstblock.ordersmonth;
+            //         this.products = response.data.popproducts;
                     
-                    if (response.data.graph1) {
-                        this.graph1 = response.data.graph1.split(',').map(Number);
-                    }
+            //         if (response.data.graph1) {
+            //             this.graph1 = response.data.graph1.split(',').map(Number);
+            //         }
 
-                    if (response.data.graph2) {
-                        this.graph2 = response.data.graph2.split(',').map(Number);
-                    } 
+            //         if (response.data.graph2) {
+            //             this.graph2 = response.data.graph2.split(',').map(Number);
+            //         } 
 
-                    this.initadmin();
+            //         this.initadmin();
 
-                } else {
-                    alert('Error!')
-                }
-            },
+            //     } else {
+            //         alert('Error!')
+            //     }
+            // },
 
-            initadmin: function () {
+            // initadmin: function () {
             
-                var firstDay = new Date();
-                var day1 = firstDay.toLocaleDateString();
-                var day2 = new Date(firstDay.getTime() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString();
-                var day3 = new Date(firstDay.getTime() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString();
-                var day4 = new Date(firstDay.getTime() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString();
-                var day5 = new Date(firstDay.getTime() - 4 * 24 * 60 * 60 * 1000).toLocaleDateString();
-                var day6 = new Date(firstDay.getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString();;
-                var day7 = new Date(firstDay.getTime() - 6 * 24 * 60 * 60 * 1000).toLocaleDateString();
-                var days = [day1, day2, day3, day4, day5, day6, day7];
-                var firstdata = this.graph1;
+            //     var firstDay = new Date();
+            //     var day1 = firstDay.toLocaleDateString();
+            //     var day2 = new Date(firstDay.getTime() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            //     var day3 = new Date(firstDay.getTime() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            //     var day4 = new Date(firstDay.getTime() - 3 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            //     var day5 = new Date(firstDay.getTime() - 4 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            //     var day6 = new Date(firstDay.getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString();;
+            //     var day7 = new Date(firstDay.getTime() - 6 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            //     var days = [day1, day2, day3, day4, day5, day6, day7];
+            //     var firstdata = this.graph1;
 
-                    var ctx = document.getElementById('myChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: days,
-                        datasets: [{
-                            label: 'Заказов за день',
-                            data: this.graph1,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderWidth: 1,
-                            borderColor: 'rgba(255, 99, 132, 0.2)',
-                        }]
-                    },
-                });
+            //         var ctx = document.getElementById('myChart').getContext('2d');
+            //     var myChart = new Chart(ctx, {
+            //         type: 'line',
+            //         data: {
+            //             labels: days,
+            //             datasets: [{
+            //                 label: 'Заказов за день',
+            //                 data: this.graph1,
+            //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            //                 borderWidth: 1,
+            //                 borderColor: 'rgba(255, 99, 132, 0.2)',
+            //             }]
+            //         },
+            //     });
             
-                var ctx2 = document.getElementById('myChart2').getContext('2d');
-                var myChart2 = new Chart(ctx2, {
-                    type: 'line',
-                    data: {
-                        labels: days,
-                        datasets: [{
-                            label: 'Заявок за день',
-                            data: this.graph2,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 0.2)',
-                        }]
-                    },
-                });
+            //     var ctx2 = document.getElementById('myChart2').getContext('2d');
+            //     var myChart2 = new Chart(ctx2, {
+            //         type: 'line',
+            //         data: {
+            //             labels: days,
+            //             datasets: [{
+            //                 label: 'Заявок за день',
+            //                 data: this.graph2,
+            //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            //                 borderColor: 'rgba(255, 99, 132, 0.2)',
+            //             }]
+            //         },
+            //     });
                 
-            }
+            // }
         },
     });
 </script>

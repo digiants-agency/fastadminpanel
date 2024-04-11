@@ -15,43 +15,62 @@ class Export implements FromQuery, WithHeadings, WithMapping
 {
     use Exportable;
 
+    protected $menu;
     protected $table;
-    protected $realTable;
     protected $menuItem;
 
     public function __construct($table)
     {
+        $this->menu = Menu::get()->keyBy('table_name');
         $this->menuItem = Menu::where('table_name', $table)->first();
-
-        $this->table = $table;
-        $this->realTable = $this->menuItem->multilanguage ? $table.'_'.Lang::get() : $table;
+        $this->table = $this->menuItem->multilanguage ? $table.'_'.Lang::get() : $table;
     }
 
     public function query()
     {
-        $toSelect = [$this->realTable.'.id'];
+        $toSelect = [$this->table.'.id'];
+        $joins = [];
         
         foreach (json_decode($this->menuItem->fields) as $field) {
 
-            if (!in_array($field->type, ['relationship', 'password'])) {
+            if ($field->type == 'password') {
+                continue;
+            }
+
+            if ($field->type != 'relationship') {
 
                 if ($field->lang) {
                     foreach (Lang::getLangs() as $lang) {
-                        $toSelect[] = $this->table.'_'.$lang->tag.'.'.$field->db_title.' AS '.$field->db_title.'_'.$lang->tag;
+                        $toSelect[] = $this->table.'.'.$field->db_title.' AS '.$field->db_title.'_'.$lang->tag;
                     }
                 } else {
-                    $toSelect[] = $this->realTable.'.'.$field->db_title;
+                    $toSelect[] = $this->table.'.'.$field->db_title;
+                }
+            } else {
+
+                if ($field->relationship_count == 'single') {
+
+                    $relationshipTable = $this->menu[$field->relationship_table_name]->multilanguage ? $field->relationship_table_name.'_'.Lang::get() : $field->relationship_table_name;
+
+                    $toSelect[] = $relationshipTable.'.'.$field->relationship_view_field.' AS '.$field->relationship_table_name.'_'.$field->relationship_view_field;
+
+                    $joins[] = [$relationshipTable, $relationshipTable.'.id', $this->table.'.id_'.$field->relationship_table_name];
                 }
             }
         }
-
-        return DB::table($this->realTable)
+        
+        return DB::table($this->table)
         ->select($toSelect)
         ->when($this->menuItem->multilanguage, function($q) {
             foreach (Lang::getLangs() as $lang) {
                 if ($lang->tag != Lang::get()) {
-                    $q->join($this->table.'_'.$lang->tag, $this->realTable.'.id', $this->table.'_'.$lang->tag.'.id');
+                    $q->join($this->table, $this->table.'.id', $this->table.'.id');
                 }
+            }
+        })
+        ->when(!empty($joins), function($q) use ($joins) {
+            foreach ($joins as $join) {
+                $q->join($join[0], $join[1], $join[2]);
             }
         })
         ->orderBy('id', 'ASC');
@@ -63,13 +82,21 @@ class Export implements FromQuery, WithHeadings, WithMapping
         
         foreach (json_decode($this->menuItem->fields) as $field) {
 
-            if (!in_array($field->type, ['relationship', 'password'])) {
+            if ($field->type == 'password') {
+                continue;
+            }
+
+            if ($field->type != 'relationship') {
 
                 if ($field->lang) {
                     foreach (Lang::getLangs() as $lang) {
                         $headings[] = $field->title.' '.Str::upper($lang->tag);
                     }
                 } else {
+                    $headings[] = $field->title;
+                }
+            } else {
+                if ($field->relationship_count == 'single') {
                     $headings[] = $field->title;
                 }
             }
@@ -84,15 +111,31 @@ class Export implements FromQuery, WithHeadings, WithMapping
         
         foreach (json_decode($this->menuItem->fields) as $field) {
 
-            if (!in_array($field->type, ['relationship', 'password'])) {
+            if ($field->type == 'password') {
+                continue;
+            }
+
+            if ($field->type != 'relationship') {
 
                 if ($field->lang) {
+                    
                     foreach (Lang::getLangs() as $lang) {
+
                         $dbTitle = $field->db_title.'_'.$lang->tag;
                         $map[] = $item->$dbTitle;
                     }
+
                 } else {
+
                     $dbTitle = $field->db_title;
+                    $map[] = $item->$dbTitle;
+                }
+
+            } else {
+
+                if ($field->relationship_count == 'single') {
+                    
+                    $dbTitle = $field->relationship_table_name.'_'.$field->relationship_view_field;
                     $map[] = $item->$dbTitle;
                 }
             }

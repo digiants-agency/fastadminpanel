@@ -55,7 +55,7 @@ class FastAdminPanelInstall extends Command {
 
 	private function path_package ($path) {
 
-		return base_path("/vendor/sv-digiants/fastadminpanel" . $path);
+		return base_path("/vendor/digiants/fastadminpanel" . $path);
 	}
 
 	private function publish_parts_folder ($source, $destination) {
@@ -112,25 +112,30 @@ class FastAdminPanelInstall extends Command {
 
 		copy(
 			$this->path_package('/core/routes.php'),
-			base_path('/routes/fap.php')
+			base_path('/routes/fastadminpanel.php')
 		);
 
 		copy(
-			$this->path_package('/core/fap.php'),
-			base_path('/config/fap.php')
+			$this->path_package('/core/api_routes.php'),
+			base_path('/routes/fastadminpanel_api.php')
+		);
+
+		copy(
+			$this->path_package('/core/fastadminpanel.php'),
+			base_path('/config/fastadminpanel.php')
 		);
 
 		// register provider
 		$provider = file_get_contents(base_path("/config/app.php"));
 		
-		if (strpos($provider, 'FAPServiceProvider::class') === false) {
+		if (strpos($provider, 'FastAdminPanelServiceProvider::class') === false) {
 
 			$pos = strpos($provider, 'Package Service Providers...');
 			$pos = strpos($provider, '*/', $pos);
 			
 			file_put_contents(
 				base_path("/config/app.php"),
-				substr_replace($provider, '*/ App\FastAdminPanel\Providers\FAPServiceProvider::class,', $pos, 2)
+				substr_replace($provider, '*/ App\FastAdminPanel\Providers\FastAdminPanelServiceProvider::class,', $pos, 2)
 			);
 		}
 	}

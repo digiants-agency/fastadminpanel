@@ -16,10 +16,12 @@ return new class extends Migration
 		Schema::create('single_pages', function (Blueprint $table) {
 			$table->id();
 			$table->string("title")->default("");
+			$table->string("slug")->default("")->unique();
 			$table->integer("sort")->default(0);
-			$table->integer('parent')->default(0);
+			$table->integer('dropdown_id')->default(0);
+			$table->string('icon')->default("")->nullable();
 
-			$table->index("title");
+			$table->index("slug");
 		});
 	}
 

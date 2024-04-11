@@ -2,10 +2,6 @@
 
 namespace App\FastAdminPanel\Helpers;
 
-use App\FastAdminPanel\Helpers\JSAssembler as FastAdminPanelHelpersJSAssembler;
-use Digiants\FastAdminPanel\Helpers\JSAssembler as HelpersJSAssembler;
-use Route;
-
 class JSAssembler
 {
     private static $js_file = [[],[],[]];

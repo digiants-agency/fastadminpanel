@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-datetime">
+<template id="template-field-datetime">
 	<div class="form-group">
 		
 		<div class="field-title">
@@ -15,7 +15,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-datetime',{
 		template: '#template-field-datetime',

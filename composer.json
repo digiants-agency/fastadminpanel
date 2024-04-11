@@ -1,16 +1,14 @@
 {
-    "name": "sv-digiants/fastadminpanel",
+    "name": "digiants-agency/fastadminpanel",
     "description": "Fast admin panel generator",
     "type": "library",
-    "license": "MIT",
+    "license": "GPL-3.0-only",
     "authors": [{
         "name": "Savchenko Vladyslav",
         "email": "sv@digiants.com.ua",
-        "homepage": "https://digiants.agency",
-        "role": "Developer"
+        "homepage": "https://digiants.agency"
     }],
     "require": {
-        "doctrine/dbal": "^2.9",
         "unisharp/laravel-filemanager": "2.6.0",
         "mobiledetect/mobiledetectlib": "^3.74",
         "maatwebsite/excel": "^3.1"

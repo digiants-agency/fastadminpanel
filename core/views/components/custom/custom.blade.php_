@@ -1,0 +1,17 @@
+<template id="template-custom">
+	<div class="custom">
+		<h1>Custom</h1>
+	</div>
+</template>
+
+<script>
+	Vue.component('template-custom',{
+		template: '#template-custom',
+		data() {
+			return {
+			}
+		},
+		created() {
+		},
+	})
+</script>

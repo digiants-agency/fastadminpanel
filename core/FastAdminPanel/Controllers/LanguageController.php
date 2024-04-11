@@ -3,7 +3,6 @@
 namespace App\FastAdminPanel\Controllers;
 
 use App\FastAdminPanel\Models\Language;
-use Illuminate\Http\Request;
 
 class LanguageController extends \App\Http\Controllers\Controller
 {

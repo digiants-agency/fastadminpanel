@@ -1,9 +1,12 @@
 <?php 
 
 return [
-    'admin_panel' 		=> 'Admin Panel',
+	'admin_panel' 		=> 'Admin Panel',
 	'dropdown'			=> 'Dropdown',
-	'options'			=> 'Options',
+	'settings'			=> 'Settings',
+	'docs'				=> 'Documentation',
+	'menu'				=> 'Menu',
+	'single'			=> 'Single',
 	'sign_out'			=> 'Sign Out',
 	'save'				=> 'Save',
 	'delete_lang'		=> 'Delete language',
@@ -18,6 +21,10 @@ return [
 	'no'				=> 'No',
 	'is_dev'			=> 'Is dev',
 	'multilang'			=> 'Multilanguage',
+	'gen_single_desc'	=> 'Create or edit Single item',
+	'gen_single_item'	=> 'Single item',
+	'single_name'		=> 'Single name  (API ID)',
+	'single_title'		=> 'Single title',
 	'list'				=> 'List',
 	'add'				=> 'Add +',
 	'sort'				=> 'Sort:',

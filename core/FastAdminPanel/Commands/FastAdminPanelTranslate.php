@@ -47,7 +47,7 @@ class FastAdminPanelTranslate extends Command
 	}
 
 	/*
-	 * FAP Translator
+	 * FastAdminPanel Translator
 	 */
 
 	private $notTranslateCols = [
@@ -617,7 +617,7 @@ class FastAdminPanelTranslate extends Command
 	}
 
 	/*
-	 * End FAP Translator
+	 * End FastAdminPanel Translator
 	 */
 
 

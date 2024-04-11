@@ -37,11 +37,15 @@ class SingleField extends MultilanguageModel
 		'is_multilanguage',
 		'type',
 		'title',
-		'block_title',
-		'single_page_id',
+		'slug',
+		'single_block_id',
 		'sort',
 		'parent_id',
 		'value',
+	];
+
+	protected $attributes = [
+		'value'	=> '',
 	];
 
 	public function multilanguageSave()
@@ -60,8 +64,8 @@ class SingleField extends MultilanguageModel
 				$field->is_multilanguage = $this->is_multilanguage;
 				$field->type = $this->type;
 				$field->title = $this->title;
-				$field->block_title = $this->block_title;
-				$field->single_page_id = $this->single_page_id;
+				$field->slug = $this->slug;
+				$field->single_block_id = $this->single_block_id;
 				$field->sort = $this->sort;
 				$field->parent_id = $this->parent_id;
 				$field->value = $this->value;
@@ -143,6 +147,16 @@ class SingleField extends MultilanguageModel
 			'gallery'		=> [],
 			default			=> 'Saved',
 		};
+	}
+
+	public function childrenFields()
+	{
+		return $this->hasMany(SingleField::class, 'parent_id');
+	}
+
+	public function fields()
+	{
+		return $this->childrenFields()->with('fields');
 	}
 
 	public function removeTables($tag)

@@ -1,44 +1,13 @@
-@font-face {
-    font-family: 'Proxima Nova';
-    src: url('/vendor/fastadminpanel/fonts/ProximaNova-Regular.eot');
-    src: local('Proxima Nova Regular'), local('ProximaNova-Regular'), url('/vendor/fastadminpanel/fonts/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'), url('/vendor/fastadminpanel/fonts/ProximaNova-Regular.woff') format('woff'), url('/vendor/fastadminpanel/fonts/ProximaNova-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Proxima Nova';
-    src: url('/vendor/fastadminpanel/fonts/ProximaNova-Semibold.eot');
-    src: local('Proxima Nova Semibold'), local('ProximaNova-Semibold'), url('/vendor/fastadminpanel/fonts/ProximaNova-Semibold.eot?#iefix') format('embedded-opentype'), url('/vendor/fastadminpanel/fonts/ProximaNova-Semibold.woff') format('woff'), url('/vendor/fastadminpanel/fonts/ProximaNova-Semibold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Proxima Nova';
-    src: url('/vendor/fastadminpanel/fonts/ProximaNova-Bold.eot');
-    src: local('Proxima Nova Bold'), local('ProximaNova-Bold'), url('/vendor/fastadminpanel/fonts/ProximaNova-Bold.eot?#iefix') format('embedded-opentype'), url('/vendor/fastadminpanel/fonts/ProximaNova-Bold.woff') format('woff'), url('/vendor/fastadminpanel/fonts/ProximaNova-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Proxima Nova';
-    src: url('/vendor/fastadminpanel/fonts/ProximaNova-Extrabld.eot');
-    src: local('Proxima Nova Extrabold'), local('ProximaNova-Extrabld'), url('/vendor/fastadminpanel/fonts/ProximaNova-Extrabld.eot?#iefix') format('embedded-opentype'), url('/vendor/fastadminpanel/fonts/ProximaNova-Extrabld.woff') format('woff'), url('/vendor/fastadminpanel/fonts/ProximaNova-Extrabld.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-    font-display: swap;
+:root {
+    --color-main: #165BC3;
+    --color-hover: #10408A;
 }
 
 body,
 input,
 textarea,
 select {
-    font-family: "Proxima Nova", sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     color: #171219;
     font-size: 0.9722vw;
 }
@@ -161,8 +130,7 @@ fieldset {
 }
 
 .login-form-logo {
-    width: 8.8083vw;
-    height: 4.2438vw;
+    width: 6.9444vw;
 }
 
 .login-title {
@@ -174,7 +142,7 @@ fieldset {
     padding: 1.1111vw 1.5278vw;
     background: #F1F4F6;
     border-radius: 1.0486vw;
-    margin-left: 0.5556vw;
+    margin-left: 1.0417vw;
 }
 
 .login-form-title {
@@ -247,7 +215,7 @@ fieldset {
 
 .checkbox-input:checked + .checkbox-rectangle,
 .checkbox-rectangle.active {
-    background: #51225D;
+    background: var(--color-main);
     border: none;
 }
 
@@ -266,7 +234,7 @@ fieldset {
 }
 
 .login-form-btn {
-    background: #51225D;
+    background: var(--color-main);
     border-radius: 0.3472vw;
     font-style: normal;
     font-weight: 600;
@@ -277,6 +245,11 @@ fieldset {
     height: 3.4722vw;
     display: block;
     border: 0;
+    transition: .3s;
+}
+
+.login-form-btn:hover {
+    background: var(--color-hover);
 }
 
 .login-error {
@@ -293,26 +266,28 @@ fieldset {
     overflow-y: auto;
     padding: 2.0833vw 3.4722vw;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sidebar-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding-bottom: 1.0417vw;
     border-bottom: 1px solid #E3E3E3;
 }
 
 .sidebar-logo {
-    width: 5.8333vw;
-    height: 2.8104vw;
-    margin-right: 0.3472vw;
+    width: 4.8611vw;
+    margin-right: 0.6944vw;
 }
 
 .sidebar-header-title {
     font-style: normal;
     font-weight: bold;
-    font-size: 0.9722vw;
+    font-size: 0.9028vw;
     line-height: 1.25vw;
     padding: 0.7639vw 1.0417vw;
     background: #EFF2F4;
@@ -327,6 +302,10 @@ fieldset {
 
 .sidebar-menu {
     padding: 0.8333vw 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sidebar-menu-item-parent {
@@ -344,12 +323,22 @@ fieldset {
     top: -0.5556vw;
     left: -2.0833vw;
     z-index: 0;
-    border-right: 0.2778vw solid #51225D;
+    border-right: 0.2778vw solid var(--color-main);
 }
 
 .sidebar-menu-item {
     margin-bottom: 1.0417vw;
     padding-right: 1.3889vw;
+}
+
+.sidebar-menu-item:not(.child):last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-menu-items-dev {
+    padding-bottom: 0.8333vw;
+    margin-bottom: 0.8333vw;
+    border-bottom: 1px solid #E3E3E3;
 }
 
 .sidebar-menu-item,
@@ -364,6 +353,7 @@ fieldset {
     align-items: center;
     position: relative;
     user-select: none;
+    transition: .2s;
 }
 
 .sidebar-menu-item-icon {
@@ -378,7 +368,7 @@ fieldset {
 .sidebar-menu-item.router-link-active a,
 .sidebar-menu-item:hover a,
 .sidebar-menu-item a.router-link-active {
-    color: #51225D;
+    color: var(--color-main);
     text-decoration: none;
 }
 
@@ -412,7 +402,7 @@ fieldset {
 }
 
 .sidebar-menu-item-parent.active .sidebar-menu-item {
-    color: #51225D;
+    color: var(--color-main);
 }
 
 .sidebar-menu-item-parent.active .sidebar-menu-item-ico {
@@ -434,7 +424,7 @@ fieldset {
     text-align: center;
     color: #FFFFFF;
     padding: 0 3px;
-    background: #51225D;
+    background: var(--color-main);
     border-radius: 3px;
     margin-left: 0.6944vw;
 }
@@ -522,7 +512,7 @@ h3 {
 
 .btn-add {
     background: rgba(81, 34, 93, 0.04);
-    border: 1px solid #51225D;
+    border: 1px solid var(--color-main);
     border-radius: 0.3472vw;
     width: 100%;
     padding: 1.0417vw 0;
@@ -530,16 +520,16 @@ h3 {
     font-weight: 600;
     font-size: 0.9722vw;
     line-height: 1.3889vw;
-    color: #51225D;
+    color: var(--color-main);
 }
 
 .btn-dash {
-    border: 1px dashed #51225D;
+    border: 1px dashed var(--color-main);
 }
 
 .btn-add:hover {
     color: #fff;
-    background: #51225D;
+    background: var(--color-main);
 }
 
 .btn-blue {
@@ -706,7 +696,7 @@ td.td-content {
 .index-pagination-next:hover,
 .index-pagination-number.active,
 .index-pagination-number:hover {
-    background: #51225D;
+    background: var(--color-main);
     color: #fff;
 }
 
@@ -881,7 +871,7 @@ td.td-content {
 
 #loader svg path,
 #loader svg rect {
-    fill: #51225D;
+    fill: var(--color-main);
 }
 
 #loader {
@@ -909,9 +899,6 @@ td.td-content {
     margin-bottom: 1.0417vw;
 }
 
-.flex {
-    display: flex;
-}
 
 .single-block-title {
     font-style: normal;
@@ -1005,16 +992,16 @@ td.td-content {
 
 .btn-primary,
 .btn-info {
-    background-color: #51225D;
-    border-color: #51225D;
+    background-color: var(--color-main);
+    border-color: var(--color-main);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-info:not(:disabled):not(.disabled):active,
 .btn-primary:hover,
 .btn-info:hover {
-    background-color: #460955;
-    border-color: #460955;
+    background-color: var(--color-hover);
+    border-color: var(--color-hover);
 }
 
 select {
@@ -1281,7 +1268,7 @@ select:focus {
 }
 
 .vs__dropdown-option--highlight {
-    background: #51225D;
+    background: var(--color-main);
     color: #fff !important;
 }
 
@@ -1314,7 +1301,7 @@ select:focus {
 }
 
 .relationship-many .vs__selected {
-    background: #51225D;
+    background: var(--color-main);
     color: #fff;
     border: none;
     margin-right: 0.6944vw;
@@ -1379,12 +1366,34 @@ select:focus {
     transition: .3s;
 }
 
+.menu-table-editblocks {
+    padding: 1.3889vw 2.0833vw;
+    background: #FFFFFF;
+    box-shadow: 0vw 0.9722vw 2.4306vw rgba(0, 1, 20, 0.02);
+    border-radius: 1.0417vw;
+    margin-bottom: 1.3889vw;
+}
+
 .menu-table-editfields {
     padding: 2.0833vw 2.7778vw;
     background: #FFFFFF;
     box-shadow: 0vw 0.9722vw 2.4306vw rgba(0, 1, 20, 0.02);
     border-radius: 1.0417vw;
     margin-bottom: 1.3889vw;
+}
+
+.menu-table-editblocks .menu-table-editfields {
+    border: 1px solid #E3E3E3;
+    padding: 1.3889vw 2.0833vw;
+    margin-bottom: 0 !important;
+}
+
+#addBlock {
+    margin-bottom: 1.3889vw;
+}
+
+.menu-table-editblocks .menu-table-editfields .menu-table-field {
+    width: auto;
 }
 
 .menu-table-editfields td {
@@ -1708,6 +1717,13 @@ select:focus {
     color: #7F7F7F;
     padding-top: 0.9722vw;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: .2s;
+}
+
+.logout:hover {
+    color: var(--color-hover);
 }
 
 .logout svg {
@@ -1742,7 +1758,7 @@ select:focus {
     margin-right: 0.6944vw;
 }
 
-.lang-active:after {
+.lang-active.with-arrow:after {
     display: block;
     content: "";
     width: 0.4861vw;
@@ -1797,7 +1813,7 @@ select:focus {
 }
 
 textarea.form-control {
-    height: 4.0278vw !important;
+    min-height: 4.0278vw !important;
 }
 
 .graph {
@@ -2039,5 +2055,200 @@ textarea.form-control {
 
 .edit-settings-option:hover,
 .edit-settings-option a:hover {
-    color: #51225D;
+    color: var(--color-main);
+}
+
+.flex {
+    display: flex;
+}
+
+.a-center {
+    align-items: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.table-col {
+    width: 11.1111vw !important;
+    margin-right: 0.6944vw;
+    padding: 0.3472vw 0.3472vw !important;
+}
+
+.table-col-last {
+    width: 6.9444vw !important;
+    margin-right: 0;
+    flex: 1;
+    align-self: flex-end;
+}
+
+.create-single-block-title-wrapper {
+    margin-bottom: 1.3889vw !important;
+}
+
+.menu-table-editblocks .menu-table-editfields .table {
+    margin-bottom: 1.0417vw !important;
+}
+
+.menu-table-editfields .menu-table-editfields {
+    margin-top: 1.0417vw;
+    margin-bottom: 0.6944vw !important;
+}
+
+.docs-routes-block {
+    margin-bottom: 2.0833vw;
+}
+
+.docs-group-title {
+    margin-bottom: 1.3889vw;
+}
+
+.docs-routes-endpoint {
+    margin-bottom: 1.0417vw;
+    display: flex;
+    text-decoration: none !important;
+}
+
+.docs-route-get {
+    color: hsl(198 93% 60%);
+}
+
+.docs-route-post {
+    color: hsl(158 64% 52%);
+}
+
+.docs-route-put {
+    color: hsl(43 96% 56%);
+}
+
+.docs-route-delete {
+    color: hsl(0 91% 71%);
+}
+
+.docs-routes-endpoint-text {
+    color: #171219;
+}
+
+.docs-route-method {
+    width: 5.5556vw;
+    display: block;
+}
+
+.docs-content {
+    padding: 0 0 0 2.7778vw;
+    margin-left: 2.7778vw;
+    border-left: 1px solid #E3E3E3;
+    flex: 1;
+}
+
+.docs-routes-endpoint-block {
+    padding-top: 1.3889vw;
+    padding-bottom: 1.3889vw;
+    border-bottom: 1px solid #E3E3E3;
+    width: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.docs-routes-endpoint-desc {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.1111vw;
+    line-height: 1.3889vw;
+    color: #7F7F7F;
+    margin-bottom: 1.3889vw;
+}
+
+.docs-routes-endpoint-desc-block {
+    margin-bottom: 2.0833vw;
+}
+
+.docs-routes-endpoint-desc-block:last-child {
+    margin-bottom: 0;
+}
+
+.docs-routes-endpoint-desc-block-title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.1111vw;
+    line-height: 1.3889vw;
+    color: #7F7F7F;
+    margin-bottom: 0.6944vw;
+}
+
+.docs-routes-endpoint-desc-block-value {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.9722vw;
+    line-height: 1.25vw;
+    color: #171219;
+}
+
+.docs-route-rule {
+    padding: 0.3472vw 0;
+    border-bottom: 1px solid #E3E3E3;
+    border-left: 1px solid #165BC3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.docs-route-rule-title {
+    color: #165BC3;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+    line-height: 1.5278vw;
+}
+
+.docs-route-rule-title span {
+    margin-right: 0.3472vw;
+}
+
+.docs-route-rule-required {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.1111vw;
+    line-height: 1.3889vw;
+    margin-top: 0.3472vw;
+    padding-left: 1.3889vw;
+}
+
+.docs-route-rule-required.required {
+    color: hsl(0 91% 71%);
+}
+
+.docs-route-rule-required.optional {
+    color: hsl(198 93% 60%);
+}
+
+.docs-route-rule-description {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.1111vw;
+    line-height: 1.3889vw;
+    color: #7F7F7F;
+}
+
+.docs-route-rule-description-wrapper {
+    max-width: 27.7778vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.docs-route-rule-available {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.9722vw;
+    line-height: 1.25vw;
+    margin-top: 0.3472vw;
+}
+
+.docs-block {
+    margin-top: 2.0833vw;
 }

@@ -127,7 +127,6 @@
 	$.prototype.toggleSlide = function (){
 		this.el.forEach(function(el,index){
 			el.style.transition = "all 1s ease-in-out"
-			console.log(el.offsetHeight);
 			if(el.offsetHeight==0) {
 				el.style.height = el.getAttribute('data-height') ?? 'auto'
 			} else {

@@ -1,4 +1,4 @@
-<script type="text/x-template" id="template-field-enum">
+<template id="template-field-enum">
 	<div class="form-group">
 		
 		<div class="field-title">
@@ -17,7 +17,7 @@
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
-</script>
+</template>
 <script>
 	Vue.component('template-field-enum', {
 		template: '#template-field-enum',
