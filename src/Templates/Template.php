@@ -2,13 +2,12 @@
 
 namespace Digiants\FastAdminPanel\Templates;
 
-class Template {
-
-    protected function template_add_folder ($path) {
-
+class Template
+{	
+    protected function addFolder($path)
+	{
 		if (!is_dir($path)) {
 			mkdir($path, 0777, true);
 		}
 	}
-
 }

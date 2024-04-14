@@ -2,21 +2,15 @@
 
 namespace Digiants\FastAdminPanel\Templates;
 
-class TemplateComponents extends Template{
-
-	protected function template_path_package ($path) {
-
-		return base_path("vendor/digiants-agency/fastadminpanel/templates/components" . $path);
-	}
-
-	public function import () {
-
+class TemplateComponents extends Template
+{
+	public function import()
+	{
 		// add converter
-		$this->template_add_folder(public_path('/css'));
-		$this->template_add_folder(public_path('/css/cache'));
-		$this->template_add_folder(public_path('/js'));
-		$this->template_add_folder(public_path('/js/cache'));
-
+		$this->addFolder(public_path('/css'));
+		$this->addFolder(public_path('/css/cache'));
+		$this->addFolder(public_path('/js'));
+		$this->addFolder(public_path('/js/cache'));
 
 		$css = [
 			'desktop-src.css',
@@ -25,16 +19,16 @@ class TemplateComponents extends Template{
 
 		foreach ($css as $path) {
 			copy(
-				$this->template_path_package("/css/$path"),
+				$this->getPathPackage("/css/$path"),
 				public_path("/css/$path")
 			);
 		}
 
 		// add views
-		$this->template_add_folder(base_path('/resources/views/inc'));
-		$this->template_add_folder(base_path('/resources/views/pages'));
-		$this->template_add_folder(base_path('/resources/views/components'));
-		$this->template_add_folder(base_path('/resources/views/components/inc'));
+		$this->addFolder(base_path('/resources/views/inc'));
+		$this->addFolder(base_path('/resources/views/pages'));
+		$this->addFolder(base_path('/resources/views/components'));
+		$this->addFolder(base_path('/resources/views/components/inc'));
 
 		$views = [
 			'inc/head.blade.php',
@@ -49,7 +43,7 @@ class TemplateComponents extends Template{
 
 		foreach ($views as $path) {
 			copy(
-				$this->template_path_package("/views/$path"),
+				$this->getPathPackage("/views/$path"),
 				base_path("/resources/views/$path")
 			);
 		}
@@ -60,17 +54,17 @@ class TemplateComponents extends Template{
 		}
 
 		copy(
-			$this->template_path_package("/web.php"),
+			$this->getPathPackage("/web.php"),
 			base_path("/routes/web.php")
 		);
 
 		// controllers
 		copy(
-			$this->template_path_package("/Controllers/SitemapController.php"),
+			$this->getPathPackage("/Controllers/SitemapController.php"),
 			base_path("/app/Http/Controllers/SitemapController.php")
 		);
 		copy(
-			$this->template_path_package("/Controllers/PageController.php"),
+			$this->getPathPackage("/Controllers/PageController.php"),
 			base_path("/app/Http/Controllers/PageController.php")
 		);
 
@@ -78,33 +72,33 @@ class TemplateComponents extends Template{
 			unlink(base_path("/app/Http/Controllers/Controller.php"));
 
 		copy(
-			$this->template_path_package("/Controllers/Controller.php"),
+			$this->getPathPackage("/Controllers/Controller.php"),
 			base_path("/app/Http/Controllers/Controller.php")
 		);
 
 		//components
-		$this->template_add_folder(base_path('/app/View'));
-		$this->template_add_folder(base_path('/app/View/Components'));
-		$this->template_add_folder(base_path('/app/View/Components/Inc'));
+		$this->addFolder(base_path('/app/View'));
+		$this->addFolder(base_path('/app/View/Components'));
+		$this->addFolder(base_path('/app/View/Components/Inc'));
 
 		copy(
-			$this->template_path_package("/Components/Layout.php"),
+			$this->getPathPackage("/Components/Layout.php"),
 			base_path("/app/View/Components/Layout.php")
 		);
 		copy(
-			$this->template_path_package("/Components/Inc/Breadcrumbs.php"),
+			$this->getPathPackage("/Components/Inc/Breadcrumbs.php"),
 			base_path("/app/View/Components/Inc/Breadcrumbs.php")
 		);
 		copy(
-			$this->template_path_package("/Components/Inc/Footer.php"),
+			$this->getPathPackage("/Components/Inc/Footer.php"),
 			base_path("/app/View/Components/Inc/Footer.php")
 		);
 		copy(
-			$this->template_path_package("/Components/Inc/Header.php"),
+			$this->getPathPackage("/Components/Inc/Header.php"),
 			base_path("/app/View/Components/Inc/Header.php")
 		);
 		copy(
-			$this->template_path_package("/Components/Inc/Pagination.php"),
+			$this->getPathPackage("/Components/Inc/Pagination.php"),
 			base_path("/app/View/Components/Inc/Pagination.php")
 		);
 		
@@ -113,5 +107,9 @@ class TemplateComponents extends Template{
 			unlink(base_path("/resources/views/welcome.blade.php"));
 		}
 	}
-    
+
+	protected function getPathPackage($path)
+	{
+		return base_path("vendor/digiants-agency/fastadminpanel/templates/components" . $path);
+	}
 }

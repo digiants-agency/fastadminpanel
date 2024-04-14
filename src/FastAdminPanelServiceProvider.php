@@ -2,20 +2,18 @@
 
 namespace Digiants\FastAdminPanel;
 
-use Illuminate\Support\Facades\Config;
+use Digiants\FastAdminPanel\Commands\FastAdminPanelInstall;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\AliasLoader;
 
 class FastAdminPanelServiceProvider extends ServiceProvider
 {
-
-	public function boot() {
-
+	public function boot()
+	{
 		Schema::defaultStringLength(191);
 
 		$this->app->bind('fastadminpanel:install', function ($app) {
-			return new \Digiants\FastAdminPanel\Commands\FastAdminPanelInstall();
+			return $app->make(FastAdminPanelInstall::class);
 		});
 		$this->commands([
 			'fastadminpanel:install',
@@ -30,7 +28,8 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 		// ], 'fap_view');
 	}
 
-	public function register() {
+	public function register()
+	{
 		
 	}
 }
