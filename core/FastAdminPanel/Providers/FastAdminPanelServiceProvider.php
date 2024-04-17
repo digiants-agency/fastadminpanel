@@ -41,7 +41,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 		]);
 
 		Route::middleware('web')
-			->group(base_path('routes/fastadminpanel.php'));
+		->group(base_path('routes/fap.php'));
 
 		Blade::directive('desktopcss', function () {
 
@@ -77,7 +77,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 
 		Route::middleware('api')
 		->prefix('api')
-		->group(base_path('routes/fastadminpanel_api.php'));
+		->group(base_path('routes/fapi.php'));
 	}
 
 	public function register()

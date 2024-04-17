@@ -3,6 +3,7 @@
 namespace Digiants\FastAdminPanel;
 
 use Digiants\FastAdminPanel\Commands\FastAdminPanelInstall;
+use Digiants\FastAdminPanel\Commands\FastAdminPanelUninstall;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,11 +13,11 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 	{
 		Schema::defaultStringLength(191);
 
-		$this->app->bind('fastadminpanel:install', function ($app) {
-			return $app->make(FastAdminPanelInstall::class);
-		});
+		$this->app->bind('fastadminpanel:install', fn ($app) => $app->make(FastAdminPanelInstall::class));
+		$this->app->bind('fastadminpanel:uninstall', fn ($app) => $app->make(FastAdminPanelUninstall::class));
 		$this->commands([
 			'fastadminpanel:install',
+			'fastadminpanel:uninstall',
 		]);
 
 		// $this->publishes([

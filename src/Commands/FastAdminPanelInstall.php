@@ -3,11 +3,11 @@
 namespace Digiants\FastAdminPanel\Commands;
 
 use App\Models\User;
-use Artisan;
 use Digiants\FastAdminPanel\Publishers\Core;
 use Digiants\FastAdminPanel\Publishers\Provider;
 use Digiants\FastAdminPanel\Templates\TemplateImporter;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class FastAdminPanelInstall extends Command
 {
@@ -41,7 +41,7 @@ class FastAdminPanelInstall extends Command
 	 */
 	public function handle()
 	{
-		$this->info('Please note: FastAdminPanel will erase your DB and some files!');
+		$this->info('Please note: FastAdminPanel requires fresh Laravel installation!');
 		
 		if (!$this->confirm('Do you wish to continue?')) {
 
@@ -52,8 +52,6 @@ class FastAdminPanelInstall extends Command
 		$this->publisherProvider->publish();
 		
 		Artisan::call('migrate');
-
-		$this->info('Migrated successfully!');
 		
 		$this->addUser();
 		$this->importTemplate();
