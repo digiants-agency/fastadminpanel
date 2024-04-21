@@ -3,7 +3,9 @@
 
 <br />
 
-
+<p align="center">
+	<a href="https://packagist.org/packages/digiants-agency/fastadminpanel"><img src="https://img.shields.io/packagist/v/digiants-agency/fastadminpanel" alt="Latest Stable Version"></a>
+</p>
 
 <br>
 
