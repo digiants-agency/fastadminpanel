@@ -40,33 +40,18 @@ composer require digiants-agency/fastadminpanel
 php artisan fastadminpanel:install
 ```
 
-- Add class aliases in bottom of file config/app.php
+- Publish the packages config and assets (laravel filemanager)
 ```bash
-'Image' => Intervention\Image\Facades\Image::class,
-```
-
-- Publish the packages config and assets
-```bash
-php artisan vendor:publish --tag=lfm_config 
+composer require intervention/image-laravel
+php artisan vendor:publish --tag=lfm_config
 php artisan vendor:publish --tag=lfm_public
-```
-
-- Run commands to clear cache
-```bash
-php artisan route:clear
-php artisan config:clear
 ```
 
 - In "config/lfm.php"
 ```bash
-// in any place
-add line: 'middlewares' => ['admin'],
-
 change line: ('disk' => 'public',) to ('disk' => 'lfm',)
 
-//add category of folder
-in folder_categories (48 line)
-
+// add category of folder in folder_categories (48 line)
 'admin' => [
     'folder_name'  => 'vendor/fastadminpanel/icons',
     'startup_view' => 'list',

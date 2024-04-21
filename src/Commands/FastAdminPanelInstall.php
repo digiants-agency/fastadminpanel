@@ -3,6 +3,7 @@
 namespace Digiants\FastAdminPanel\Commands;
 
 use App\Models\User;
+use Digiants\FastAdminPanel\FixVendors\Lfm;
 use Digiants\FastAdminPanel\Publishers\Core;
 use Digiants\FastAdminPanel\Publishers\Provider;
 use Digiants\FastAdminPanel\Templates\TemplateImporter;
@@ -32,6 +33,7 @@ class FastAdminPanelInstall extends Command
 		protected TemplateImporter $templateImporter,
 		protected Core $publisherCore,
 		protected Provider $publisherProvider,
+		protected Lfm $fixLfm,
 	) {
 		parent::__construct();
 	}
@@ -48,6 +50,7 @@ class FastAdminPanelInstall extends Command
 			return Command::FAILURE;
 		}
 
+		$this->fixLfm->fix();
 		$this->publisherCore->publish();
 		$this->publisherProvider->publish();
 		
