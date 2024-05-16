@@ -16,36 +16,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
     
-$menu = Menu::get();
+// $menu = Menu::get();
 
-foreach ($menu as $menuItem) {
+// foreach ($menu as $menuItem) {
 
-    Route::group([
-		'prefix' => Lang::prefix(),
-	], function() use ($menuItem) {
+//     Route::group([
+// 		'prefix' => Lang::prefix(),
+// 	], function() use ($menuItem) {
 
-        Route::get($menuItem->table_name, [ApiController::class, 'index'])
-        ->defaults('menu_item', $menuItem)
-        ->name('api-index-'.$menuItem->table_name);
+//         Route::get($menuItem->table_name, [ApiController::class, 'index'])
+//         ->defaults('menu_item', $menuItem)
+//         ->name('api-index-'.$menuItem->table_name);
 
-        Route::get($menuItem->table_name.'/{id}', [ApiController::class, 'show'])
-        ->defaults('menu_item', $menuItem)
-        ->name('api-show-'.$menuItem->table_name);
+//         Route::get($menuItem->table_name.'/{id}', [ApiController::class, 'show'])
+//         ->defaults('menu_item', $menuItem)
+//         ->name('api-show-'.$menuItem->table_name);
         
-    });
+//     });
     
-    Route::post($menuItem->table_name, [ApiController::class, 'store'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-store-'.$menuItem->table_name);
+//     Route::post($menuItem->table_name, [ApiController::class, 'store'])
+//     ->defaults('menu_item', $menuItem)
+//     ->name('api-store-'.$menuItem->table_name);
 
-    Route::put($menuItem->table_name.'/{id}', [ApiController::class, 'update'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-update-'.$menuItem->table_name);
+//     Route::put($menuItem->table_name.'/{id}', [ApiController::class, 'update'])
+//     ->defaults('menu_item', $menuItem)
+//     ->name('api-update-'.$menuItem->table_name);
 
-    Route::delete($menuItem->table_name.'/{id}',[ApiController::class, 'destroy'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-destroy-'.$menuItem->table_name);	
-}
+//     Route::delete($menuItem->table_name.'/{id}',[ApiController::class, 'destroy'])
+//     ->defaults('menu_item', $menuItem)
+//     ->name('api-destroy-'.$menuItem->table_name);	
+// }
 
 Route::group([
     'prefix' => Lang::prefix(),
