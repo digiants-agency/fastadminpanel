@@ -14,7 +14,7 @@ return new class extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('menu', function (Blueprint $table) {
+		Schema::create('cruds', function (Blueprint $table) {
 			$table->id();
 			$table->string('title');
 			$table->string('table_name');
@@ -30,7 +30,7 @@ return new class extends Migration
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 
-		DB::table('menu')->insert([
+		DB::table('cruds')->insert([
 			'title'             => 'Roles',
 			'table_name'        => 'roles',
 			'fields'            => '[{"id":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"title","title":"Title"}]',
@@ -42,7 +42,7 @@ return new class extends Migration
 			'model'				=> '',
 		]);
 
-		DB::table('menu')->insert([
+		DB::table('cruds')->insert([
 			'title'             => 'Users',
 			'table_name'        => 'users',
 			'fields'            => '[{"id":0,"lang":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"name","title":"Name"},{"id":1,"required":"optional","is_visible":true,"lang":1,"show_in_list":"no","type":"relationship","relationship_count":"single","relationship_table_name":"roles","title":"Role","relationship_view_field":"title"},{"id":2,"lang":0,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"email","title":"Email"},{"id":3,"lang":0,"required":"optional","is_visible":true,"show_in_list":"no","type":"password","db_title":"password","title":"Password"}]',
@@ -62,6 +62,6 @@ return new class extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('menu');
+		Schema::dropIfExists('cruds');
 	}
 };

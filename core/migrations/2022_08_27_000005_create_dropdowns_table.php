@@ -13,7 +13,7 @@ return new class extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dropdown', function (Blueprint $table) {
+		Schema::create('dropdowns', function (Blueprint $table) {
 			$table->id();
 			$table->string('title')->default('');
 			$table->integer('sort')->default(0);
