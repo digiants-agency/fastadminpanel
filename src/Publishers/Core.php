@@ -7,6 +7,11 @@ class Core
 	public function publish()
 	{
 		$this->publishPartsFolder(
+			$this->pathPackage('/core/content'),
+			base_path('/content')
+		);
+
+		$this->publishPartsFolder(
 			$this->pathPackage('/core/FastAdminPanel'),
 			base_path('/app/FastAdminPanel')
 		);
