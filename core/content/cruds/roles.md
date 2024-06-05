@@ -1,7 +1,7 @@
 ---
 title: Roles
 table_name: roles
-fields: '[{"id":1,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"title","title":"Title"}]'
+fields: [{"id":1,"required":"optional","is_visible":true,"show_in_list":"yes","type":"text","db_title":"title","title":"Title"}]
 is_dev: 1
 multilanguage: 0
 is_soft_delete: 0
