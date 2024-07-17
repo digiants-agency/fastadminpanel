@@ -18,7 +18,7 @@ return new class extends Migration
 			$table->string("title")->default("");
 			$table->string("slug")->default("")->unique();
 			$table->integer("sort")->default(0);
-			$table->integer('dropdown_id')->default(0);
+			$table->string('dropdown_slug')->default("");
 			$table->string('icon')->default("")->nullable();
 
 			$table->index("slug");

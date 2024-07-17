@@ -7,8 +7,8 @@ class Core
 	public function publish()
 	{
 		$this->publishPartsFolder(
-			$this->pathPackage('/core/content'),
-			base_path('/content')
+			$this->pathPackage('/core/storage'),
+			base_path('/storage/app')
 		);
 
 		$this->publishPartsFolder(
