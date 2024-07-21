@@ -13,10 +13,9 @@ return new class extends Migration
 	 */
 	public function up()
 	{
-		if (!Schema::hasColumn('users', 'id_roles', 'is_admin')) {
+		if (!Schema::hasColumn('users', 'id_roles')) {
 
 			Schema::table('users', function (Blueprint $table) {
-				$table->tinyInteger('is_admin')->default(0);
 				$table->integer('id_roles')->default(1);
 				$table->string('admin_lang_tag', 2)->default('en');
 			});
@@ -30,10 +29,9 @@ return new class extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasColumn('users', 'id_roles', 'is_admin')) {
+		if (Schema::hasColumn('users', 'id_roles')) {
 
 			Schema::table('users', function (Blueprint $table) {
-				$table->dropColumn('is_admin');
 				$table->dropColumn('id_roles');
 				$table->dropColumn('admin_lang_tag');
 			});

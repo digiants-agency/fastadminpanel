@@ -17,16 +17,19 @@ return new class extends Migration
 		Schema::create('roles', function (Blueprint $table) {
 			$table->id();
 			$table->string('title');
+			$table->tinyInteger('is_admin')->default(0);
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 
 		DB::table('roles')->insert([
-			'title' => 'Administrator'
+			'title' => 'Administrator',
+			'is_admin' => 1,
 		]);
 		
 		DB::table('roles')->insert([
-			'title' => 'User'
+			'title' => 'User',
+			'is_admin' => 0,
 		]);
 	}
 
