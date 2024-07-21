@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "table": "all",
         "id_roles": 1,
         "admin_read": 0,
