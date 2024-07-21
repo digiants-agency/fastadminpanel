@@ -5,7 +5,7 @@
         "fields": [
             {
                 "id": 1,
-                "lang": 0,
+                "lang": 1,
                 "required": "optional",
                 "is_visible": true,
                 "show_in_list": "yes",
@@ -17,7 +17,7 @@
                 "id": 2,
                 "required": "optional",
                 "is_visible": true,
-                "lang": 1,
+                "lang": 0,
                 "show_in_list": "no",
                 "type": "relationship",
                 "relationship_count": "single",
@@ -44,6 +44,26 @@
                 "type": "password",
                 "db_title": "password",
                 "title": "Password"
+            },
+            {
+                "id": 5,
+                "lang": 0,
+                "required": "optional",
+                "is_visible": false,
+                "show_in_list": "no",
+                "type": "text",
+                "db_title": "admin_lang_tag",
+                "title": "Admin language"
+            },
+			{
+                "id": 6,
+                "lang": 0,
+                "required": "optional",
+                "is_visible": true,
+                "show_in_list": "no",
+                "type": "checkbox",
+                "db_title": "is_admin",
+                "title": "Is admin?"
             }
         ],
         "is_dev": 0,
