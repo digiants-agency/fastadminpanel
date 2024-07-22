@@ -80,6 +80,16 @@
                 "type": "text",
                 "db_title": "title",
                 "title": "Title"
+            },
+            {
+                "id": 2,
+                "lang": 0,
+                "required": "optional",
+                "is_visible": true,
+                "show_in_list": "no",
+                "type": "checkbox",
+                "db_title": "is_admin",
+                "title": "Is admin?"
             }
         ],
         "is_dev": 1,
