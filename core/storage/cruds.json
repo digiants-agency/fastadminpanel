@@ -54,16 +54,6 @@
                 "type": "text",
                 "db_title": "admin_lang_tag",
                 "title": "Admin language"
-            },
-			{
-                "id": 6,
-                "lang": 0,
-                "required": "optional",
-                "is_visible": true,
-                "show_in_list": "no",
-                "type": "checkbox",
-                "db_title": "is_admin",
-                "title": "Is admin?"
             }
         ],
         "is_dev": 0,
