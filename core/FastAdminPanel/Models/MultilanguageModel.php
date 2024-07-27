@@ -2,8 +2,8 @@
 
 namespace App\FastAdminPanel\Models;
 
+use App\FastAdminPanel\Facades\Lang;
 use Illuminate\Database\Eloquent\Model;
-use Lang;
 
 class MultilanguageModel extends Model
 {
@@ -18,5 +18,4 @@ class MultilanguageModel extends Model
 		
 		$this->table .= '_'.$lang; 
 	}
-
 }

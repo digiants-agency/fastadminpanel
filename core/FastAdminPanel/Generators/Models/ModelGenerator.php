@@ -14,7 +14,7 @@ class ModelGenerator
     public function create($table, $isMulilanguage, $fields)
     {
         $class = $this->getClass($table);
-        $path = $this->getPath($class);
+        $path = $this->getPathByClass($class);
 
         $namespace = $this->getNamespace();
         $extends = $this->getExtends($isMulilanguage);
@@ -30,10 +30,13 @@ class ModelGenerator
         return '\\'.$namespace.'\\'.$class;
     }
 
-    public function update($table, $isMulilanguage, $fields)
+    public function update($table, $modelPath, $isMulilanguage, $fields)
     {
-        $class = $this->getClass($table);
-        $path = $this->getPath($class);
+		$path = $this->getPathByModel($modelPath);
+
+		if (!file_exists($path))
+			return;
+
         $model = file_get_contents($path);
 
         if ($isMulilanguage) {
@@ -64,10 +67,12 @@ class ModelGenerator
         );
     }
 
-    public function delete($table)
+    public function delete($modelPath)
     {
-        $class = $this->getClass($table);
-        $path = $this->getPath($class);
+        $path = $this->getPathByModel($modelPath);
+
+		if (!file_exists($path))
+			return;
 
         unlink($path);
     }
@@ -101,9 +106,7 @@ class ModelGenerator
 
     protected function getNamespace()
     {
-        $folder = $this->getFolder();
-
-        return 'App\Models'.($folder ? '\\'.$folder : '');
+        return 'App\Models';
     }
 
     protected function getClass($table)
@@ -129,31 +132,19 @@ class ModelGenerator
 
     protected function getFillable($fields)
     {
-        $fillableFields = [];
+        $fillableFields = collect([]);
 
         foreach ($fields as $field) {
 
-            if (in_array($field->type, ['password'])) {
-                
-                continue;
+			$fillable = $field->getFillable();
 
-            } elseif ($field->type == 'relationship') {
-                
-                if ($field->relationship_count == 'single') {
-
-                    $fillableFields[] = "'id_".$field->relationship_table_name."'";
-
-                } else {
-
-                    continue;
-                }
-
-            } else {
-                $fillableFields[] = "'".$field->db_title."'";
-            }
+			if ($fillable) {
+				
+				$fillableFields[] = "'$fillable'";
+			}
         }
 
-        return implode(",\n\t\t", $fillableFields);
+        return $fillableFields->implode(",\n\t\t") . ',';
     }
 
     protected function getRelationships($table, $fields)
@@ -192,12 +183,6 @@ class ModelGenerator
         return implode("\n\n\t", $relationships);
     }
 
-    // TODO: Add folders for models from dropdown names
-    protected function getFolder()
-    {
-        return '';
-    }
-
     protected function getStub()
     {
         $stub = $this->stubPath('model.stub');
@@ -205,12 +190,25 @@ class ModelGenerator
         return file_get_contents($stub);
     }
 
-    protected function getPath($name)
+    protected function getPathByClass($name)
     {
-        $folder = $this->getFolder();
-
-        return app_path("Models").($folder ? '/'.$folder : '').'/'.$name.'.php';
+        return app_path("Models").'/'.$name.'.php';
     }
+
+	protected function getPathByModel($modelPath)
+	{
+		$parts = explode("\\", $modelPath);
+		$path = '';
+
+		for ($i = 1, $count = count($parts) - 1; $i < $count; $i++) {
+			
+			$path .= strtolower($parts[$i]) . '/';
+		}
+
+		$modelName = array_pop($parts);
+		
+		return base_path($path) . $modelName . '.php';
+	}
 
     public function stubPath($path)
     {

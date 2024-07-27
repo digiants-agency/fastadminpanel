@@ -17,33 +17,32 @@ class SitemapController extends Controller
 		$this->domain = env('APP_URL');
 	}
 
-	public function index() {
-
-
-		$this->add_url('', '1.0');
+	public function index()
+	{
+		$this->addUrl('', '1.0');
 
 		/* add url like this */
 
-		// $this->add_url('/about', '1.0');
-		// $this->add_url('/contacts', '1.0');
-		// $this->add_url('/products', '1.0');
-		// $this->add_url('/projects', '1.0');
+		// $this->addUrl('/about', '1.0');
+		// $this->addUrl('/contacts', '1.0');
+		// $this->addUrl('/products', '1.0');
+		// $this->addUrl('/projects', '1.0');
 		
 		// $products = DB::table('products_en')->select('slug')->get();
 		// foreach ($products as $elm)
-		// 	$this->add_url('/product/'.$elm->slug, '0.5');
+		// 	$this->addUrl('/product/'.$elm->slug, '0.5');
 		
 		// $products_category = DB::table('category_products_en')->select('slug')->get();
 		// foreach ($products_category as $elm)
-		// 	$this->add_url('/products/'.$elm->slug, '0.5');
+		// 	$this->addUrl('/products/'.$elm->slug, '0.5');
 
 		// $projects = DB::table('projects_en')->select('slug')->get();
 		// foreach ($projects as $elm)
-		// 	$this->add_url('/project/'.$elm->slug, '0.5');
+		// 	$this->addUrl('/project/'.$elm->slug, '0.5');
 		
 		// $projects_category = DB::table('category_projects_en')->select('slug')->get();
 		// foreach ($projects_category as $elm)
-		// 	$this->add_url('/projects/'.$elm->slug, '0.5');
+		// 	$this->addUrl('/projects/'.$elm->slug, '0.5');
 			
 		
 		$response = Response::make(view('pages.sitemap', 
@@ -52,11 +51,10 @@ class SitemapController extends Controller
 		])->render());
 		$response->header('Content-Type', 'text/xhtml+xml; charset=utf-8');
 		return $response;
-
 	}
 
-	private function add_url($url, $priority, $is_multilanguage = true) {
-
+	private function addUrl($url, $priority, $is_multilanguage = true)
+	{
 		$this->sitemap[] = [
 			'slug' 					=> $this->domain.$url, 
 			'priority' 				=> $priority, 

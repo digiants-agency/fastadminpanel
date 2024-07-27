@@ -7,10 +7,6 @@ use App\FastAdminPanel\Models\SingleField;
 
 class SingleGetService
 {
-	public function __construct()
-	{
-	}
-
 	public function get(int $pageId)
 	{
 		$blocks = SingleBlock::where('single_page_id', $pageId)

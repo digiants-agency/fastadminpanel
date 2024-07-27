@@ -2,8 +2,9 @@
 
 namespace App\FastAdminPanel\Helpers;
 
-class Translater {
-
+// legacy
+class Translater
+{
 	protected $tags = [];
 	protected $attempts;
 

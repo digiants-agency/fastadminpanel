@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "slug": "all",
+        "id_roles": 1,
+        "admin_read": 0,
+        "admin_edit": 0,
+        "api_create": 0,
+        "api_read": 0,
+        "api_update": 0,
+        "api_delete": 0,
+        "all": 1
+    }
+]

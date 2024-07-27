@@ -2,6 +2,7 @@
 
 namespace App\FastAdminPanel\Rules;
 
+use App\FastAdminPanel\Models\Crud;
 use Illuminate\Contracts\Validation\Rule;
 
 class RelationsRule implements Rule
@@ -13,11 +14,9 @@ class RelationsRule implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Crud $crud)
     {
-        $menuItem = request()->route()->parameters()['menu_item'];
-
-        $this->relations = $menuItem->getRelations();
+        $this->relations = $crud->getRelations();
     }
 
     /**

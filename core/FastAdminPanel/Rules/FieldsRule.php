@@ -2,6 +2,7 @@
 
 namespace App\FastAdminPanel\Rules;
 
+use App\FastAdminPanel\Models\Crud;
 use Illuminate\Contracts\Validation\Rule;
 
 class FieldsRule implements Rule
@@ -13,13 +14,9 @@ class FieldsRule implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Crud $crud)
     {
-        $menuItem = request()->route()->parameters()['menu_item'];
-
-        $fields = $menuItem->getFields();
-
-        $this->fields = $fields;
+        $this->fields = $crud->getFields();
     }
 
     /**

@@ -8,30 +8,28 @@ use App\FastAdminPanel\Rules\RelationsRule;
 
 class ShowRequest extends ApiRequest
 {
-    /**
+	/**
 	 * Set default values
-     * 
+	 * 
 	 * @return array
 	 */
 	public function validationData()
 	{
 		$data = $this->all();
 
-		$data['fields']	= $data['fields'] ?? $this->route()->parameters()['menu_item']->getFields();
-        $data['relations'] = $data['relations'] ?? [];
+		$data['fields']	= $data['fields'] ?? $this->crud->getFields();
+		$data['relations'] = $data['relations'] ?? [];
 
 		return $data;
 	}
 
-    public function rules() : array
+	public function rules() : array
 	{
-        $rules = [
+		return [
 			'fields'	    => ['array'],
-			'fields.*'	    => [new FieldsRule()],
+			'fields.*'	    => [new FieldsRule($this->crud)],
 			'relations'	    => [new AllOrArrayRule()],
-			'relations.*'	=> [new RelationsRule()],
-        ];
-
-        return $rules;
-    }
+			'relations.*'	=> [new RelationsRule($this->crud)],
+		];
+	}
 }

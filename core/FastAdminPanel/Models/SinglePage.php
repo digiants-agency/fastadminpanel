@@ -15,7 +15,7 @@ class SinglePage extends Model
 		'slug',
 		'sort',
 		'icon',
-		'dropdown_id',
+		'dropdown_slug',
 	];
 
 	public function blocks()

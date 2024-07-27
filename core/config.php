@@ -7,20 +7,20 @@ return [
 	| Admin Panel Path
 	|--------------------------------------------------------------------------
 	|
-	| This option define url for the admin panel
+	| This option define url for the admin panel. It doesnt work for now
 	|
 	*/
 
-	'panel_url' => 'admin',
+	'panel_url' => 'admin',	// TODO
 
 	/*
 	|--------------------------------------------------------------------------
-	| Single save query parameter
+	| Hidden menu query parameter
 	|--------------------------------------------------------------------------
 	|
-	| This option define query parameter for the single saving
+	| This option define query parameter for the showing hidden dev menu 
 	|
 	*/
 
-	'single_save_query' => 'update',
+	'hidden_menu_query' => 'dev',
 ];

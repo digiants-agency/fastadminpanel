@@ -13,13 +13,22 @@ class SingleSaver
 
 	protected $sorts = [];
 
-	public function __construct($data)
+	public function setPage($data)
 	{
 		$page = SinglePage::where('slug', $data['slug'])->first();
 
 		if (empty($page)) {
 
 			$page = new SinglePage($data);
+			$page->save();
+
+		} else {
+
+			$page->title = $data['title'];
+			$page->slug = $data['slug'];
+			$page->sort = $data['sort'];
+			$page->icon = $data['icon'];
+			$page->dropdown_slug = $data['dropdown_slug'];
 			$page->save();
 		}
 

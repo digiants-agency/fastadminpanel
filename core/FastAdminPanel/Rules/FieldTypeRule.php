@@ -87,11 +87,11 @@ class FieldTypeRule implements Rule
             
         } else if ($this->fieldType == 'date') {
 
-            return 'in correct date format: Y-m-d';
+            return 'incorrect date format: Y-m-d';
             
         } else if ($this->fieldType == 'datetime') {
 
-            return 'in correct datetime format: Y-m-d H:i:s';
+            return 'incorrect datetime format: Y-m-d H:i:s';
             
         } else if (in_array($this->fieldType, ['translater', 'repeat'])) {
 

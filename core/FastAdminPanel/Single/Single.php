@@ -9,19 +9,22 @@ class Single
 {
 	protected $page;
 	protected $fields;
-	protected $service;
 	protected $singles = [];
 
-	public function __construct()
-	{
-		$this->service = new SingleGetService();
-	}
+	public function __construct(
+		protected SingleGetService $service,
+	) { }
 
 	public function get(string $slug)
 	{
 		if (!isset($this->singles[$slug])) {
 			
 			$singlePageId = SinglePage::where('slug', $slug)->value('id');
+
+			if (!$singlePageId) {
+
+				return null;
+			}
 
 			$singlePage = $this->service->get($singlePageId);
 

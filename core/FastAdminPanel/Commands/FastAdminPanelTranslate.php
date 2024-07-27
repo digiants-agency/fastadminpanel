@@ -11,6 +11,7 @@ use App\FastAdminPanel\Models\SinglePage;
 use App\FastAdminPanel\Services\Single\SingleGetService;
 use DB;
 
+// legacy
 class FastAdminPanelTranslate extends Command
 {
 	/**

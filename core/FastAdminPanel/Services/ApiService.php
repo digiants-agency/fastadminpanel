@@ -3,20 +3,17 @@
 namespace App\FastAdminPanel\Services;
 
 use App\FastAdminPanel\Facades\Lang;
-use App\FastAdminPanel\Models\Menu;
+use App\FastAdminPanel\Models\Crud;
 
 class ApiService
 {
-	protected $menuItem;
-
-	public function __construct(Menu $menuItem)
-	{
-		$this->menuItem = $menuItem;
-	}
+	public function __construct(
+		protected Crud $crud,
+	) { }
 
 	public function index($data, $filters)
 	{
-		$model = new $this->menuItem->model;
+		$model = new $this->crud->model;
 		
 		$query = $model->query();
 
@@ -38,11 +35,11 @@ class ApiService
 	{
 		$data = $this->uploadFiles($data);
 
-		$modelClass = $this->menuItem->model;
+		$modelClass = $this->crud->model;
 
-		if ($this->menuItem->multilanguage) {
+		if ($this->crud->multilanguage) {
 
-			foreach (Lang::getLangs() as $lang) {
+			foreach (Lang::all() as $lang) {
 				
 				$model = new $modelClass($lang->tag);
 	
@@ -68,7 +65,7 @@ class ApiService
 
 	public function show($id, $data)
 	{
-		$model = new $this->menuItem->model;
+		$model = new $this->crud->model;
 		
 		$query = $model->where('id', $id);
 
@@ -77,13 +74,18 @@ class ApiService
 
 		$item = $query->first();
 
+		if (!$item) {
+			
+			return null;
+		}
+
 		return $this->map($item);
 	}
 
 
 	public function update($id, $data)
 	{
-		$model = new $this->menuItem->model;
+		$model = new $this->crud->model;
 		
 		$model->where('id', $id)
 		->update($data);
@@ -96,11 +98,11 @@ class ApiService
 
 	public function destroy($id)
 	{
-		$modelClass = $this->menuItem->model;
+		$modelClass = $this->crud->model;
 
-		if ($this->menuItem->multilanguage) {
+		if ($this->crud->multilanguage) {
 
-			foreach (Lang::getLangs() as $lang) {
+			foreach (Lang::all() as $lang) {
 				
 				$model = new $modelClass($lang->tag);
 
@@ -121,7 +123,7 @@ class ApiService
 
 	protected function map($item)
 	{
-		$fields = $this->menuItem->getFieldsType();
+		$fields = $this->crud->getFieldsType();
 
 		foreach ($fields as $key => $field) {
 			
@@ -151,7 +153,7 @@ class ApiService
 	#TODO: make search for all fields ? or mark field as searchable, now searching by admin visible fields
 	protected function scopeSearch($query, $data)
 	{	
-		$visible = $this->menuItem->getVisibleFields();
+		$visible = $this->crud->getVisibleFields();
 
 		$query = $query->where(function($query) use ($visible, $data) {
 
@@ -179,7 +181,7 @@ class ApiService
 
 	protected function scopeRelations($query, $data)
 	{
-		$relations = $this->menuItem->getRelations();
+		$relations = $this->crud->getRelations();
 		
 		return $query->when($data['relations'], function($q) use ($data, $relations) {
 			
@@ -201,7 +203,7 @@ class ApiService
 
 	protected function uploadFiles($data)
 	{
-		$fieldsTypes = $this->menuItem->getFieldsType();
+		$fieldsTypes = $this->crud->getFieldsType();
 		
 		foreach ($data as $key => $value) {
 
