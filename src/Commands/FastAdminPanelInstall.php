@@ -68,10 +68,12 @@ class FastAdminPanelInstall extends Command
 
 		if ($isImport) {
 
-			$type = $this->choice('Which type of template do you want?', [
-				TemplateImporter::DEFAULT,
-				TemplateImporter::COMPONENTS,
-			]);
+			$type = TemplateImporter::COMPONENTS;
+
+			// $type = $this->choice('Which type of template do you want?', [
+			// 	TemplateImporter::DEFAULT,
+			// 	TemplateImporter::COMPONENTS,
+			// ]);
 
 			$this->templateImporter->import($type);
 		}

@@ -2,6 +2,7 @@
 
 namespace Digiants\FastAdminPanel\Templates;
 
+// deprecated
 class TemplateDefault extends Template
 {
 	public function import()

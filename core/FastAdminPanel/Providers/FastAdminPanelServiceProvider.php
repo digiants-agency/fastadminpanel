@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\Route;
 use App\FastAdminPanel\Commands\FastAdminPanelTranslate;
 use App\FastAdminPanel\Facades\Single as SingleFacade;
 use App\FastAdminPanel\Facades\Lang as LangFacade;
+use App\FastAdminPanel\Facades\Platform as PlatformFacade;
 use App\FastAdminPanel\Helpers\JSAssembler;
 use App\FastAdminPanel\Helpers\ResizeImg;
 use App\FastAdminPanel\Helpers\Formatter;
-use App\FastAdminPanel\Helpers\Platform;
 use App\FastAdminPanel\Helpers\Convertor;
 use App\FastAdminPanel\Helpers\SEO;
 use App\FastAdminPanel\Policies\MainPolicy;
 use App\FastAdminPanel\Services\LanguageService;
+use App\FastAdminPanel\Services\PlatformService;
 use App\FastAdminPanel\Single\Single;
 use Illuminate\Support\Facades\Gate;
 use View;
@@ -31,6 +32,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
     public $singletons = [
         'lang'			=> LanguageService::class,
 		'single' 		=> Single::class,
+		'platform' 		=> PlatformService::class,
     ];
 
 	protected $crudCustomServices = [
@@ -136,12 +138,12 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 
 			$loader = AliasLoader::getInstance();
 
+			$loader->alias('Platform',		PlatformFacade::class);
 			$loader->alias('Single',		SingleFacade::class);
 			$loader->alias('Lang',			LangFacade::class);
 			$loader->alias('JSAssembler',	JSAssembler::class);
 			$loader->alias('ResizeImg',		ResizeImg::class);
 			$loader->alias('Formatter',		Formatter::class);
-			$loader->alias('Platform',		Platform::class);
 			$loader->alias('Convertor',		Convertor::class);
 			$loader->alias('SEO',			SEO::class);
 		});

@@ -16,7 +16,7 @@ class TemplateImporter
 	{
 		if ($template == self::DEFAULT) {
 
-			$this->templateDefault->import();
+			$this->templateDefault->import();	// deprecated
 
 		} else {
 

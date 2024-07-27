@@ -2,6 +2,7 @@
 
 namespace App\FastAdminPanel\Helpers;
 
+// TODO: make service + facade singleton
 class JSAssembler
 {
     private static $js_file = [[],[],[]];

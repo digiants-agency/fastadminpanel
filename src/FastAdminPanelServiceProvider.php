@@ -9,12 +9,15 @@ use Illuminate\Support\ServiceProvider;
 
 class FastAdminPanelServiceProvider extends ServiceProvider
 {
+	public $bindings = [
+		'fastadminpanel:install'	=> FastAdminPanelInstall::class,
+		'fastadminpanel:uninstall'	=> FastAdminPanelUninstall::class,
+	];
+
 	public function boot()
 	{
 		Schema::defaultStringLength(191);
 
-		$this->app->bind('fastadminpanel:install', fn ($app) => $app->make(FastAdminPanelInstall::class));
-		$this->app->bind('fastadminpanel:uninstall', fn ($app) => $app->make(FastAdminPanelUninstall::class));
 		$this->commands([
 			'fastadminpanel:install',
 			'fastadminpanel:uninstall',

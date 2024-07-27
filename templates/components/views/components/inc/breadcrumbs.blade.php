@@ -27,95 +27,93 @@
 @desktopcss
 <style>
 
-    .breadcrumbs {
-        background: var(--color-back-and-stroke);
-        margin-bottom: 40px;
-        padding: 5px 0;
-    }
+.breadcrumbs {
+	background: var(--color-back-and-stroke);
+	margin-bottom: 40px;
+	padding: 5px 0;
+}
 
-    .breadcrumbs-inner {
-        display: inline;
-        list-style: none;
-    }
+.breadcrumbs-inner {
+	display: inline;
+	list-style: none;
+}
 
-    .breadcrumbs-item {
-        display: inline;
-    }
+.breadcrumbs-item {
+	display: inline;
+}
 
-    .breadcrumbs-link {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 20px;
-        color: var(--color-grey);
-        display: inline;
-    }
+.breadcrumbs-link {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 20px;
+	color: var(--color-grey);
+	display: inline;
+}
 
-    .breadcrumbs-link::after{
-        content: "/";
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 20px;
-        color: var(--color-grey);
-        margin: 0 2.1px;
-    }
+.breadcrumbs-link::after{
+	content: "/";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 20px;
+	color: var(--color-grey);
+	margin: 0 2.1px;
+}
 
-    .breadcrumbs-last::after{
-        display: none;
-    }
+.breadcrumbs-last::after{
+	display: none;
+}
 
-    .breadcrumbs-last{
-        color: var(--color-text);
-    }
+.breadcrumbs-last{
+	color: var(--color-text);
+}
 
 </style>
 @mobilecss
 <style>
 
-    .breadcrumbs {
-        background: var(--color-back-and-stroke);
-        margin-bottom: 25px;
-        padding: 7px 0;
-    }
+.breadcrumbs {
+	background: var(--color-back-and-stroke);
+	margin-bottom: 25px;
+	padding: 7px 0;
+}
 
-    .breadcrumbs-inner {
-        display: inline;
-        list-style: none;
-    }
+.breadcrumbs-inner {
+	display: inline;
+	list-style: none;
+}
 
-    .breadcrumbs-item {
-        display: inline;
-    }
+.breadcrumbs-item {
+	display: inline;
+}
 
-    .breadcrumbs-link {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 16px;
-        color: var(--color-grey);
-        display: inline;
-    }
+.breadcrumbs-link {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 16px;
+	color: var(--color-grey);
+	display: inline;
+}
 
-    .breadcrumbs-link::after{
-        content: "/";
-        font-style: normal;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 16px;
-        color: var(--color-grey);
-        margin: 0 2.5px;
-    }
+.breadcrumbs-link::after{
+	content: "/";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 16px;
+	color: var(--color-grey);
+	margin: 0 2.5px;
+}
 
-    .breadcrumbs-last::after{
-        display: none;
-    }
+.breadcrumbs-last::after{
+	display: none;
+}
 
-    .breadcrumbs-last{
-        color: var(--color-text);
-    }
+.breadcrumbs-last{
+	color: var(--color-text);
+}
 
 </style>
 @endcss
-
-

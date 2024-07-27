@@ -48,6 +48,7 @@ class FastAdminPanelUninstall extends Command
 		
 		$this->coreRemover->remove();
 		$this->providerRemover->remove();
+		// TODO: remove template
 		
 		return Command::SUCCESS;
 	}

@@ -5,7 +5,6 @@ namespace App\View\Components\Inc;
 use Illuminate\Http\Request;
 use Illuminate\View\Component;
 use SEO;
-use Single;
 
 class Pagination extends Component
 {
@@ -13,21 +12,18 @@ class Pagination extends Component
 	public $showmore;
 	public $fields;
 
-    public function __construct($count, $pagesize, $page, $paglink, $showmore = false){
-        
-		$this->pagination = $this->make_pagination($count, $pagesize, $page, $paglink);
+    public function __construct($count, $pagesize, $page, $paglink, $showmore = false)
+	{
+		$this->pagination = $this->makePagination($count, $pagesize, $page, $paglink);
 		$this->showmore = $showmore;
 
-		// $s = new Single('Каталог', 10, 1);
 		$this->fields = [
-			// 'showmore'	=> $s->field('Каталог', 'Кнопка "Показать больше" (текст)', 'text', true, 'Показать больше'),
-			'showmore'	=> 'Показать больше',
-
+			'showmore'	=> 'Show more',
 		];
-
     }
     
-    public function render(){
+    public function render()
+	{
         return view('components.inc.pagination', [
 			'pagination'	=> $this->pagination,
 			'showmore'		=> $this->showmore,
@@ -35,20 +31,21 @@ class Pagination extends Component
 		])->render();
     }
 
-	protected function make_pagination ($count, $posts_per_page, $curr, $link) {
+	protected function makePagination($count, $perPage, $curr, $link)
+	{
 		$obj = [];
 
-		$page_count = ceil($count / $posts_per_page);
+		$page_count = ceil($count / $perPage);
 		
-		if ( $count != 0){
+		if ($count != 0) {
 
-			if ($curr > $page_count){
+			if ($curr > $page_count) {
 				header("HTTP/1.1 301 Moved Permanently");
 				header("Location: ".$link."?page=".$page_count);
 				die();
 			}
 	
-			if ($curr == 0 || request()->get('page') == 1){
+			if ($curr == 0 || request()->get('page') == 1) {
 				header("HTTP/1.1 301 Moved Permanently");
 				header("Location: ".$link);
 				die();
@@ -123,16 +120,16 @@ class Pagination extends Component
 			}
 		}
 
-		if (isset($obj['arrow_left'])){
+		if (isset($obj['arrow_left'])) {
 			$href = $obj['link'];
 			$href .= ($obj['arrow_left'] != 1) ? $obj['separator'].'page='.$obj['arrow_left'] : '';
 
-			SEO::link_prev($href);
+			SEO::linkPrev($href);
 		}
 
-		if (isset($obj['arrow_right'])){
+		if (isset($obj['arrow_right'])) {
 			$href = $obj['link'].$obj['separator'].'page='.$obj['arrow_right'];
-			SEO::link_next($href);
+			SEO::linkNext($href);
 		}
 
 		return $obj;

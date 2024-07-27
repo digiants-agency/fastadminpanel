@@ -2,6 +2,7 @@
 
 namespace App\FastAdminPanel\Helpers;
 
+// TODO: make service + facade singleton
 class Convertor
 {
     private static $width = [
@@ -16,7 +17,7 @@ class Convertor
     
     public static $views = [];
 
-    public static function create ($view, $style, $isDesktop = false)
+    public static function create($view, $style, $isDesktop = false)
     {            
         if ($isDesktop) {
             self::$views['desktop'][$view] = $style;
@@ -176,7 +177,6 @@ class Convertor
 
         return $styles;
     }
-
 
     public static function addTabletMedia()
     {

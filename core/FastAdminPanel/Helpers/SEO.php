@@ -2,11 +2,12 @@
 
 namespace App\FastAdminPanel\Helpers;
 
+// TODO: make service + facade singleton
 class SEO
 {
 	private static $robots = '';
-	private static $href_prev = '';
-	private static $href_next = '';
+	private static $hrefPrev = '';
+	private static $hrefNext = '';
 	
 	public static function robots($robots = -1)
 	{
@@ -17,23 +18,23 @@ class SEO
 		return '<meta name="robots" content="' . self::$robots . '"/>';
 	}
 
-	public static function link_prev($href_prev = -1)
+	public static function linkPrev($hrefPrev = -1)
 	{
-		if ($href_prev != -1)
-			self::$href_prev = $href_prev;
+		if ($hrefPrev != -1)
+			self::$hrefPrev = $hrefPrev;
 
-		if (self::$href_prev == '') return '';
+		if (self::$hrefPrev == '') return '';
 
-		return '<link rel="prev" href="'.self::$href_prev.'">';
+		return '<link rel="prev" href="'.self::$hrefPrev.'">';
 	}
 
-    public static function link_next($href_next = -1)
+    public static function linkNext($hrefNext = -1)
 	{
-		if ($href_next != -1)
-			self::$href_next = $href_next;
+		if ($hrefNext != -1)
+			self::$hrefNext = $hrefNext;
 
-		if (self::$href_next == '') return '';
+		if (self::$hrefNext == '') return '';
 
-		return '<link rel="next" href="'.self::$href_next.'">';
+		return '<link rel="next" href="'.self::$hrefNext.'">';
 	}
 }

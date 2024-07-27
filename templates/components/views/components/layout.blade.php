@@ -4,13 +4,12 @@
 	<head>
 		@include('inc.head')
 
-		<title>{{ $meta_title }}</title>
-		<meta name="description" content="{{ $meta_description }}">
-		<meta name="keywords" content="{{ $meta_keywords }}">
+		<title>{{ $metaTitle }}</title>
+		<meta name="description" content="{{ $metaDescription }}">
 		
 		{!! SEO::robots() !!}
-		{!! SEO::link_prev() !!}
-		{!! SEO::link_next() !!}
+		{!! SEO::linkPrev() !!}
+		{!! SEO::linkNext() !!}
 		
 		%convertor%
         
