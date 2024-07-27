@@ -3,35 +3,52 @@
 namespace App\FastAdminPanel\Controllers;
 
 use App\FastAdminPanel\Models\Language;
+use App\FastAdminPanel\Requests\Language\StoreRequest;
+use App\FastAdminPanel\Requests\Language\UpdateRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 
-class LanguageController extends \App\Http\Controllers\Controller
+class LanguageController extends Controller
 {
-	public function delete($tag)
+	public function index()
 	{
-		$lang = Language::where('tag', $tag)
-		->where('main_lang', '!=', 1)
-		->first();
-
-		if (!empty($lang)) {
-
-			$lang->delete();
-		}
-
-		return $this->response();
+		return Language::get();
 	}
 
-	public function post($tag)
+	public function store(StoreRequest $request)
 	{
-		$lang = Language::where('tag', $tag)->first();
+		$data = $request->validated();
 
-		if (empty($lang) && strlen($tag) == 2) {
+		Language::create([
+			'tag'		=> $data['tag'],
+			'main_lang'	=> 0,
+		]);
 
-			Language::create([
-				'tag'		=> $tag,
-				'main_lang'	=> 0,
-			]);
+		return Response::json();
+	}
+
+	public function update(UpdateRequest $request, Language $language)
+	{
+		Language::where('id', '!=', 0)
+		->update([
+			'main_lang' => 0,
+		]);
+
+		$language->main_lang = 1;
+		$language->save();
+
+		return Response::json();
+	}
+
+	public function destroy(Language $language)
+	{
+		if ($language->main_lang == 1) {
+
+			return Response::json(['message' => 'Cant delete the main language'], 422);
 		}
 
-		return $this->response();
+		$language->delete();
+
+		return Response::json();
 	}
 }

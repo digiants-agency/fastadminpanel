@@ -159,6 +159,7 @@ class SingleField extends MultilanguageModel
 		return $this->childrenFields()->with('fields');
 	}
 
+	// TODO: move
 	public function removeTables($tag)
 	{
 		$table = substr($this->table, 0, -2);
@@ -166,6 +167,7 @@ class SingleField extends MultilanguageModel
 		Schema::dropIfExists("{$table}{$tag}");
 	}
 
+	// TODO: move
 	public function addTables($tag, $main_tag)
 	{
 		$table = substr($this->table, 0, -2);

@@ -6,10 +6,10 @@ use App\FastAdminPanel\Rules\FieldTypeRule;
 
 class UpdateRequest extends ApiRequest
 {
-    public function rules() : array
+	public function rules() : array
 	{
-		$fieldsTypes = $this->route()->parameters()['menu_item']->getFieldsType();
-		$fieldsRequired = $this->route()->parameters()['menu_item']->getFieldsRequired();
+		$fieldsTypes = $this->crud->getFieldsType();
+		$fieldsRequired = $this->crud->getFieldsRequired();
 
 		$rules = [];
 
@@ -18,5 +18,5 @@ class UpdateRequest extends ApiRequest
 		}
 
 		return $rules;
-    }
+	}
 }

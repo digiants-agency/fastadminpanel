@@ -2,26 +2,31 @@
 
 namespace App\FastAdminPanel\Requests\Api;
 
-use App\FastAdminPanel\Helpers\Field;
 use App\FastAdminPanel\Rules\FieldTypeRule;
 
 class StoreRequest extends ApiRequest
 {
-    /**
+	/**
 	 * Set default values
-     * 
+	 * 
 	 * @return array
 	 */
 	public function validationData()
 	{
 		$data = $this->all();
 
-		$fieldsTypes = $this->route()->parameters()['menu_item']->getFieldsType();
-
 		$default = [];
 
-		foreach ($fieldsTypes as $key => $field) {
-			$default[$key] = Field::default($field);
+		// $this->crud->fields->filter(fn ($field) => $field->getDbTitle())
+		// ->each(fn ($field) => $default[$field->getDbTitle()] = $field->default());
+
+		foreach ($this->crud->fields as $field) {
+
+			$dbTitle = $field->getDbTitle();
+
+			if ($dbTitle) {
+				$default[$dbTitle] = $field->default();
+			}
 		}
 
 		foreach ($data as $dataField => $value) {
@@ -31,15 +36,15 @@ class StoreRequest extends ApiRequest
 		return $default;
 	}
 
-    public function rules() : array
+	public function rules() : array
 	{
-		$fieldsTypes = $this->route()->parameters()['menu_item']->getFieldsType();
-		$fieldsRequired = $this->route()->parameters()['menu_item']->getFieldsRequired();
+		$fieldsTypes = $this->crud->getFieldsType();
+		$fieldsRequired = $this->crud->getFieldsRequired();
 
 		foreach ($fieldsTypes as $key => $field) {
 			$rules[$key] = [$fieldsRequired[$key], new FieldTypeRule($field, $fieldsRequired[$key])];
 		}
 
 		return $rules;
-    }
+	}
 }

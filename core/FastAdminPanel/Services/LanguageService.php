@@ -2,11 +2,9 @@
 
 namespace App\FastAdminPanel\Services;
 
-use App\FastAdminPanel\Models\Menu;
-use App\FastAdminPanel\Models\Language;
-use App\FastAdminPanel\Services\FastAdminPanelService;
-use Illuminate\Http\Request;
 use App;
+use App\FastAdminPanel\Models\Language;
+use Illuminate\Http\Request;
 
 class LanguageService
 {
@@ -14,16 +12,13 @@ class LanguageService
 	protected $langs = [];
 	protected $host;
 
-	public function __construct(Request $request, FastAdminPanelService $fastAdminPanelService)
+	public function __construct(Request $request)
 	{
 		$this->langs = Language::get();
 		$this->host = $request->getHost();
 		$this->lang = $this->findLang($request, $this->langs);
 
-		if (!$fastAdminPanelService->isAdminPanel()) {
-
-			App::setLocale($this->lang);
-		}
+		App::setLocale($this->lang);
 	}
 
 	public function url($lang, $url = '')
@@ -69,7 +64,7 @@ class LanguageService
 		return $this->lang == $lang;
 	}
 
-	public function prefix($lang = '')
+	public function prefix($lang = '', $prefix = '')
 	{
 		if ($lang == '') {
 
@@ -80,8 +75,18 @@ class LanguageService
 
 			if ($lang == $l->tag && $l->main_lang == 1) {
 
-				return '';
+				$lang = '';
 			}
+		}
+
+		if ($prefix) {
+
+			if ($lang) {
+
+				return "$lang/$prefix";
+			}
+
+			return $prefix;
 		}
 		
 		return $lang;
@@ -115,6 +120,11 @@ class LanguageService
 		]);
 	}
 
+	public function isMain()
+	{
+		return $this->main() == $this->lang;
+	}
+
 	public function getMain()
 	{
 		return $this->main();
@@ -138,6 +148,11 @@ class LanguageService
 	public function getLangs()
 	{
 		return $this->langs;
+	}
+
+	public function count()
+	{
+		return $this->langs->count();
 	}
 
 	public function link($url)
@@ -177,9 +192,9 @@ class LanguageService
 		return "/$lang$url";
 	}
 
-	public function ending($is_multilanguage)
+	public function ending($isMultilanguage)
 	{
-		if ($is_multilanguage) {
+		if ($isMultilanguage) {
 
 			return '_' . $this->lang;
 		}

@@ -2,62 +2,31 @@
 
 namespace App\FastAdminPanel\Controllers;
 
-use App\FastAdminPanel\Requests\SingleEditRequest;
-use App\FastAdminPanel\Requests\SingleRemoveRequest;
-use App\FastAdminPanel\Responses\JsonResponse;
-use App\FastAdminPanel\Services\Single\SingleGetService;
-use App\FastAdminPanel\Services\Single\SingleSetService;
+use App\FastAdminPanel\Requests\Single\DestroyRequest;
+use App\FastAdminPanel\Requests\Single\UpdateRequest;
 use App\FastAdminPanel\Single\SingleSaver;
-use Illuminate\Http\Request;
-use Single;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 
-class SingleController extends \App\Http\Controllers\Controller
+class SingleController extends Controller
 {
-	public function show(SingleGetService $service, $id)
-	{
-		$blocks = $service->get($id);
-
-		return JsonResponse::response($blocks);
-	}
-	
-	// TODO: validate parameters
-	public function update(Request $request, SingleSetService $service)
-	{
-		$blocks = $request->get('blocks');
-
-		$service->set($blocks);
-
-		return JsonResponse::response();
-	}
-
-	public function destroy()
-	{
-	}
-
-	public function first($slug)
-	{
-		return JsonResponse::response([
-			'single'	=> Single::get($slug),
-		]);
-	}
-
-	public function singleEdit(SingleEditRequest $request)
+	public function update(UpdateRequest $request, SingleSaver $saver)
 	{
 		$data = $request->validated();
 
-		$saver = new SingleSaver($data);
+		$saver->setPage($data);
 		$saver->save($data['blocks']);
 
-		return JsonResponse::response();
+		return Response::json();
 	}
 
-	public function singleRemove(SingleRemoveRequest $request)
+	public function destroy(DestroyRequest $request, SingleSaver $saver)
 	{
 		$data = $request->validated();
 
-		$saver = new SingleSaver($data);
+		$saver->setPage($data);
 		$saver->remove();
 
-		return JsonResponse::response();
+		return Response::json();
 	}
 }

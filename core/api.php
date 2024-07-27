@@ -1,8 +1,7 @@
 <?php
 
 use App\FastAdminPanel\Controllers\ApiController;
-use App\FastAdminPanel\Controllers\SingleController;
-use App\FastAdminPanel\Models\Menu;
+use App\FastAdminPanel\Controllers\SingleValueApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,41 +14,11 @@ use Illuminate\Support\Facades\Route;
 | Enjoy building your API!
 |
 */
-    
-$menu = Menu::get();
 
-foreach ($menu as $menuItem) {
+Route::get('/singles/{slug}', [SingleValueApiController::class, 'show']);
 
-    Route::group([
-		'prefix' => Lang::prefix(),
-	], function() use ($menuItem) {
-
-        Route::get($menuItem->table_name, [ApiController::class, 'index'])
-        ->defaults('menu_item', $menuItem)
-        ->name('api-index-'.$menuItem->table_name);
-
-        Route::get($menuItem->table_name.'/{id}', [ApiController::class, 'show'])
-        ->defaults('menu_item', $menuItem)
-        ->name('api-show-'.$menuItem->table_name);
-        
-    });
-    
-    Route::post($menuItem->table_name, [ApiController::class, 'store'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-store-'.$menuItem->table_name);
-
-    Route::put($menuItem->table_name.'/{id}', [ApiController::class, 'update'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-update-'.$menuItem->table_name);
-
-    Route::delete($menuItem->table_name.'/{id}',[ApiController::class, 'destroy'])
-    ->defaults('menu_item', $menuItem)
-    ->name('api-destroy-'.$menuItem->table_name);	
-}
-
-Route::group([
-    'prefix' => Lang::prefix(),
-], function() {
-
-    Route::get('/single/{slug}', [SingleController::class, 'first']);
-});
+Route::get('/{slug}', [ApiController::class, 'index'])->name('fapi-index');
+Route::get('/{slug}/{id}', [ApiController::class, 'show'])->name('fapi-show');
+Route::post('/{slug}', [ApiController::class, 'store'])->name('fapi-store');
+Route::put('/{slug}/{id}', [ApiController::class, 'update'])->name('fapi-update');
+Route::delete('/{slug}/{id}',[ApiController::class, 'destroy'])->name('fapi-destroy');

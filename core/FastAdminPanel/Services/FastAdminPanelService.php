@@ -6,15 +6,13 @@ use Illuminate\Http\Request;
 
 class FastAdminPanelService
 {
-	protected $request;
-
-	public function __construct(Request $request)
-	{
-		$this->request = $request;
-	}
+	public function __construct(
+		protected Request $request,
+	) { }
 
 	public function isAdminPanel()
 	{
-		return $this->request->is(config('fastadminpanel.panel_url') . '/*') || $this->request->is(config('fastadminpanel.panel_url'));
+		// it is incorrect
+		// return $this->request->is(config('fastadminpanel.panel_url') . '/*') || $this->request->is(config('fastadminpanel.panel_url'));
 	}
 }

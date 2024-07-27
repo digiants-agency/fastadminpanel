@@ -20,7 +20,7 @@ class FilterQueryBuilder
         $filters = $this->parseFilters($filters);
 
         foreach($filters as $filter) {
-          $query = $this->addFiltersToQuery($query, $filter);
+            $query = $this->addFiltersToQuery($query, $filter);
         }
 
         return $query;
@@ -43,7 +43,7 @@ class FilterQueryBuilder
     {
         $result = explode($operator, $filter);
 
-        if(count($result) == 2) {
+        if (count($result) == 2) {
             return $result[1];
         }
     }
@@ -52,7 +52,7 @@ class FilterQueryBuilder
     {
         $result = explode($operator, $filter);
 
-        if(count($result) == 2) {
+        if (count($result) == 2) {
             return $result[0];
         }
     }
@@ -82,6 +82,7 @@ class FilterQueryBuilder
             }
 
         } else {
+
             $result = [
                 'field' => $field,
                 'operator' => $operator,
@@ -94,7 +95,7 @@ class FilterQueryBuilder
 
     private function parseFilters($filters)
     {
-        if(empty($filters)) {
+        if (empty($filters)) {
             return [];
         }
 
@@ -119,7 +120,7 @@ class FilterQueryBuilder
 
     private function addFiltersToQuery($query, $filters)
     {
-        if(count($filters) === 3) {
+        if (count($filters) === 3) {
 
             switch($filters['operator']) {
                 
@@ -134,7 +135,7 @@ class FilterQueryBuilder
                 default:
 
                     return $query->where($filters['field'], $filters['operator'], $filters['value']);
-          }
+            }
         }
 
         $relation = array_key_first($filters);

@@ -103,6 +103,7 @@ fieldset {
     align-items: center;
     height: 100vh;
     position: relative;
+	background: #EFF2F4;
 }
 
 .digiants {
@@ -542,8 +543,8 @@ h3 {
 }
 
 .btn-svg {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
 }
 
 .btn-small {
@@ -993,7 +994,7 @@ td.td-content {
     user-select: none;
 }
 
-.editable-checkbox {
+. {
     width: auto;
 }
 
@@ -1455,8 +1456,9 @@ select:focus {
     margin-bottom: 10px;
 }
 
-.edit-fields-btns .btn {
+.edit-fields-btns > .btn {
     margin-top: 10px;
+	margin-right: 10px;
 }
 
 .edit-fields-editable {
@@ -1466,7 +1468,7 @@ select:focus {
     border-radius: none;
 }
 
-.edit-field-title {
+ {
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
@@ -1592,6 +1594,11 @@ select:focus {
     width: 100px;
 }
 
+.crud-entities-img {
+	width: 50px;
+	height: 50px;
+}
+
 .sorting_asc .checkbox,
 .checkbox.editable-checkbox,
 .td-content .checkbox {
@@ -1679,7 +1686,7 @@ select:focus {
     padding-left: 15px;
 }
 
-.logout svg {
+.logout-ico {
     width: 16px;
     height: 16px;
     margin-right: 20px;
@@ -2070,4 +2077,25 @@ textarea.form-control {
 .edit-settings-option:hover,
 .edit-settings-option a:hover {
     color: var(--color-main);
+}
+
+.settings-group {
+	margin-bottom: 25px;
+}
+
+.settings-group-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    display: block;
+	margin-bottom: 5px;
+}
+
+.settings-group-input {
+	-webkit-appearance: auto;
+	margin-bottom: 10px;
+}
+
+.import_input_row {
+	margin: 10px 0 30px;
 }
