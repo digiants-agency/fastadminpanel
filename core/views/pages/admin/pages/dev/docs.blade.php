@@ -17,7 +17,7 @@
 		</div>
 		<div class="docs-content">
 			<h1>API {{ __('fastadminpanel.docs') }}</h1>
-			@if (Lang::all()->count())
+			@if (Lang::count() > 1)
 				<div class="docs-routes-endpoint-desc">
 					This website is multi-lingual. 
 					The route "/fapi/example" have main language ({{Lang::main()}}). 
