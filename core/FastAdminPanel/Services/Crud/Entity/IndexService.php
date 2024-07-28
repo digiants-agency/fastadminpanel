@@ -38,8 +38,6 @@ class IndexService implements Index
 			return $i;
 		});
 
-		$instanceIds = $instances->pluck('id');
-
 		$relationFields = $crud->fields->filter(fn ($f) => 
 			$f->type == 'relationship' && $f->relationship_count == 'single' && $f->show_in_list != 'no'
 		);
@@ -47,6 +45,8 @@ class IndexService implements Index
 		foreach ($relationFields as $field) {
 
 			$table = $this->tableService->getTable($field->relationship_table_name);
+
+			$instanceIds = $instances->pluck("id_{$field->relationship_table_name}");
 
 			$relationsById = DB::table($table)
 			->select('id', "{$field->relationship_view_field} AS title")
