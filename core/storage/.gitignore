@@ -1,0 +1,6 @@
+*
+!public/
+!.gitignore
+!cruds.json
+!dropdowns.json
+!permissions.json
