@@ -37,6 +37,11 @@ class Core
 		);
 
 		copy(
+			$this->pathPackage('/templates/components/Controllers/Controller.php'),
+			base_path('/app/Http/Controllers/Controller.php')
+		);
+
+		copy(
 			$this->pathPackage('/core/routes.php'),
 			base_path('/routes/fap.php')
 		);
