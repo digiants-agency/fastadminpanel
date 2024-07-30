@@ -352,7 +352,7 @@ const crudsEditPage = {
 			}
 		},
 		getEmptyField(id = 0, type = 'text') {
-			return {
+			const newField = {
 				id: id,
 				required: 'optional',
 				is_visible: true,
@@ -362,6 +362,13 @@ const crudsEditPage = {
 				title: '',
 				type: type,
 			}
+
+			if (type == 'enum') {
+
+				newField.enum = []
+			}
+
+			return newField
 		},
 		setCrud(e) {
 
