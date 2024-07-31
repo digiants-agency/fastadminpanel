@@ -37,9 +37,9 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 
 	protected $crudCustomServices = [
 		// example
-		'filter'	=> [
+		'products'	=> [
 			// methods: index, show, store, update, copy, destroy
-			'show'	=> \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowFilterService::class,
+			'show'	=> \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowProductsService::class,
 		],
 	];
 
@@ -79,7 +79,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 	
 				$method = $crudService['method'];
 				$table = $this->app->request->route('table');
-				$service = $this->crudServices[$table][$method] ?? $crudService['service'];
+				$service = $this->crudCustomServices[$table][$method] ?? $crudService['service'];
 				return $app->make($service);
 			});
 		}

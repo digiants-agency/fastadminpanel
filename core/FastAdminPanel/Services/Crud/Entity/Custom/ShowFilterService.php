@@ -1,13 +1,14 @@
 <?php
 
-namespace App\FastAdminPanel\Services\Crud\Entity;
+namespace App\FastAdminPanel\Services\Crud\Entity\Custom;
 
 use App\FastAdminPanel\Contracts\CrudEntity\Show;
+use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Models\Crud;
 use App\FastAdminPanel\Services\Crud\TableService;
 use Illuminate\Support\Facades\DB;
 
-class ShowService implements Show
+class ShowProductsService implements Show
 {
 	public function __construct(
 		protected TableService $tableService,
@@ -43,7 +44,7 @@ class ShowService implements Show
 					->select('id', $field->relationship_view_field.' as title')
 					->get();
 
-					#region for filter table
+					#region for products table
 					if ($field->relationship_table_name == 'filter_fields') {
 
 						$field->values = DB::table($this->tableService->getTable(
