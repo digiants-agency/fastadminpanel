@@ -68,6 +68,7 @@
 		@include('fastadminpanel.pages.admin.pages.singles.entity')
 		@include('fastadminpanel.pages.admin.pages.singles.fields')
 		@include('fastadminpanel.pages.admin.pages.dashboard')
+		@include('fastadminpanel.pages.admin.pages.custom')
 
 		@include('fastadminpanel.pages.admin.fields.checkbox')
 		@include('fastadminpanel.pages.admin.fields.ckeditor')
@@ -133,6 +134,11 @@
 							path: '',
 							name: 'home',
 							component: dashboardPage,
+						},
+						{
+							path: 'custom',
+							name: 'custom',
+							component: customPage,
 						},
 						{
 							path: 'dropdowns',

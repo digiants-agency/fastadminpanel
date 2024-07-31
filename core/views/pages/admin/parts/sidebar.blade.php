@@ -65,6 +65,10 @@
 						<span v-if="item.count != 0" class="sidebar-menu-item-count" v-text="item.count"></span>
 					</div>
 				</template>
+				{{-- <div class="sidebar-menu-item">
+					<img src="/vendor/fastadminpanel/images/options.svg" alt="" class="sidebar-menu-item-icon">
+					<router-link :to="{name: 'custom'}">Custom page</router-link>
+				</div> --}}
 			</div>
 			<div class="sidebar-bottom">
 				<div class="langs">
