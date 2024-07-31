@@ -14,7 +14,6 @@
   - [Add custom page](#add-custom-page)
   - [Override field template](#override-field-template)
   - [Override CRUD service](#override-crud-service)
-- [TODO](#todo)
 
 # Intro
 
@@ -37,6 +36,8 @@ FastAdminPanel is a free and open-source headless multilangual CMS enabling you 
 - **Customizable**: You can quickly build your logic by fully customizing APIs, routes, or plugins to fit your needs perfectly.
 - **Blazing Fast and Robust**: Built on top of Laravel and Vue.js, FastAdminPanel delivers reliable and solid performance.
 - **Front-end Agnostic**: Use any front-end framework (React, Next.js, Vue, Angular, etc.), mobile apps or even IoT.
+
+You can find some screenshots below.
 
 Feel free to contact me: sv@digiants.com.ua
 
@@ -227,6 +228,19 @@ You can see the example of the dropdown below:
 
 - The language of the admin panel is represented in the “admin_lang_tag” column of the User.
 
+- There is a class Lang. It has useful methods:
+
+```
+use Lang;
+
+Lang::count(); // languages count
+Lang::all(); // get all languages
+Lang::get(); // get current language tag
+Lang::is($langTag); // check language tag
+Lang::main(); // get main language tag
+...
+```
+
 # How to
 
 ## Open dev menu
@@ -245,7 +259,7 @@ You can see the example of the dropdown below:
 
 - Go to https://yourdomain.com/admin/cruds/roles to add roles.
 
-- Each role has an “Is admin” option that allows the role to log into the admin panel.
+- Each role has the “Is admin” option that allows the role to log into the admin panel.
 
 - Go to https://yourdomain.com/admin/settings to change role permissions.
 
@@ -253,3 +267,94 @@ You can see the example of the dropdown below:
 
 - Superadmin role is: Entities = all, All = true.
 
+## Add custom page
+
+- The example below exists, but it is commented out (https://github.com/digiants-agency/fastadminpanel/commit/5d6f2eb4bab58cebe1ddfc9a4a66f7e18e95a51b).
+
+- Create Vue component. For example: 
+
+```
+/views/fastadminpanel/pages/admin/pages/custom.blade.php
+```
+
+- Include your page in the app. The app is here:
+
+```
+/views/fastadminpanel/layouts/app.blade.php
+```
+
+- Place your include after the dashboard: 
+
+```
+@include('fastadminpanel.pages.admin.pages.dashboard')
+@include('fastadminpanel.pages.admin.pages.custom')
+```
+
+- Add Vue route in the app after the dashboard:
+
+```
+{
+  path: '',
+  name: 'home',
+  component: dashboardPage,
+},
+{
+  path: 'custom',
+  name: 'custom',
+  component: customPage,
+},
+```
+
+- Add menu item to the sidebar (after menu v-for). The sidebar is here:
+
+```
+/views/fastadminpanel/pages/admin/parts/sidebar.blade.php
+```
+
+## Override field template
+
+- Create your field by this rule and it will be applied accordingly:
+
+```
+/views/fastadminpanel/pages/admin/fields/custom/FIELD_TYPE-TABLE_NAME-DB_TITLE.blade.php
+```
+
+- FIELD_TYPE - the type of the field, for example: ckeditor, date etc.
+
+- TABLE_NAME - the name of the CRUD table (place the word "all" for all tables)
+
+- DB_TITLE - the title in the database of the field (place the word "all" for all fields)
+
+Some examples already exist in the "custom" folder.
+
+## Override CRUD service
+
+- Add your own CRUD service to override some methods: index, show, store, update, copy, destroy.
+
+- One such service already exists as example.
+
+- Create your service here:
+
+```
+/app/FastAdminPanel/Services/Crud/Entity/Custom/YOUR_SERVICE_NAME.php
+```
+
+- Add your service to the provider:
+
+```
+/app/FastAdminPanel/Providers/FastAdminPanelServiceProvider.php
+```
+
+- Here:
+
+```
+protected $crudCustomServices = [
+  // example
+  'products'	=> [
+    // methods: index, show, store, update, copy, destroy
+    'show'	=> \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowProductsService::class,
+  ],
+];
+```
+
+- The example above shows an override of the “show” method of the “products” table.
