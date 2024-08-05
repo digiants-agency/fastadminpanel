@@ -3,8 +3,8 @@
 - [Intro](#intro)
 - [Getting started](#getting-started)
 - [Concept](#concept)
-- [Usage CRUD](#usage-crud-generator)
-- [Usage Static content generator](#usage-static-content-generator)
+- [Usage CRUD](#usage-of-crud-generator)
+- [Usage Static content generator](#usage-of-static-content-generator)
 - [Auto documentation](#auto-documentation)
 - [Dropdown menu](#dropdown-menu)
 - [Multilanguage](#multilanguage)
@@ -102,7 +102,7 @@ change line: ('disk' => 'public',) to ('disk' => 'lfm',)
 
 - Add disk "config/filesystems.php"
 ```
-// add like line 44 from:
+// add this config beginning from the line 44:
 'lfm' => [
     'driver' => 'local',
     'root' => public_path(),
@@ -115,13 +115,13 @@ Enjoy 🎉
 
 # Concept
 
-- With this package you can generate CRUDs. The package also automatically creates model files with relations and migrations (they are also added when updating or deleting CRUDs).
+- You can generate CRUDs with this package. The package also automatically creates model files with relations and migrations (they are also added when updating or deleting CRUDs).
 - Data about dropdown list, permissions and CRUDs are stored in json files, path = "/storage/app/ENTITY.json" (so this information will end up on the git). 
 - You have the ability to create “single” entities to manage static content.
 - The admin panel is fully multi-lingual. CRUD multilingualism is represented as identical tables in different languages, e.g. post_en, post_de. This approach [denormalizes](https://en.wikipedia.org/wiki/Denormalization) the database (increasing the amount of space occupied), but makes a very simple approach to manage it. The multilanguage model is very simple and is represented by the MultilanguageModel class.
 - The admin panel is written without using npm or other such technologies, allowing it to be edited without reassembling.
 
-# Usage CRUD generator
+# Usage of CRUD generator
 
 - Go to https://yourdomain.com/admin/cruds
 - Fill the fields:
@@ -141,9 +141,9 @@ Enjoy 🎉
 - Now you can create Controller and use generated Model in it. Or you can go to /fapi/{crud_slug}
 
 Notes:
-- All the data about CRUDs store in /storage/app/cruds.json (so this information will end up on the git)
+- All the data about CRUDs is stored in /storage/app/cruds.json (so this information will end up on the git)
 - If you want to move the generated model from the default folder - you need to edit the **Model field** in the model in CRUD properly.
-- If you want to **NOT** edit the model automatically when you change the CRUD - you just need to remove the **Model field** in the CRUD (but this will break /fapi/{model}/{id}).
+- If you **DON'T** want to edit the model automatically when you change the CRUD - you just need to remove the **Model field** in the CRUD (but this will break /fapi/{model}/{id}).
 - To add [permissions](#change-permissions) for the automatic API, you need to go to /admin/settings
 
 You can see the examples below:
@@ -160,7 +160,7 @@ You can see the examples below:
 
 ![crudEntityImage](https://digiants.com.ua/fastadminpanel/crud-edit.png)
 
-# Usage Static content generator
+# Usage of Static content generator
 
 - Go to https://yourdomain.com/admin/singles
 - Fill the fields:
@@ -228,7 +228,7 @@ You can see the example of the dropdown below:
 
 - The language of the admin panel is represented in the “admin_lang_tag” column of the User.
 
-- There is a class Lang. It has useful methods:
+- There is a class Lang. It has several useful methods:
 
 ```
 use Lang;
@@ -249,7 +249,7 @@ Lang::main(); // get main language tag
 
 - All hidden menu items are displayed if APP_DEBUG=true in the .env file.
 
-- Also you can hide CRUDs ("Is dev" option).
+- You can also hide CRUDs ("Is dev" option).
 
 - To show hidden menu items, you need to add "?dev=" to your address, for example: https://yourdomain.com/admin?dev=.
 
