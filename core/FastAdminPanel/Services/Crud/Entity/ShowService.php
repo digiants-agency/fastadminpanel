@@ -59,7 +59,7 @@ class ShowService implements Show
 							
 							if ($field->value) {
 
-								$field->value_title = $field->values->where('id', $field->value)->first()->title;
+								$field->value_title = $field->values->where('id', $field->value)->first()->title ?? '';
 							}
 						}
 
