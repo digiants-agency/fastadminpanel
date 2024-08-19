@@ -76,7 +76,7 @@
 								</div>
 							</td>
 							<td class="settings-access-td">
-								<div class="btn btn-danger btn-small">
+								<div class="btn btn-danger btn-small" v-on:click="rolesStore.removePermission(permission.id)">
 									<img src="/vendor/fastadminpanel/images/close.svg" alt="" class="btn-svg">
 								</div>
 							</td>

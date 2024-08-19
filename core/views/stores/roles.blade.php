@@ -30,6 +30,12 @@ const useRolesStore = Pinia.defineStore('roles', {
 				permissions: this.permissions
 			})
 		},
+		removePermission(id) {
+
+			const index = this.permissions.findIndex(d => d.id == id)
+
+			this.permissions.splice(index, 1)
+		},
 		async addPermission() {
 
 			const maxId = Math.max(...this.permissions.map(p => p.id))
