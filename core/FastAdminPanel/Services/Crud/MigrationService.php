@@ -4,14 +4,16 @@ namespace App\FastAdminPanel\Services\Crud;
 
 use App\FastAdminPanel\Generators\Migrations\MigrationGenerator;
 use Artisan;
+use Illuminate\Support\Facades\Schema;
 
 class MigrationService
 {
 	public function __construct(
 		protected MigrationGenerator $generator,
+		protected MigrationDevService $devService,
 	) { }
 
-	public function create($crud)
+	public function create($crud, $filename = '')
 	{
 		$fields = [
 			'$table->id();'
@@ -33,7 +35,7 @@ class MigrationService
 			$fields[] = '$table->timestamp("deleted_at")->nullable();';
 		}
 
-		$this->generator->create($crud->table_name, 'create', implode("\n\t\t\t", $fields), $crud->multilanguage);
+		$this->generator->create($crud->table_name, 'create', implode("\n\t\t\t", $fields), $crud->multilanguage, $filename);
 
         Artisan::call('migrate');
 	}
@@ -52,18 +54,32 @@ class MigrationService
 			$this->addFields($crud->table_name, $newFields, $currentFields),
 		));
 
-		if (!empty($fields)) {
-			// TODO: add unfields (down columns)
-			$this->generator->create($crud->table_name, 'update', implode("\n\t\t\t", $fields), $crud->multilanguage);
+		if (empty($fields)) {
+
+			return;
 		}
 
+		// TODO: add unfields (down columns)
+		$this->generator->create($crud->table_name, 'update', implode("\n\t\t\t", $fields), $crud->multilanguage);
+
         Artisan::call('migrate');
+
+		if (config('fap.migrations_mode') == 'dev') {
+
+			$this->devService->removeMigrationFiles($crud, ['update']);
+			$this->devService->updateOldMigration($crud, $this);
+		}
 	}
 
 	public function delete($crud)
 	{
 		$this->generator->create($crud->table_name, 'delete', '', $crud->multilanguage);
         Artisan::call('migrate');
+
+		if (config('fap.migrations_mode') == 'dev') {
+
+			$this->devService->removeMigrationFiles($crud, ['create', 'update', 'delete']);
+		}
 	}
 
 	protected function removeFields($tableSingular, $toRemoveFieldsIds, $currentFields)
@@ -198,7 +214,10 @@ class MigrationService
 					'$table->unsignedBigInteger("'.$colLast.'");',
 				];
 
-				$this->generator->create($tableName, 'create', implode("\n\t\t\t", $fields));
+				if (!Schema::hasTable($tableName)) {
+
+					$this->generator->create($tableName, 'create', implode("\n\t\t\t", $fields));
+				}
 			}
 		}
 

@@ -4,10 +4,11 @@ namespace App\FastAdminPanel\Generators\Migrations;
 
 class MigrationGenerator
 {
-    public function create($table, $type = '', $fields = '', $isMultilanguage = false)
+    public function create($table, $type = '', $fields = '', $isMultilanguage = false, $filename = '')
     {
-        $stub = $this->getStub($type, $isMultilanguage);
-        $path = $this->getPath($type.'_'.$table);
+        $stub = $this->getStub($type, $isMultilanguage); 
+        $filename = $filename ? $filename : $this->getDatePrefix().'_'.$type.'_'.$table.'.php';
+        $path = $this->getPath($filename);
 
         file_put_contents(
             $path, 
@@ -44,7 +45,7 @@ class MigrationGenerator
 
     protected function getPath($name)
     {
-        return database_path("migrations").'/'.$this->getDatePrefix().'_'.$name.'.php';
+        return database_path("migrations").'/'.$name;
     }
 
     protected function getDatePrefix()
