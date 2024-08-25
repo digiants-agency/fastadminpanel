@@ -433,13 +433,15 @@ const crudsEditPage = {
 				this.crudItem.model = response.data.model
 				this.crudsStore.addCrud(this.crudItem)
 				this.isNew = false
-				alert('Successfully created')
+				alert('Successfully created. Page will be reloaded')
 
 			} else {
 
-				alert(response.data.message)
+				alert('Error, page will be reloaded: ' + response.data.message)
 				this.clearFeildIds()
 			}
+
+			location.reload()
 		},
 		async updateCrud() {
 
@@ -450,13 +452,15 @@ const crudsEditPage = {
 
 			if (response.success) {
 				
-				alert('Successfully updated')
+				alert('Successfully updated. Page will be reloaded')
 
 			} else {
 
-				alert(response.data.message)
+				alert('Error, page will be reloaded: ' + response.data.message)
 				// this.clearFeildIds() // clear unsaved ones
 			}
+
+			location.reload()
 		},
 		async removeCrud() {
 
@@ -467,12 +471,14 @@ const crudsEditPage = {
 
 				this.crudsStore.removeCrud(this.crudItem.table_name)
 				this.setCrud({target: {value: ''}})
-				alert('Successfully deleted')
+				alert('Successfully deleted. Page will be reloaded')
 
 			} else {
 
-				alert(response.data.message)
+				alert('Error, page will be reloaded: ' + response.data.message)
 			}
+
+			location.reload()
 		},
 	},
 }
