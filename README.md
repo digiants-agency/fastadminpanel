@@ -145,6 +145,13 @@ Notes:
 - If you want to move the generated model from the default folder - you need to edit the **Model field** in the model in CRUD properly.
 - If you **DON'T** want to edit the model automatically when you change the CRUD - you just need to remove the **Model field** in the CRUD (but this will break /fapi/{model}/{id}).
 - To add [permissions](#change-permissions) for the automatic API, you need to go to /admin/settings
+- There is an option in /config/fap.php - "migrations_mode". It determines how the admin panel handles migrations:
+  - "dev":
+    - if you delete CRUD - old migration will be DELETED
+    - if you update CRUD - old migration will be OVERWRITTEN
+  - "prod":
+    - if you delete CRUD - new migration will be ADDED
+    - if you update CRUD - new migration will be ADDED
 
 You can see the examples below:
 
