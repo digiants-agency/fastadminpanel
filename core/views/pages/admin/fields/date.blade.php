@@ -8,7 +8,7 @@
 			</div>
 		</div>
 		<div class="edit-field-inner">
-			<input class="form-control" type="date" v-on:change="error = ''">
+			<input class="form-control" type="date" v-model="value" v-on:change="error = ''">
 			<div class="input-error" v-text="error"></div>
 		</div>
 	</div>
