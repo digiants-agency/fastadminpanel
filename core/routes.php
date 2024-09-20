@@ -8,6 +8,7 @@ use App\FastAdminPanel\Controllers\DashboardController;
 use App\FastAdminPanel\Controllers\DocsController;
 use App\FastAdminPanel\Controllers\DropdownController;
 use App\FastAdminPanel\Controllers\ExchangeController;
+use App\FastAdminPanel\Controllers\ImageController;
 use App\FastAdminPanel\Controllers\LanguageController;
 use App\FastAdminPanel\Controllers\RoleController;
 use App\FastAdminPanel\Controllers\RolePermissionController;
