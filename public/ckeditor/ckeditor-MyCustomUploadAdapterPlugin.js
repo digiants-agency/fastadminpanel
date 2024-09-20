@@ -29,7 +29,7 @@ class MyUploadAdapter {
         // integration to choose the right communication channel. This example uses
         // a POST request with JSON as a data structure but your configuration
         // could be different.
-        xhr.open( 'POST', ckeditor_path, true );
+        xhr.open( 'POST', location.origin + "/admin/api/image", true );
         xhr.responseType = 'json';
     }
 
@@ -88,7 +88,7 @@ class MyUploadAdapter {
         // XMLHttpRequest.setRequestHeader() to set the request headers containing
         // the CSRF token generated earlier by your application.
 
-        this.xhr.setRequestHeader( 'X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content') );
+        this.xhr.setRequestHeader( 'X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content );
         // Send the request.
         this.xhr.send( data );
     }
