@@ -2,13 +2,15 @@
 
 namespace Digiants\FastAdminPanel\Publishers;
 
+use Illuminate\Support\Facades\Storage;
+
 class Core
 {
 	public function publish()
 	{
 		$this->publishPartsFolder(
 			$this->pathPackage('/core/storage'),
-			base_path('/storage/app')
+			Storage::path("")
 		);
 
 		$this->publishPartsFolder(

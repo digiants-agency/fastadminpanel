@@ -1,5 +1,4 @@
 *
-!public/
 !.gitignore
 !cruds.json
 !dropdowns.json
