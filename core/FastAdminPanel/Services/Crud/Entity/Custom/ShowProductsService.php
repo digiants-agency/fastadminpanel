@@ -33,6 +33,9 @@ class ShowProductsService implements Show
 
 		foreach ($crud->fields as $field) {
 
+			// TODO: refactor
+			$field = json_decode(json_encode($field));
+
 			// TODO: date/datetime?
 			if ($field->type == 'relationship') {
 
@@ -80,7 +83,7 @@ class ShowProductsService implements Show
 							
 							if ($field->value) {
 
-								$field->value_title = $field->values->where('id', $field->value)->first()->title;
+								$field->value_title = $field->values->where('id', $field->value)->first()->title ?? '';
 							}
 						}
 
@@ -121,9 +124,11 @@ class ShowProductsService implements Show
 						->get()
 						->pluck('id');
 
+						$values = [];
+
 						foreach ($editable_ids as $editable_id) {
 							
-							$field->value[] = [
+							$values[] = [
 								'fields'	=> $this->getFields(
 									$field->relationship_table_name,
 									$editable_id,
@@ -131,6 +136,8 @@ class ShowProductsService implements Show
 								'id'		=> $editable_id,
 							];
 						}
+					
+						$field->value = $values;
 					}
 
 					$field->values = $this->getFields($field->relationship_table_name, 0);
@@ -189,7 +196,7 @@ class ShowProductsService implements Show
 				}
 
 			} else {
-
+				
 				if ($entityId == 0) {
 
 					$field->value = '';
