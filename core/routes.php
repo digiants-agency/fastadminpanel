@@ -18,9 +18,6 @@ use App\FastAdminPanel\Controllers\SpaController;
 use App\FastAdminPanel\Facades\Lang;
 use UniSharp\LaravelFilemanager\Lfm;
 
-Route::get('/admin/login', [SpaController::class, 'spa']);
-Route::get('/admin', [SpaController::class, 'spa']);
-
 Route::group([
 	'prefix' => Lang::prefix(prefix: 'admin/api'),
 ], function() {
@@ -93,6 +90,11 @@ Route::group([
 	Route::group(['prefix' => 'laravel-filemanager'], function() {
 		Lfm::routes();
 	});
+});
+
+Route::group([
+	'prefix' => Lang::prefix(),
+], function() {
 
 	Route::get('/admin', [SpaController::class, 'spa']);
 	Route::get('/admin/{any}', [SpaController::class, 'spa'])->where('any', '.*');
