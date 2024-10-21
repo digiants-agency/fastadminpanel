@@ -94,5 +94,6 @@ Route::group([
 		Lfm::routes();
 	});
 
+	Route::get('/admin', [SpaController::class, 'spa']);
 	Route::get('/admin/{any}', [SpaController::class, 'spa'])->where('any', '.*');
 });
