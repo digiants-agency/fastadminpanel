@@ -59,7 +59,7 @@ class SingleSetService
 
 			} else {
 
-				$this->repeat($field['value']['fields']);
+				$this->repeat($field['value']['fields'], $blockIds);
 
 				$singleField->value = $singleField->encodeValue($field['value']['length']);
 			}
