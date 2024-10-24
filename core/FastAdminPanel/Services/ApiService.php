@@ -66,16 +66,27 @@ class ApiService
 	public function show($id, $data)
 	{
 		$model = new $this->crud->model;
-		
-		$query = $model->where('id', $id);
+
+		$slugField = $this->crud->fields->first(fn($f) => ($f->db_title ?? '') == 'slug');
+
+		if ($slugField) {
+			$query = $model->where(
+				fn($q) =>
+					$q->where('id', $id)
+					->orWhere('slug', $id)
+			);
+		} else {
+			$query = $model->where('id', $id);
+		}
 
 		$query = $this->scopeFields($query, $data);
+
 		$query = $this->scopeRelations($query, $data);
 
 		$item = $query->first();
 
 		if (!$item) {
-			
+
 			return null;
 		}
 
