@@ -4,101 +4,97 @@ namespace App\FastAdminPanel\Helpers;
 
 class ResizeImg
 {
-	public static function get($path, $width, $height)
+	/*
+	* Resizes and optimizes images for web display.
+	*
+	* This function takes an image URL, width, and height as input parameters. It checks if the WebP
+	* image format is supported, and if not, it returns the original URL. It then extracts the filename
+	* and path from the provided URL, and creates the necessary directories if they do not exist.
+	*
+	* If the thumbnail image already exists, it returns the URL to the thumbnail image in WebP format.
+	* Otherwise, it reads the original image, calculates the optimal dimensions for resizing, and creates
+	* a thumbnail image in WebP format. It then returns the URL to the thumbnail image in WebP format.
+	*
+	* @param string $url     The original image URL.
+	* @param int    $width   The desired width of the thumbnail image.
+	* @param int    $height  The desired height of the thumbnail image.
+	*
+	* @return string The URL to the thumbnail image in WebP format. If the WebP format is not supported,
+	*                it returns the original URL.
+	*/
+	public static function get($url, $width, $height)
 	{
 		if (!function_exists('imagewebp')) {
-			return $path;
+			return $url;
 		}
-		
-		$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-		$site_path = public_path();
-		$is_chrome = strpos($ua, 'Chrome') !== false || strpos($ua, 'Firefox') !== false;
+		preg_match('/[^\/]+\.(jpg|jpeg|png)$/i', $url, $pathMatch);
 
-		preg_match('/[^\/]+\.(jpg|jpeg|png|JPG|JPEG|PNG)$/', $path, $match);
+		if (empty($pathMatch[0]) || empty($pathMatch[1])) {
+			return $url;
+		}
 
-		if (isset($match[0]))
-			$filename = $match[0];
-		else return $path;
+		$filename = $pathMatch[0];
+		$format = $pathMatch[1];
 
-		if (isset($match[1]))
-			$format = $match[1];
-		else return $path;
+		$path = str_replace($filename, '', $url);
 
-		if ($format != 'jpg' && $format != 'jpeg' && $format != 'png' && $format != 'JPG' && $format != 'JPEG' && $format != 'PNG')
-			return $path;
+		$realPath = rtrim(public_path(), '/').$path;
 
-		$path = str_replace($filename, '', $path);
-
-		$real_path = rtrim($site_path, '/').$path;
-
-		if (!file_exists($real_path.$filename))
+		if (!file_exists($realPath.$filename))
 			return $path.$filename;
 
-		if (!file_exists($real_path.'thumb'))
-			mkdir($real_path.'thumb');
+		if (!file_exists($realPath.'thumb'))
+			mkdir($realPath.'thumb');
 
-		if (file_exists($real_path.'thumb/'.$width.'_'.$filename)) {
-			if ($is_chrome)
-				return $path.'thumb/'.$width.'_'.str_replace(['.png', '.jpg', '.jpeg', '.PNG', '.JPEG', '.JPG'], '.webp', $filename);
-			return $path.'thumb/'.$width.'_'.$filename;
+		$webpFilename = substr_replace($filename, 'webp', -strlen($format));
+
+		if (file_exists($realPath.'thumb/'.$width.'_'.$filename)) {
+
+			return $path.'thumb/'.$width.'_'.$webpFilename;
 		}
 
-		$imagesize = getimagesize($real_path.$filename);	// getimagesize - read all img and then get it info
+		$imagesize = getimagesize($realPath.$filename);	// getimagesize - read all img and then get it info
 
-		$real_width = $imagesize[0];
-		$real_height = $imagesize[1];
+		$realWidth = $imagesize[0];
+		$realHeight = $imagesize[1];
 
-		$ratio_resize = $width / $height;
-		$ratio_original = $real_width / $real_height;
+		$ratioResize = $width / $height;
+		$ratioOriginal = $realWidth / $realHeight;
 
-		if ($ratio_resize < $ratio_original) {
-			$width_resize = ($height / $real_height) * $real_width;
-			$height_resize = $height;
+		if ($ratioResize < $ratioOriginal) {
+			$widthResize = ($height / $realHeight) * $realWidth;
+			$heightResize = $height;
+		} else {
+			$widthResize = $width;
+			$heightResize = ($width / $realWidth) * $realHeight;
 		}
-		else {
-			$width_resize = $width;
-			$height_resize = ($width / $real_width) * $real_height;
-		}
 
-		if ($real_width > $width) {
+		$image = imagecreatefromstring(file_get_contents($realPath.$filename));
 
-			$image = imagecreatefromstring(file_get_contents($real_path.$filename));
+		if (!$image) return $url;
 
-			if ($image != false) {
+		if ($realWidth > $width) {
 
-				$scaled_img = imagescale($image, $width_resize + 1, $height_resize + 1);
+			$scaled_img = imagescale($image, $widthResize + 1, $heightResize + 1);
 
-				imagedestroy($image);
+			imagedestroy($image);
 
-				if ($format == 'png')
-					imagepng($scaled_img, $real_path.'thumb/'.$width.'_'.$filename);
-				else {
-					imagejpeg($scaled_img, $real_path.'thumb/'.$width.'_'.$filename, 83);
-				}
-				imagewebp($scaled_img, $real_path.'thumb/'.$width.'_'.str_replace(['.png', '.jpg', '.jpeg', '.PNG', '.JPEG', '.JPG'], '.webp', $filename));
+			imagewebp($scaled_img, $realPath.'thumb/'.$width.'_'.$webpFilename);
 
-				imagedestroy($scaled_img);
+			imagedestroy($scaled_img);
 
-				return $path.'thumb/'.$width.'_'.str_replace(['.png', '.jpg', '.jpeg', '.PNG', '.JPEG', '.JPG'], '.webp', $filename);
-			}
+			return $path.'thumb/'.$width.'_'.$webpFilename;
+
 		} else {
 
-			if (!copy($real_path.$filename, $real_path.'thumb/'.$width.'_'.$filename)) {
-				return $path.$filename;
-			} else {
+			imagewebp($image, $realPath.'thumb/'.$width.'_'.$webpFilename);
 
-				$image = imagecreatefromstring(file_get_contents($real_path.$filename));
+			imagedestroy($image);
 
-				if ($image != false)
-					imagewebp($image, $real_path.'thumb/'.$width.'_'.str_replace(['.png', '.jpg', '.jpeg', '.PNG', '.JPEG', '.JPG'], '.webp', $filename));
-			}
-
-			if ($is_chrome)
-				return $path.'thumb/'.$width.'_'.str_replace(['.png', '.jpg', '.jpeg', '.PNG', '.JPEG', '.JPG'], '.webp', $filename);
-			return $path.'thumb/'.$width.'_'.$filename;
+			return $path.'thumb/'.$width.'_'.$webpFilename;
 		}
 
-		return $path.$filename;
+		return $url;
 	}
 }
