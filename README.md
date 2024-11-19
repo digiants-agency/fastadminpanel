@@ -338,30 +338,18 @@ Some examples already exist in the "custom" folder.
 
 - Add your own CRUD service to override some methods: index, show, store, update, copy, destroy.
 
-- One such service already exists as example.
-
-- Create your service here:
+- Create your service here (it will be applied automatically):
 
 ```
-/app/FastAdminPanel/Services/Crud/Entity/Custom/YOUR_SERVICE_NAME.php
+/app/FastAdminPanel/Services/Crud/Entity/Custom/MethodTableService.php
 ```
 
-- Add your service to the provider:
+- Method can be: index, show, store, update, copy, destroy.
+
+- Table: as you named it in the database.
+
+- One such service already exists as the example. The example below overrides “show” method, “products” table.
 
 ```
-/app/FastAdminPanel/Providers/FastAdminPanelServiceProvider.php
+/app/FastAdminPanel/Services/Crud/Entity/Custom/ShowProductsService.php
 ```
-
-- Here:
-
-```
-protected $crudCustomServices = [
-  // example
-  'products'	=> [
-    // methods: index, show, store, update, copy, destroy
-    'show'	=> \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowProductsService::class,
-  ],
-];
-```
-
-- The example above shows an override of the “show” method of the “products” table.

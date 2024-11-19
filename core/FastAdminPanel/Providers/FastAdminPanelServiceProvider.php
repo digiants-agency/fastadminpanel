@@ -35,13 +35,8 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 		'platform' 		=> PlatformService::class,
     ];
 
-	protected $crudCustomServices = [
-		// example
-		'products'	=> [
-			// methods: index, show, store, update, copy, destroy
-			'show'	=> \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowProductsService::class,
-		],
-	];
+	// To create custom service - just create your service in app/FastAdminPanel/Services/Crud/Entity/Custom/{$Method}{$Table}Service.php
+	// You can check the example \App\FastAdminPanel\Services\Crud\Entity\Custom\ShowProductsService.php (method = show, table = products)
 
 	protected $crudServices = [
 		[
@@ -79,7 +74,9 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 	
 				$method = $crudService['method'];
 				$table = $this->app->request->route('table');
-				$service = $this->crudCustomServices[$table][$method] ?? $crudService['service'];
+				$customClass = "\\App\\FastAdminPanel\\Services\\Crud\\Entity\\Custom\\{$method}{$table}Service";
+				$isCustomClassExists = class_exists($customClass);
+				$service = $isCustomClassExists ? $customClass : $crudService['service'];
 				return $app->make($service);
 			});
 		}
