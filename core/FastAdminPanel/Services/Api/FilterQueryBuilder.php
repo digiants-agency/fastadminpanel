@@ -1,6 +1,6 @@
 <?php
 
-namespace App\FastAdminPanel\Services;
+namespace App\FastAdminPanel\Services\Api;
 
 use Illuminate\Database\Eloquent\Builder;
 

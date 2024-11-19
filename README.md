@@ -14,6 +14,8 @@
   - [Add custom page](#add-custom-page)
   - [Override field template](#override-field-template)
   - [Override CRUD service](#override-crud-service)
+  - [Add custom api validation](#add-custom-api-validation)
+  - [Add custom api filter](#add-custom-api-filter)
 
 # Intro
 
@@ -352,4 +354,44 @@ Some examples already exist in the "custom" folder.
 
 ```
 /app/FastAdminPanel/Services/Crud/Entity/Custom/ShowProductsService.php
+```
+
+## Add custom api validation
+
+- Add your own API validation for the methods: index, show, store, update, destroy.
+
+- Create your validator here (it will be applied automatically):
+
+```
+/app/FastAdminPanel/Api/Validation/MethodTableValidation.php
+```
+
+- Method can be: index, show, store, update, destroy.
+
+- Table: as you named it in the database.
+
+- One such validator already exists as the example. The example below overrides “store” method, “callbacks” table.
+
+```
+/app/FastAdminPanel/Api/Validation/StoreCallbacksValidation.php
+```
+
+## Add custom api filter
+
+- Add your own API filter to change data or do something (send email after creation, set user id etc) for the methods: index, show, store, update.
+
+- Create your filter here (it will be applied automatically):
+
+```
+/app/FastAdminPanel/Api/Filter/MethodTableFilter.php
+```
+
+- Method can be: index, show, store, update.
+
+- Table: as you named it in the database.
+
+- One such filter already exists as the example. The example below overrides “store” method, “callbacks” table.
+
+```
+/app/FastAdminPanel/Api/Filter/StoreCallbacksFilter.php
 ```

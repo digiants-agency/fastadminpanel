@@ -7,14 +7,18 @@ use App\FastAdminPanel\Requests\Api\IndexRequest;
 use App\FastAdminPanel\Requests\Api\ShowRequest;
 use App\FastAdminPanel\Requests\Api\StoreRequest;
 use App\FastAdminPanel\Requests\Api\UpdateRequest;
-use App\FastAdminPanel\Services\ApiService;
-use App\FastAdminPanel\Services\FilterQueryBuilder;
+use App\FastAdminPanel\Services\Api\ApiService;
+use App\FastAdminPanel\Services\Api\FilterQueryBuilder;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class ApiController extends Controller
 {
+	public function __construct(
+		protected ApiService $service,
+	) { }
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -28,11 +32,11 @@ class ApiController extends Controller
 
 		$crud = Crud::findOrFail($slug);
 
-		$service = new ApiService($crud);
+		$this->service->setCrud($crud);
 
 		$filters = new FilterQueryBuilder($request);
 
-		$items = $service->index($data, $filters);
+		$items = $this->service->index($data, $filters);
 		
 		return Response::json($items);
 	}
@@ -51,9 +55,9 @@ class ApiController extends Controller
 		
 		$crud = Crud::findOrFail($slug);
 
-		$service = new ApiService($crud);
+		$this->service->setCrud($crud);
 
-		$item = $service->store($data);
+		$item = $this->service->store($data);
 
 		return Response::json($item); 
 	}
@@ -72,9 +76,9 @@ class ApiController extends Controller
 		
 		$crud = Crud::findOrFail($slug);
 
-		$service = new ApiService($crud);
+		$this->service->setCrud($crud);
 
-		$item = $service->show($id, $data);
+		$item = $this->service->show($id, $data);
 		
 		return Response::json($item, $item ? 200 : 404);
 	}
@@ -94,9 +98,9 @@ class ApiController extends Controller
 		
 		$crud = Crud::findOrFail($slug);
 
-		$service = new ApiService($crud);
+		$this->service->setCrud($crud);
 
-		$item = $service->update($id, $data);
+		$item = $this->service->update($id, $data);
 
 		return Response::json($item); 
 	}
@@ -113,9 +117,9 @@ class ApiController extends Controller
 
 		$crud = Crud::findOrFail($slug);
 
-		$service = new ApiService($crud);
+		$this->service->setCrud($crud);
 
-		$service->destroy($id);
+		$this->service->destroy($id);
 
 		return Response::json();
 	}

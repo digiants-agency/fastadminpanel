@@ -1,8 +1,6 @@
 # TODO
 - Add trait for the auto docs creation
 - Add changing the administration language to the options
-- Add an additional customizable check and filters on each API request
-- **Add required validation for PUT, POST, DELETE requests**
 - Add docs for facades
 - Add events for CRUDs (create, update, ...)
 - Add regexp CRUD fields validation

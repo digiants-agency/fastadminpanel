@@ -1,18 +1,28 @@
 <?php 
 
-namespace App\FastAdminPanel\Services;
+namespace App\FastAdminPanel\Services\Api;
 
 use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Models\Crud;
 
 class ApiService
 {
+	protected Crud $crud;
+
 	public function __construct(
-		protected Crud $crud,
+		protected CustomValidation $customValidation,
+		protected CustomFilter $customFilter,
 	) { }
+
+	public function setCrud(Crud $crud)
+	{
+		$this->crud = $crud;
+	}
 
 	public function index($data, $filters)
 	{
+		$this->customValidation->validate('index', $this->crud);
+
 		$model = new $this->crud->model;
 		
 		$query = $model->query();
@@ -25,14 +35,19 @@ class ApiService
 		$items = $query->orderBy($data['sort'], $data['order'])
 		->paginate($data['perPage'])
 		->through(function($item) {
-			return $this->map($item); 
+			$this->map($item);
+			return $item;
 		});
+
+		$this->customFilter->filter($items, 'index', $this->crud);
 
 		return $items;
 	}
 
 	public function store($data)
 	{
+		$this->customValidation->validate('store', $this->crud, true);
+
 		$data = $this->uploadFiles($data);
 
 		$modelClass = $this->crud->model;
@@ -49,7 +64,9 @@ class ApiService
 
 				} else {
 
-					$model->create($data);
+					$itemOtherLang = $model->create($data);
+
+					$this->customFilter->filter($itemOtherLang, 'store', $this->crud);
 				}
 			}
 
@@ -60,11 +77,17 @@ class ApiService
 			$item = $model->create($data);
 		}
 
-		return $this->map($item);
+		$this->map($item);
+
+		$this->customFilter->filter($item, 'store', $this->crud);
+
+		return $item;
 	}
 
 	public function show($id, $data)
 	{
+		$this->customValidation->validate('show', $this->crud);
+
 		$model = new $this->crud->model;
 
 		$slugField = $this->crud->fields->first(fn($f) => ($f->db_title ?? '') == 'slug');
@@ -90,12 +113,18 @@ class ApiService
 			return null;
 		}
 
-		return $this->map($item);
+		$this->map($item);
+
+		$this->customFilter->filter($item, 'show', $this->crud);
+
+		return $item;
 	}
 
 
 	public function update($id, $data)
 	{
+		$this->customValidation->validate('update', $this->crud, true);
+
 		$model = new $this->crud->model;
 		
 		$model->where('id', $id)
@@ -104,11 +133,17 @@ class ApiService
 		$item = $model->where('id', $id)
 		->first();
 
-		return $this->map($item);
+		$this->map($item);
+
+		$this->customFilter->filter($item, 'update', $this->crud);
+
+		return $item;
 	}
 
 	public function destroy($id)
 	{
+		$this->customValidation->validate('destroy', $this->crud);
+
 		$modelClass = $this->crud->model;
 
 		if ($this->crud->multilanguage) {
