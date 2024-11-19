@@ -199,12 +199,14 @@ class ApiService
 			if ($data['relations'] == '*') {
 				
 				foreach ($relations as $relation) {
+					if ($relation == 'user') continue;
 					$q->with($relation);
 				}
 
 			} else {
 				
 				foreach ($data['relations'] as $relation) {
+					if ($relation == 'user') continue;
 					$q->with($relation);
 				}
 			}
