@@ -82,6 +82,7 @@ class SingleSaver
 
 			$singleField = SingleField::where('slug', $field['slug'])
 			->where('single_block_id', $field['single_block_id'])
+			->where('parent_id', $field['parent_id'])
 			->first();
 
 			if (empty($singleField)) {
@@ -98,6 +99,7 @@ class SingleSaver
 
 					$singleField = (new SingleField($lang->tag))->where('slug', $field['slug'])
 					->where('single_block_id', $field['single_block_id'])
+					->where('parent_id', $field['parent_id'])
 					->first();
 
 					$singleField->is_multilanguage = $field['is_multilanguage'];
