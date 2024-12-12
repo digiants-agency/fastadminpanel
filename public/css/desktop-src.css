@@ -1931,9 +1931,10 @@ textarea.form-control {
 
 .graphs {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 40px;
+    display: grid;
+    gap: 50px;
+    grid-template-columns: 1fr 1fr;
 }
 
 .itemstosale {
