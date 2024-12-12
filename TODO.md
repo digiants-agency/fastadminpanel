@@ -1,4 +1,5 @@
 # TODO
+- Add shop with the cart module
 - Add trait for the auto docs creation
 - Add changing the administration language to the options
 - Add docs for facades
