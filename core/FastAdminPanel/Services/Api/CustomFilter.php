@@ -9,7 +9,7 @@ class CustomFilter
 		$method = ucfirst($method);
 		$tableName = ucfirst($crud->table_name);
 
-		$filterClass = "\App\FastAdminPanel\Api\Filter\\{$method}{$$tableName}Filter";
+		$filterClass = "\App\FastAdminPanel\Api\Filter\\{$method}{$tableName}Filter";
 
 		if (!class_exists($filterClass)) {
 
