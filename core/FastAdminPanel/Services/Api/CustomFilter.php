@@ -6,7 +6,10 @@ class CustomFilter
 {
 	public function filter($entity, $method, $crud)
 	{
-		$filterClass = "\App\FastAdminPanel\Api\Filter\\{$method}{$crud->table_name}Filter";
+		$method = ucfirst($method);
+		$tableName = ucfirst($crud->table_name);
+
+		$filterClass = "\App\FastAdminPanel\Api\Filter\\{$method}{$$tableName}Filter";
 
 		if (!class_exists($filterClass)) {
 
