@@ -6,7 +6,10 @@ class CustomValidation
 {
 	public function validate($method, $crud, $isRequired = false)
 	{
-		$validatorClass = "\App\FastAdminPanel\Api\Validation\\{$method}{$crud->table_name}Validation";
+		$method = ucfirst($method);
+		$tableName = ucfirst($crud->table_name);
+
+		$validatorClass = "\App\FastAdminPanel\Api\Validation\\{$method}{$tableName}Validation";
 
 		if (!class_exists($validatorClass)) {
 
