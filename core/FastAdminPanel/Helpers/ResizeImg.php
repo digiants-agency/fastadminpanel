@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Helpers;
 
@@ -28,6 +28,8 @@ class ResizeImg
 			return $url;
 		}
 
+		// $url = preg_replace('/https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/', '', $url); // uncomment if you want to cut the domain
+
 		preg_match('/[^\/]+\.(jpg|jpeg|png)$/i', $url, $pathMatch);
 
 		if (empty($pathMatch[0]) || empty($pathMatch[1])) {
@@ -39,22 +41,26 @@ class ResizeImg
 
 		$path = str_replace($filename, '', $url);
 
-		$realPath = rtrim(public_path(), '/').$path;
+		$realPath = rtrim(public_path(), '/') . $path;
 
-		if (!file_exists($realPath.$filename))
-			return $path.$filename;
+		if (!file_exists($realPath . $filename))
+			return $path . $filename;
 
-		if (!file_exists($realPath.'thumb'))
-			mkdir($realPath.'thumb');
+		if (!file_exists($realPath . 'thumb'))
+			mkdir($realPath . 'thumb');
 
 		$webpFilename = substr_replace($filename, 'webp', -strlen($format));
 
-		if (file_exists($realPath.'thumb/'.$width.'_'.$filename)) {
+		if (file_exists($realPath . 'thumb/' . $width . '_' . $webpFilename)) {
 
-			return $path.'thumb/'.$width.'_'.$webpFilename;
+			return $path . 'thumb/' . $width . '_' . $webpFilename;
 		}
 
-		$imagesize = getimagesize($realPath.$filename);	// getimagesize - read all img and then get it info
+		$image = imagecreatefromstring(file_get_contents($realPath . $filename));
+
+		if (!$image) return $url;
+
+		$imagesize = getimagesize($realPath . $filename);	// getimagesize - read all img and then get it info
 
 		$realWidth = $imagesize[0];
 		$realHeight = $imagesize[1];
@@ -70,29 +76,44 @@ class ResizeImg
 			$heightResize = ($width / $realWidth) * $realHeight;
 		}
 
-		$image = imagecreatefromstring(file_get_contents($realPath.$filename));
-
-		if (!$image) return $url;
-
 		if ($realWidth > $width) {
 
 			$scaled_img = imagescale($image, $widthResize + 1, $heightResize + 1);
 
+			if (in_array(strtolower($format), ['jpg', 'jpeg'])) {
+
+				$exif = exif_read_data($realPath . $filename);
+	
+				if (!empty($exif['Orientation'])) {
+					switch($exif['Orientation']) {
+						case 8:
+							$scaled_img = imagerotate($scaled_img, 90, 0);
+							break;
+						case 3:
+							$scaled_img = imagerotate($scaled_img, 180, 0);
+							break;
+						case 6:
+							$scaled_img = imagerotate($scaled_img, -90, 0);
+							break;
+					}
+				}
+			}
+
 			imagedestroy($image);
 
-			imagewebp($scaled_img, $realPath.'thumb/'.$width.'_'.$webpFilename);
+			imagewebp($scaled_img, $realPath . 'thumb/' . $width . '_' . $webpFilename);
 
 			imagedestroy($scaled_img);
 
-			return $path.'thumb/'.$width.'_'.$webpFilename;
+			return $path . 'thumb/' . $width . '_' . $webpFilename;
 
 		} else {
 
-			imagewebp($image, $realPath.'thumb/'.$width.'_'.$webpFilename);
+			imagewebp($image, $realPath . 'thumb/' . $width . '_' . $webpFilename);
 
 			imagedestroy($image);
 
-			return $path.'thumb/'.$width.'_'.$webpFilename;
+			return $path . 'thumb/' . $width . '_' . $webpFilename;
 		}
 
 		return $url;
