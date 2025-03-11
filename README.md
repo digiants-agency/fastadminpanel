@@ -50,7 +50,7 @@ Feel free to contact me: sv@digiants.com.ua
  - Install Laravel first
 
 ```bash
-composer create-project laravel/laravel="11.*" PROJECT_NAME
+composer create-project laravel/laravel="12.*" PROJECT_NAME
 ```
 
  - Go inside the folder
