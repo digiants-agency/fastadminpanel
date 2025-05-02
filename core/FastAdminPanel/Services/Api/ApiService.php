@@ -92,14 +92,10 @@ class ApiService
 
 		$slugField = $this->crud->fields->first(fn($f) => ($f->db_title ?? '') == 'slug');
 
-		if ($slugField) {
-			$query = $model->where(
-				fn($q) =>
-					$q->where('id', $id)
-					->orWhere('slug', $id)
-			);
-		} else {
+		if (is_numeric($id)) {
 			$query = $model->where('id', $id);
+		} else if ($slugField) {
+			$query = $model->where('slug', $id);
 		}
 
 		$query = $this->scopeFields($query, $data);
