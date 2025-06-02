@@ -41,10 +41,8 @@ class FastAdminPanelTranslate extends Command
 
 		$this->translater = new Translater();
 
-		$languages = Language::get();
-		
-		$this->languagesToTranslate = $languages->where('main_lang', '!=', 1);
-		$this->mainTag = $languages->where('main_lang', 1)->first()->tag;
+		$this->languagesToTranslate = Lang::all()->where('main_lang', '!=', 1);
+		$this->mainTag = Lang::main();
 	}
 
 	/*

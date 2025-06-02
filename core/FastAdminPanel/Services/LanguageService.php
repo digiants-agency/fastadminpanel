@@ -2,9 +2,9 @@
 
 namespace App\FastAdminPanel\Services;
 
-use App;
 use App\FastAdminPanel\Models\Language;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class LanguageService
 {
@@ -14,7 +14,25 @@ class LanguageService
 
 	public function __construct(Request $request)
 	{
-		$this->langs = Language::get();
+		try {
+
+			$this->langs = Language::get();
+
+		} catch (\Exception $e) { // for migrate purpose
+			
+			if (App::runningInConsole()) {
+				echo 'Warning! Cant connect to db or table languages doesnt exist', PHP_EOL;
+			}
+
+			$this->langs = collect([
+				(object)[
+					'id'		=> 1,
+					'tag'		=> 'en',
+					'main_lang'	=> 1,
+				],
+			]);
+		}
+		
 		$this->host = $request->getHost();
 		$this->lang = $this->findLang($request, $this->langs);
 
