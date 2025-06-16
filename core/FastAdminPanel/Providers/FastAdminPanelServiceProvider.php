@@ -72,8 +72,8 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 
 			$this->app->bind($crudService['contract'], function ($app) use ($crudService) {
 	
-				$method = $crudService['method'];
-				$table = $this->app->request->route('table');
+				$method = ucfirst($crudService['method']);
+				$table = ucfirst($this->app->request->route('table'));
 				$customClass = "\\App\\FastAdminPanel\\Services\\Crud\\Entity\\Custom\\{$method}{$table}Service";
 				$isCustomClassExists = class_exists($customClass);
 				$service = $isCustomClassExists ? $customClass : $crudService['service'];
