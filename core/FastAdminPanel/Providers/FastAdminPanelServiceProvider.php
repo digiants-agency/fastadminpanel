@@ -7,6 +7,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use App\FastAdminPanel\Commands\FastAdminPanelTranslate;
+use App\FastAdminPanel\Facades\CssAssembler as CssAssemblerFacade;
 use App\FastAdminPanel\Facades\Single as SingleFacade;
 use App\FastAdminPanel\Facades\Lang as LangFacade;
 use App\FastAdminPanel\Facades\Platform as PlatformFacade;
@@ -16,6 +17,7 @@ use App\FastAdminPanel\Helpers\Formatter;
 use App\FastAdminPanel\Helpers\Convertor;
 use App\FastAdminPanel\Helpers\SEO;
 use App\FastAdminPanel\Policies\MainPolicy;
+use App\FastAdminPanel\Services\CssAssemblerService;
 use App\FastAdminPanel\Services\LanguageService;
 use App\FastAdminPanel\Services\PlatformService;
 use App\FastAdminPanel\Single\Single;
@@ -33,6 +35,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
         'lang'			=> LanguageService::class,
 		'single' 		=> Single::class,
 		'platform' 		=> PlatformService::class,
+		'cssassembler'	=> CssAssemblerService::class,
     ];
 
 	// To create custom service - just create your service in app/FastAdminPanel/Services/Crud/Entity/Custom/{$Method}{$Table}Service.php
@@ -100,6 +103,16 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 			return '<?php Convertor::create($viewName, ob_get_clean(), false); ?>';
 		});
 
+		Blade::directive('cachecss', function () {
+
+			return "<?php ob_start(); ?>";
+		});
+
+		Blade::directive('endcachecss', function () {
+		
+			return '<?php CssAssembler::create($viewName, ob_get_clean()); ?>';
+		});
+
 		Blade::directive('startjs', function ($index) {
 			
 			return '<?php $positionJs = '.($index ? $index : '1').'; ob_start(); ?>';
@@ -138,6 +151,7 @@ class FastAdminPanelServiceProvider extends ServiceProvider
 			$loader->alias('Platform',		PlatformFacade::class);
 			$loader->alias('Single',		SingleFacade::class);
 			$loader->alias('Lang',			LangFacade::class);
+			$loader->alias('CssAssembler',	CssAssemblerFacade::class);
 			$loader->alias('JSAssembler',	JSAssembler::class);
 			$loader->alias('ResizeImg',		ResizeImg::class);
 			$loader->alias('Formatter',		Formatter::class);
