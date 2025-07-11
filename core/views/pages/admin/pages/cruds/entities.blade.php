@@ -256,6 +256,9 @@ const crudsEntitiesPage = {
 			this.order = this.getDefaultOrder()
 			this.fetchFieldInstances()
 		},
+		order() {
+			this.fetchFieldInstances()
+		},
 		perPage() {
 			this.fetchFieldInstances()
 		},
