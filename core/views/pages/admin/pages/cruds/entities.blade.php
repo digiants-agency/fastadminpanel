@@ -37,7 +37,7 @@
 							<label>
 								<span>{{ __('fastadminpanel.sort') }}</span>
 								<div class="select-wrapper">
-									<select v-model="order">
+									<select v-model="order" v-on:change="fetchFieldInstances">
 										<option :value="'id'">ID</option>
 										<option 
 											v-for="field in fields.filter(f => f.show_in_list != 'no')" 
@@ -261,9 +261,6 @@ const crudsEntitiesPage = {
 	watch: {
 		'$route.params.table'() {
 			this.order = this.getDefaultOrder()
-			this.fetchFieldInstances()
-		},
-		order() {
 			this.fetchFieldInstances()
 		},
 		perPage() {
