@@ -181,8 +181,15 @@
 								<img class="index-pagination-svg" src="/vendor/fastadminpanel/images/arrow-left-ico.svg" alt="">
 							</div>
 							<div class="index-pagination-numbers">
-								<div v-for="i in pagesCount" v-if="pagesCount < 5 || (i == 1 || i == pagesCount || i == currPage)" class="index-pagination-number" :class="{'active': i == currPage}" v-on:click="currPage = i" v-text="i"></div>
-								<div v-else-if="i == currPage - 1 || i == currPage + 1" class="index-pagination-number">...</div>
+								<template v-for="i in pagesCount">
+									<div v-if="pagesCount < 5 || (i == 1 || i == pagesCount || i == currPage)"
+										class="index-pagination-number"
+										:class="{ 'active': i == currPage }"
+										v-on:click="currPage = i" v-text="i">
+									</div>
+									<div v-else-if="i == currPage - 1 || i == currPage + 1"
+										class="index-pagination-number">...</div>
+								</template>
 							</div>
 							<div class="index-pagination-number index-pagination-next" :class="{'disabled': currPage == pagesCount}" v-on:click="nextPage()">
 								<img class="index-pagination-svg" src="/vendor/fastadminpanel/images/arrow-right-ico.svg" alt="">
