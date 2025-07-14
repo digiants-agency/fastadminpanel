@@ -2,14 +2,15 @@
 
 namespace App\FastAdminPanel\Commands;
 
-use Illuminate\Console\Command;
+use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Helpers\Translater;
 use App\FastAdminPanel\Models\Language;
 use App\FastAdminPanel\Models\Menu;
 use App\FastAdminPanel\Models\SingleField;
 use App\FastAdminPanel\Models\SinglePage;
 use App\FastAdminPanel\Services\Single\SingleGetService;
-use DB;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 // legacy
 class FastAdminPanelTranslate extends Command
