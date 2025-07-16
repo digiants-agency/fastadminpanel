@@ -40,7 +40,7 @@
 									<select v-model="order" v-on:change="fetchFieldInstances">
 										<option :value="'id'">ID</option>
 										<option 
-											v-for="field in fields.filter(f => f.show_in_list != 'no')" 
+											v-for="field in fields.filter(f => f.show_in_list != 'no' && f.db_title)"
 											:value="field.db_title" 
 											v-text="field.title"
 										></option>
