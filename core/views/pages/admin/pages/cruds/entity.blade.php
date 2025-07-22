@@ -22,7 +22,6 @@
 			</div>
 		</div>
 		<div v-for="(field, index) in fields.filter(f => f.is_visible && f.relationship_count == 'editable')" :class="'editable-' + table">
-			<h1 v-text="field.title"></h1>
 			<div class="edit-fields edit-fields-editable">
 				<component
 					:is="findFieldComponent(field.type, table, field.db_title)"

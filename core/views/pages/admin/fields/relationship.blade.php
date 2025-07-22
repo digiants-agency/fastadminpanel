@@ -2,6 +2,7 @@
 	<div>
 		<div v-if="field.relationship_count == 'editable'">
 			<div class="editable-blocks">
+				<h1 v-text="field.title"></h1>
 				<div v-for="(group, i) in field.value" class="mb-15 relationship_block">
 					<div
 						class="reletionship_title" 
