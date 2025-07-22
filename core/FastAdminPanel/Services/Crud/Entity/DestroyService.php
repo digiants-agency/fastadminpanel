@@ -59,8 +59,6 @@ class DestroyService implements Destroy
 
 			$parents = []; 
 
-			$parentsTable = explode('_', $tables[0])[0]; 
-
 			foreach ($tables as $table_index => $tbl) {
 
 				$editableItems = DB::table($tbl)
@@ -74,7 +72,7 @@ class DestroyService implements Destroy
 
 						$parents[] = [
 							'id'	=> $editable_item->id,
-							'table' => $parentsTable,
+							'table' => $tableName,
 						];
 					}
 	
