@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<template v-for="item in menuStore.menu">
-					<div v-if="item.type == 'dropdown'" class="sidebar-menu-item-parent" :class="{active: item.isActive}">
+					<div v-if="item.type == 'dropdown' && item.children.length != 0" class="sidebar-menu-item-parent" :class="{active: item.isActive}">
 						<div class="sidebar-menu-item" v-on:click="menuStore.toggleDropdown(item.id)">
 							<img v-if="item.icon" class="sidebar-menu-item-icon" :src="item.icon" alt="">
 							<img v-else class="sidebar-menu-item-icon" src="/vendor/fastadminpanel/images/paper.svg" alt="" class="sidebar-menu-item-icon">
