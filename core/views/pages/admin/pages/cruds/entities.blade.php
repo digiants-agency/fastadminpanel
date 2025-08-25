@@ -261,7 +261,8 @@ const crudsEntitiesPage = {
 	watch: {
 		'$route.params.table'() {
 			this.order = this.getDefaultOrder()
-			this.fetchFieldInstances()
+			if (this.currPage != 1) this.currPage = 1
+			else this.fetchFieldInstances()
 		},
 		perPage() {
 			this.fetchFieldInstances()
