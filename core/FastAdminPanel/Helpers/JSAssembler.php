@@ -34,26 +34,12 @@ class JSAssembler
 	{
         // need research of version collision
 
-        if (isset(request()->route()->getAction()['controller']))
-            $method = request()->route()->getAction()['controller'];
-        else 
-            $method = '404';
+        $route = request()->route();
 
-        $page_name = strtolower(
-            str_replace(
-                [
-                    'App\Http\Controllers\\', 
-                    '@', 
-                    'Controller'
-                ], 
-                [
-                    '', 
-                    '_',
-                    ''
-                ], 
-                $method
-            )
-        );
+        if ($route) $method = $route->uri();
+        else $method = '404';
+
+        $page_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $method);
 
         $cache_path = public_path().'/js/cache/'.$page_name.'.js';
         
