@@ -49,6 +49,7 @@ class JSAssembler
 
         if (!file_exists($cache_path)) {
             file_put_contents($cache_path, '');
+			touch($cache_path, time() - 365 * 24 * 60 * 60);
         }
         
         $time_source = filemtime($cache_path);
