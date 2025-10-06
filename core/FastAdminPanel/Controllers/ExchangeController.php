@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -11,21 +11,21 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExchangeController extends Controller
 {
-	public function export($table)
-	{
-		$this->authorize('something', [$table, 'admin_read']);
+    public function export($table)
+    {
+        $this->authorize('something', [$table, 'admin_read']);
 
-		return Excel::download(new Export($table), "export_".$table.date('YmdHis').".xlsx");
-	}
+        return Excel::download(new Export($table), 'export_'.$table.date('YmdHis').'.xlsx');
+    }
 
-	public function import(Request $request, $table)
-	{
-		$this->authorize('something', [$table, 'admin_edit']);
+    public function import(Request $request, $table)
+    {
+        $this->authorize('something', [$table, 'admin_edit']);
 
-		$file = $request->file('xlsx');
+        $file = $request->file('xlsx');
 
-		Excel::import(new Import($table), $file);
+        Excel::import(new Import($table), $file);
 
-		return Response::json();
-	}
+        return Response::json();
+    }
 }

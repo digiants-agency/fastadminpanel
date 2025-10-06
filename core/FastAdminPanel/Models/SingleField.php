@@ -2,11 +2,9 @@
 
 namespace App\FastAdminPanel\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
-use Schema;
-use Lang;
 use DB;
+use Lang;
+use Schema;
 
 // types:
 // text
@@ -28,152 +26,152 @@ use DB;
 
 class SingleField extends MultilanguageModel
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	protected $table = 'single_fields';
+    protected $table = 'single_fields';
 
-	protected $fillable = [
-		'id',
-		'is_multilanguage',
-		'type',
-		'title',
-		'slug',
-		'single_block_id',
-		'sort',
-		'parent_id',
-		'value',
-	];
+    protected $fillable = [
+        'id',
+        'is_multilanguage',
+        'type',
+        'title',
+        'slug',
+        'single_block_id',
+        'sort',
+        'parent_id',
+        'value',
+    ];
 
-	protected $attributes = [
-		'value'	=> '',
-	];
+    protected $attributes = [
+        'value' => '',
+    ];
 
-	public function multilanguageSave()
-	{
-		if ($this->is_multilanguage == 0) {
-	
-			$langs = Lang::all();
+    public function multilanguageSave()
+    {
+        if ($this->is_multilanguage == 0) {
 
-			foreach ($langs as $lang) {
+            $langs = Lang::all();
 
-				// TODO: probably, I should add function to change table
-				$model = new SingleField($lang->tag);
+            foreach ($langs as $lang) {
 
-				$field = $model->where('id', $this->id)->first();
+                // TODO: probably, I should add function to change table
+                $model = new SingleField($lang->tag);
 
-				$field->is_multilanguage = $this->is_multilanguage;
-				$field->type = $this->type;
-				$field->title = $this->title;
-				$field->slug = $this->slug;
-				$field->single_block_id = $this->single_block_id;
-				$field->sort = $this->sort;
-				$field->parent_id = $this->parent_id;
-				$field->value = $this->value;
+                $field = $model->where('id', $this->id)->first();
 
-				$field->save();
-			}
+                $field->is_multilanguage = $this->is_multilanguage;
+                $field->type = $this->type;
+                $field->title = $this->title;
+                $field->slug = $this->slug;
+                $field->single_block_id = $this->single_block_id;
+                $field->sort = $this->sort;
+                $field->parent_id = $this->parent_id;
+                $field->value = $this->value;
 
-		} else {
+                $field->save();
+            }
 
-			$this->save();
-		}
-	}
+        } else {
 
-	public function encodeValue($value)
-	{
-		$value = $value === null ? $this->default() : $value;
+            $this->save();
+        }
+    }
 
-		return match($this->type) {
-			'repeat'		=> json_encode($value, JSON_UNESCAPED_UNICODE),
-			'checkbox'		=> $value ? 1 : 0,
-			'gallery'		=> json_encode($value, JSON_UNESCAPED_UNICODE),
-			default			=> $value,
-		};
-	}
+    public function encodeValue($value)
+    {
+        $value = $value === null ? $this->default() : $value;
 
-	public function decodeValue($value)
-	{
-		return match($this->type) {
-			'repeat'		=> json_decode($value) ?? 0,
-			'checkbox'		=> !!$value,
-			'gallery'		=> json_decode($value) ?? [],
-			'money'			=> floatval($value),
-			'number'		=> intval($value),
-			default			=> $value,
-		};
-	}
+        return match ($this->type) {
+            'repeat' => json_encode($value, JSON_UNESCAPED_UNICODE),
+            'checkbox' => $value ? 1 : 0,
+            'gallery' => json_encode($value, JSON_UNESCAPED_UNICODE),
+            default => $value,
+        };
+    }
 
-	public function default()
-	{
-		return match($this->type) {
-			'text'			=> '',
-			'textarea'		=> '',
-			'ckeditor'		=> '',
-			'checkbox'		=> false,
-			'color'			=> '#000000',
-			'date'			=> date('Y-m-d'),
-			'datetime'		=> date('Y-m-d H:i:s'),
-			// 'relationship'	=> '',
-			'file'			=> '',
-			'photo'			=> '',
-			'gallery'		=> [],
-			'password'		=> '',
-			'money'			=> 0,
-			'number'		=> 0,
-			'enum'			=> '',
-			// 'repeat'		=> '',
-			default			=> '',
-		};
-	}
+    public function decodeValue($value)
+    {
+        return match ($this->type) {
+            'repeat' => json_decode($value) ?? 0,
+            'checkbox' => (bool) $value,
+            'gallery' => json_decode($value) ?? [],
+            'money' => floatval($value),
+            'number' => intval($value),
+            default => $value,
+        };
+    }
 
-	public function defaults($length)
-	{
-		$vals = [];
+    public function default()
+    {
+        return match ($this->type) {
+            'text' => '',
+            'textarea' => '',
+            'ckeditor' => '',
+            'checkbox' => false,
+            'color' => '#000000',
+            'date' => date('Y-m-d'),
+            'datetime' => date('Y-m-d H:i:s'),
+            // 'relationship'	=> '',
+            'file' => '',
+            'photo' => '',
+            'gallery' => [],
+            'password' => '',
+            'money' => 0,
+            'number' => 0,
+            'enum' => '',
+            // 'repeat'		=> '',
+            default => '',
+        };
+    }
 
-		for ($i = 0; $i < $length; $i++) {
+    public function defaults($length)
+    {
+        $vals = [];
 
-			$vals[] = $this->default();
-		}
+        for ($i = 0; $i < $length; $i++) {
 
-		return $vals;
-	}
+            $vals[] = $this->default();
+        }
 
-	public function savedMsg()
-	{
-		return match($this->type) {
-			'checkbox'		=> false,
-			'date'			=> date('Y-m-d'),
-			'datetime'		=> date('Y-m-d H:i:s'),
-			'gallery'		=> [],
-			default			=> 'Saved',
-		};
-	}
+        return $vals;
+    }
 
-	public function childrenFields()
-	{
-		return $this->hasMany(SingleField::class, 'parent_id');
-	}
+    public function savedMsg()
+    {
+        return match ($this->type) {
+            'checkbox' => false,
+            'date' => date('Y-m-d'),
+            'datetime' => date('Y-m-d H:i:s'),
+            'gallery' => [],
+            default => 'Saved',
+        };
+    }
 
-	public function fields()
-	{
-		return $this->childrenFields()->with('fields');
-	}
+    public function childrenFields()
+    {
+        return $this->hasMany(SingleField::class, 'parent_id');
+    }
 
-	// TODO: move
-	public function removeTables($tag)
-	{
-		$table = substr($this->table, 0, -2);
+    public function fields()
+    {
+        return $this->childrenFields()->with('fields');
+    }
 
-		Schema::dropIfExists("{$table}{$tag}");
-	}
+    // TODO: move
+    public function removeTables($tag)
+    {
+        $table = substr($this->table, 0, -2);
 
-	// TODO: move
-	public function addTables($tag, $main_tag)
-	{
-		$table = substr($this->table, 0, -2);
-				
-		Schema::dropIfExists("{$table}{$tag}");
-		DB::statement("CREATE TABLE {$table}{$tag} LIKE {$table}{$main_tag}");
-		DB::statement("INSERT {$table}{$tag} SELECT * FROM {$table}{$main_tag}");
-	}
+        Schema::dropIfExists("{$table}{$tag}");
+    }
+
+    // TODO: move
+    public function addTables($tag, $main_tag)
+    {
+        $table = substr($this->table, 0, -2);
+
+        Schema::dropIfExists("{$table}{$tag}");
+        DB::statement("CREATE TABLE {$table}{$tag} LIKE {$table}{$main_tag}");
+        DB::statement("INSERT {$table}{$tag} SELECT * FROM {$table}{$main_tag}");
+    }
 }

@@ -4,5 +4,5 @@ namespace App\FastAdminPanel\Contracts\CrudEntity;
 
 interface Destroy
 {
-	public function destroy($crud, $ids);
+    public function destroy($crud, $ids);
 }

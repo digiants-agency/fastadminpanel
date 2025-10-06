@@ -13,148 +13,149 @@ use Str;
 
 class Export implements FromQuery, WithHeadings, WithMapping
 {
-	use Exportable;
+    use Exportable;
 
-	protected $cruds;
-	protected $crud;
+    protected $cruds;
 
-	public function __construct($table)
-	{
-		$this->cruds = Crud::get()->keyBy('table_name');
-		$this->crud = $this->cruds->where('table_name', $table)->first();
-	}
+    protected $crud;
 
-	public function query()
-	{
-		$toSelect = [$this->crud->table.'.id'];
-		$joins = collect([]);
-		
-		foreach ($this->crud->fields as $field) {
+    public function __construct($table)
+    {
+        $this->cruds = Crud::get()->keyBy('table_name');
+        $this->crud = $this->cruds->where('table_name', $table)->first();
+    }
 
-			if ($field->type == 'password') {
-				continue;
-			}
+    public function query()
+    {
+        $toSelect = [$this->crud->table.'.id'];
+        $joins = collect([]);
 
-			if ($field->type != 'relationship') {
+        foreach ($this->crud->fields as $field) {
 
-				if ($field->lang) {
+            if ($field->type == 'password') {
+                continue;
+            }
 
-					foreach (Lang::all() as $lang) {
+            if ($field->type != 'relationship') {
 
-						$toSelect[] = $this->crud->table.'.'.$field->db_title.' AS '.$field->db_title.'_'.$lang->tag;
-					}
+                if ($field->lang) {
 
-				} else {
+                    foreach (Lang::all() as $lang) {
 
-					$toSelect[] = $this->crud->table.'.'.$field->db_title;
-				}
-				
-			} else {
+                        $toSelect[] = $this->crud->table.'.'.$field->db_title.' AS '.$field->db_title.'_'.$lang->tag;
+                    }
 
-				if ($field->relationship_count == 'single') {
+                } else {
 
-					$relationshipTable = $this->cruds[$field->relationship_table_name]->multilanguage ? $field->relationship_table_name.'_'.Lang::get() : $field->relationship_table_name;
+                    $toSelect[] = $this->crud->table.'.'.$field->db_title;
+                }
 
-					$toSelect[] = $relationshipTable.'.'.$field->relationship_view_field.' AS '.$field->relationship_table_name.'_'.$field->relationship_view_field;
+            } else {
 
-					$joins[] = [$relationshipTable, $relationshipTable.'.id', $this->crud->table.'.id_'.$field->relationship_table_name];
-				}
-			}
-		}
+                if ($field->relationship_count == 'single') {
 
-		$result = DB::table($this->crud->table)
-		->select($toSelect)
-		->when($this->crud->multilanguage, function($q) {
-			foreach (Lang::all() as $lang) {
-				if ($lang->tag != Lang::get()) {
-					$q->join($this->crud->table_name . "_" . $lang->tag, $this->crud->table_name . "_" . $lang->tag.'.id', $this->crud->table.'.id');
-				}
-			}
-		})
-		->when($joins->count(), function($q) use ($joins) {
-			foreach ($joins as $join) {
-				if ($join[0] != $this->crud->table) {
-					$q->join($join[0], $join[1], $join[2]);
-				}
-			}
-		})
-		->orderBy('id', 'ASC');
+                    $relationshipTable = $this->cruds[$field->relationship_table_name]->multilanguage ? $field->relationship_table_name.'_'.Lang::get() : $field->relationship_table_name;
 
-		return $result;
-	}
+                    $toSelect[] = $relationshipTable.'.'.$field->relationship_view_field.' AS '.$field->relationship_table_name.'_'.$field->relationship_view_field;
 
-	public function headings() : array
-	{
-		$headings = ['ID'];
-		
-		foreach ($this->crud->fields as $field) {
+                    $joins[] = [$relationshipTable, $relationshipTable.'.id', $this->crud->table.'.id_'.$field->relationship_table_name];
+                }
+            }
+        }
 
-			if ($field->type == 'password') {
-				continue;
-			}
+        $result = DB::table($this->crud->table)
+            ->select($toSelect)
+            ->when($this->crud->multilanguage, function ($q) {
+                foreach (Lang::all() as $lang) {
+                    if ($lang->tag != Lang::get()) {
+                        $q->join($this->crud->table_name.'_'.$lang->tag, $this->crud->table_name.'_'.$lang->tag.'.id', $this->crud->table.'.id');
+                    }
+                }
+            })
+            ->when($joins->count(), function ($q) use ($joins) {
+                foreach ($joins as $join) {
+                    if ($join[0] != $this->crud->table) {
+                        $q->join($join[0], $join[1], $join[2]);
+                    }
+                }
+            })
+            ->orderBy('id', 'ASC');
 
-			if ($field->type != 'relationship') {
+        return $result;
+    }
 
-				if ($field->lang) {
+    public function headings(): array
+    {
+        $headings = ['ID'];
 
-					foreach (Lang::all() as $lang) {
+        foreach ($this->crud->fields as $field) {
 
-						$headings[] = $field->title.' '.Str::upper($lang->tag);
-					}
+            if ($field->type == 'password') {
+                continue;
+            }
 
-				} else {
+            if ($field->type != 'relationship') {
 
-					$headings[] = $field->title;
-				}
+                if ($field->lang) {
 
-			} else {
+                    foreach (Lang::all() as $lang) {
 
-				if ($field->relationship_count == 'single') {
+                        $headings[] = $field->title.' '.Str::upper($lang->tag);
+                    }
 
-					$headings[] = $field->title;
-				}
-			}
-		}
+                } else {
 
-		return $headings;
-	}
+                    $headings[] = $field->title;
+                }
 
-	public function map($item) : array
-	{
-		$map = [$item->id];
-		
-		foreach ($this->crud->fields as $field) {
+            } else {
 
-			if ($field->type == 'password') {
-				continue;
-			}
+                if ($field->relationship_count == 'single') {
 
-			if ($field->type != 'relationship') {
+                    $headings[] = $field->title;
+                }
+            }
+        }
 
-				if ($field->lang) {
-					
-					foreach (Lang::all() as $lang) {
+        return $headings;
+    }
 
-						$dbTitle = $field->db_title.'_'.$lang->tag;
-						$map[] = $item->$dbTitle;
-					}
+    public function map($item): array
+    {
+        $map = [$item->id];
 
-				} else {
+        foreach ($this->crud->fields as $field) {
 
-					$dbTitle = $field->db_title;
-					$map[] = $item->$dbTitle;
-				}
+            if ($field->type == 'password') {
+                continue;
+            }
 
-			} else {
+            if ($field->type != 'relationship') {
 
-				if ($field->relationship_count == 'single') {
-					
-					$dbTitle = $field->relationship_table_name.'_'.$field->relationship_view_field;
-					$map[] = $item->$dbTitle;
-				}
-			}
-		}
+                if ($field->lang) {
 
-		return $map;
-	}
+                    foreach (Lang::all() as $lang) {
+
+                        $dbTitle = $field->db_title.'_'.$lang->tag;
+                        $map[] = $item->$dbTitle;
+                    }
+
+                } else {
+
+                    $dbTitle = $field->db_title;
+                    $map[] = $item->$dbTitle;
+                }
+
+            } else {
+
+                if ($field->relationship_count == 'single') {
+
+                    $dbTitle = $field->relationship_table_name.'_'.$field->relationship_view_field;
+                    $map[] = $item->$dbTitle;
+                }
+            }
+        }
+
+        return $map;
+    }
 }

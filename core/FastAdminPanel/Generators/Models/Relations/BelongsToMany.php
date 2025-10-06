@@ -7,6 +7,7 @@ use Str;
 class BelongsToMany implements Relation
 {
     protected $table;
+
     protected $field;
 
     public function __construct($table, $field)
@@ -17,11 +18,11 @@ class BelongsToMany implements Relation
 
     public function body()
     {
-        $body = "public function ".$this->name()."() \n";
+        $body = 'public function '.$this->name()."() \n";
 
-        $body .= "\t{\n";
+        $body .= "    {\n";
 
-        $body .= "\t\t";
+        $body .= "        ";
 
         $body .= 'return $this->belongsToMany(';
 
@@ -35,7 +36,7 @@ class BelongsToMany implements Relation
 
         $body .= ");\n";
 
-        $body .= "\t}";
+        $body .= "    }";
 
         return $body;
     }

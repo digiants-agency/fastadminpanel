@@ -6,12 +6,12 @@ class MigrationGenerator
 {
     public function create($table, $type = '', $fields = '', $isMultilanguage = false, $filename = '')
     {
-        $stub = $this->getStub($type, $isMultilanguage); 
+        $stub = $this->getStub($type, $isMultilanguage);
         $filename = $filename ? $filename : $this->getDatePrefix().'_'.$type.'_'.$table.'.php';
         $path = $this->getPath($filename);
 
         file_put_contents(
-            $path, 
+            $path,
             $this->populateStub($stub, $table, $fields)
         );
     }
@@ -23,11 +23,11 @@ class MigrationGenerator
 
     protected function getStub($type, $isMultilanguage)
     {
-        if (!in_array($type, ['create', 'update', 'delete'])) {
+        if (! in_array($type, ['create', 'update', 'delete'])) {
             return;
         }
 
-		$multilanguage =  $isMultilanguage ? '.multilanguage' : '';
+        $multilanguage = $isMultilanguage ? '.multilanguage' : '';
 
         $stub = $this->stubPath("migration.{$type}{$multilanguage}.stub");
 
@@ -45,7 +45,7 @@ class MigrationGenerator
 
     protected function getPath($name)
     {
-        return database_path("migrations").'/'.$name;
+        return database_path('migrations').'/'.$name;
     }
 
     protected function getDatePrefix()

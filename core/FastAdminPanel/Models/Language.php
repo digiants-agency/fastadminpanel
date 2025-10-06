@@ -6,39 +6,39 @@ use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	protected $table = 'languages';
+    protected $table = 'languages';
 
-	protected $fillable = [
-		'tag',
-		'main_lang',
-	];
+    protected $fillable = [
+        'tag',
+        'main_lang',
+    ];
 
-	public static function boot()
-	{
-		parent::boot();
+    public static function boot()
+    {
+        parent::boot();
 
-		// TODO: move
-		static::deleting(function($lang) {
+        // TODO: move
+        static::deleting(function ($lang) {
 
-			$crud = new Crud();
-			$crud->removeTables($lang->tag);
-			
-			$field = new SingleField();
-			$field->removeTables($lang->tag);
-		});
+            $crud = new Crud;
+            $crud->removeTables($lang->tag);
 
-		// TODO: move
-		static::creating(function($lang) {
+            $field = new SingleField;
+            $field->removeTables($lang->tag);
+        });
 
-			$main = Language::select('tag')->where('main_lang', 1)->first();
+        // TODO: move
+        static::creating(function ($lang) {
 
-			$crud = new Crud();
-			$crud->addTables($lang->tag, $main->tag);
-			
-			$field = new SingleField();
-			$field->addTables($lang->tag, $main->tag);
-		});
-	}
+            $main = Language::select('tag')->where('main_lang', 1)->first();
+
+            $crud = new Crud;
+            $crud->addTables($lang->tag, $main->tag);
+
+            $field = new SingleField;
+            $field->addTables($lang->tag, $main->tag);
+        });
+    }
 }

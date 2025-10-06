@@ -4,12 +4,12 @@ namespace App\FastAdminPanel\Imports;
 
 use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Models\Crud;
-use Maatwebsite\Excel\Row;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Row;
 use Str;
 
 HeadingRowFormatter::default('none');
@@ -17,6 +17,7 @@ HeadingRowFormatter::default('none');
 class Import implements OnEachRow, WithHeadingRow
 {
     protected $crud;
+
     protected $singles;
 
     public function __construct($table)
@@ -34,13 +35,13 @@ class Import implements OnEachRow, WithHeadingRow
         foreach (Lang::all() as $lang) {
             $toUpdate[$lang->tag] = [];
         }
-        
+
         $headingLangs = $this->getLangByHeading();
         $headingFields = $this->getDbTitleByHeading();
         $headingFieldTypes = $this->getFieldTypesByHeading();
 
         foreach (array_keys($row) as $rowKey) {
-            
+
             if ($rowKey == 'ID' || gettype($rowKey) == 'integer') {
                 continue;
             }
@@ -52,8 +53,8 @@ class Import implements OnEachRow, WithHeadingRow
             $value = $row[$rowKey];
 
             if (in_array($headingField, array_keys($this->singles))) {
-                
-                if (!isset($this->singles[$headingField][$value])) {
+
+                if (! isset($this->singles[$headingField][$value])) {
                     throw new HttpResponseException(
                         response()->json([
                             'error' => 'Value "'.$value.'" for "'.$rowKey.'" is not exist in ID = '.$row['ID'],
@@ -67,11 +68,11 @@ class Import implements OnEachRow, WithHeadingRow
             if ($headingFieldType == 'checkbox' && empty($value)) {
                 $value = 0;
             }
-            
-            if (!empty($headingLang)) {
-            
+
+            if (! empty($headingLang)) {
+
                 $toUpdate[$headingLang][$headingField] = $value;
-            
+
             } else {
 
                 foreach (Lang::all() as $lang) {
@@ -92,7 +93,7 @@ class Import implements OnEachRow, WithHeadingRow
     protected function getLangByHeading()
     {
         $headings = [];
-        
+
         foreach ($this->crud->fields as $field) {
 
             if ($field->type == 'password') {
@@ -126,7 +127,7 @@ class Import implements OnEachRow, WithHeadingRow
     protected function getDbTitleByHeading()
     {
         $headings = [];
-        
+
         foreach ($this->crud->fields as $field) {
 
             if ($field->type == 'password') {
@@ -136,7 +137,7 @@ class Import implements OnEachRow, WithHeadingRow
             if ($field->type != 'relationship') {
 
                 if ($field->lang) {
-                    
+
                     foreach (Lang::all() as $lang) {
                         $headings[$field->title.' '.Str::upper($lang->tag)] = $field->db_title;
                     }
@@ -145,7 +146,7 @@ class Import implements OnEachRow, WithHeadingRow
 
                     $headings[$field->title] = $field->db_title;
                 }
-            
+
             } else {
 
                 if ($field->relationship_count == 'single') {
@@ -160,11 +161,11 @@ class Import implements OnEachRow, WithHeadingRow
     protected function getFieldTypesByHeading()
     {
         $types = [];
-        
+
         foreach ($this->crud->fields as $field) {
 
             if ($field->lang) {
-                    
+
                 foreach (Lang::all() as $lang) {
                     $types[$field->title.' '.Str::upper($lang->tag)] = $field->type;
                 }
@@ -185,7 +186,6 @@ class Import implements OnEachRow, WithHeadingRow
 
         foreach ($this->crud->fields as $field) {
 
-
             if ($field->type == 'relationship') {
 
                 if ($field->relationship_count == 'single') {
@@ -193,8 +193,8 @@ class Import implements OnEachRow, WithHeadingRow
                     $relationshipTable = $cruds[$field->relationship_table_name]->multilanguage ? $field->relationship_table_name.'_'.Lang::get() : $field->relationship_table_name;
 
                     $singles['id_'.$field->relationship_table_name] = DB::table($relationshipTable)
-                    ->select('id', $field->relationship_view_field)
-                    ->get()->keyBy($field->relationship_view_field);
+                        ->select('id', $field->relationship_view_field)
+                        ->get()->keyBy($field->relationship_view_field);
                 }
             }
         }

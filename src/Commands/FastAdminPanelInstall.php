@@ -12,80 +12,80 @@ use Illuminate\Support\Facades\Artisan;
 
 class FastAdminPanelInstall extends Command
 {
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'fastadminpanel:install';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'fastadminpanel:install';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Run installation of FastAdminPanel.';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Run installation of FastAdminPanel.';
 
-	/**
-	 * Create a new command instance.
-	 */
-	public function __construct(
-		protected TemplateImporter $templateImporter,
-		protected Core $publisherCore,
-		protected Provider $publisherProvider,
-		protected Lfm $fixLfm,
-	) {
-		parent::__construct();
-	}
+    /**
+     * Create a new command instance.
+     */
+    public function __construct(
+        protected TemplateImporter $templateImporter,
+        protected Core $publisherCore,
+        protected Provider $publisherProvider,
+        protected Lfm $fixLfm,
+    ) {
+        parent::__construct();
+    }
 
-	/**
-	 * Execute the console command.
-	 */
-	public function handle()
-	{
-		$this->info('Please note: FastAdminPanel requires fresh Laravel installation!');
-		
-		if (!$this->confirm('Do you wish to continue?')) {
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $this->info('Please note: FastAdminPanel requires fresh Laravel installation!');
 
-			return Command::FAILURE;
-		}
+        if (! $this->confirm('Do you wish to continue?')) {
 
-		$this->fixLfm->fix();
-		$this->publisherCore->publish();
-		$this->publisherProvider->publish();
-		
-		Artisan::call('migrate');
-		
-		$this->addUser();
-		$this->importTemplate();
+            return Command::FAILURE;
+        }
 
-		return Command::SUCCESS;
-	}
+        $this->fixLfm->fix();
+        $this->publisherCore->publish();
+        $this->publisherProvider->publish();
 
-	protected function importTemplate()
-	{
-		$isImport = $this->confirm('Import template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController?');
+        Artisan::call('migrate');
 
-		if ($isImport) {
+        $this->addUser();
+        $this->importTemplate();
 
-			$type = TemplateImporter::COMPONENTS;
+        return Command::SUCCESS;
+    }
 
-			// $type = $this->choice('Which type of template do you want?', [
-			// 	TemplateImporter::DEFAULT,
-			// 	TemplateImporter::COMPONENTS,
-			// ]);
+    protected function importTemplate()
+    {
+        $isImport = $this->confirm('Import template (only on fresh installation): converter, layout, header, footer, pagination, JS, route, SitemapController, PagesController?');
 
-			$this->templateImporter->import($type);
-		}
-	}
+        if ($isImport) {
 
-	protected function addUser()
-	{
-		User::create([
-			'name'		=> $this->ask('Administrator name'),
-			'email'		=> $this->ask('Administrator email'),
-			'password'	=> bcrypt($this->secret('Administrator password')),
-			'roles_id'	=> 1,
-		]);
-	}
+            $type = TemplateImporter::COMPONENTS;
+
+            // $type = $this->choice('Which type of template do you want?', [
+            // 	TemplateImporter::DEFAULT,
+            // 	TemplateImporter::COMPONENTS,
+            // ]);
+
+            $this->templateImporter->import($type);
+        }
+    }
+
+    protected function addUser()
+    {
+        User::create([
+            'name' => $this->ask('Administrator name'),
+            'email' => $this->ask('Administrator email'),
+            'password' => bcrypt($this->secret('Administrator password')),
+            'roles_id' => 1,
+        ]);
+    }
 }

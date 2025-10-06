@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Services\Crud;
 
@@ -7,54 +7,54 @@ use App\FastAdminPanel\Models\Crud;
 
 class TableService
 {
-	public function getTables($entity, $multilanguage = -1)
-	{
-		$tables = collect([]);
+    public function getTables($entity, $multilanguage = -1)
+    {
+        $tables = collect([]);
 
-		if ($multilanguage == -1) {
+        if ($multilanguage == -1) {
 
-			$crud = Crud::get()
-			->where('table_name', $entity)
-			->first();
+            $crud = Crud::get()
+                ->where('table_name', $entity)
+                ->first();
 
-			$tableName = $crud->table_name;
-			$multilanguage = $crud->multilanguage;
+            $tableName = $crud->table_name;
+            $multilanguage = $crud->multilanguage;
 
-		} else {
+        } else {
 
-			$tableName = $entity;
-		}
+            $tableName = $entity;
+        }
 
-		if ($multilanguage == 1) {
+        if ($multilanguage == 1) {
 
-			foreach (Lang::all() as $lang) {
-				$tables[] = "{$tableName}_{$lang->tag}";
-			}
-			
-		} else {
+            foreach (Lang::all() as $lang) {
+                $tables[] = "{$tableName}_{$lang->tag}";
+            }
 
-			$tables[] = $tableName;
-		}
+        } else {
 
-		return $tables;
-	}
+            $tables[] = $tableName;
+        }
 
-	public function getTable($table, $lang = null)
-	{
-		$crud = Crud::get()
-		->where('table_name', $table)
-		->first();
+        return $tables;
+    }
 
-		if (empty($crud)) {
-			return $table;
-		}
+    public function getTable($table, $lang = null)
+    {
+        $crud = Crud::get()
+            ->where('table_name', $table)
+            ->first();
 
-		$lang = $lang ?? Lang::get();
+        if (empty($crud)) {
+            return $table;
+        }
 
-		if ($crud->multilanguage == 1) {
-			return $table.'_'.$lang;
-		}
+        $lang = $lang ?? Lang::get();
 
-		return $table;
-	}
+        if ($crud->multilanguage == 1) {
+            return $table.'_'.$lang;
+        }
+
+        return $table;
+    }
 }

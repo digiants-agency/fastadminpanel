@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -10,23 +10,23 @@ use Illuminate\Support\Facades\Response;
 
 class SingleController extends Controller
 {
-	public function update(UpdateRequest $request, SingleSaver $saver)
-	{
-		$data = $request->validated();
+    public function update(UpdateRequest $request, SingleSaver $saver)
+    {
+        $data = $request->validated();
 
-		$saver->setPage($data);
-		$saver->save($data['blocks']);
+        $saver->setPage($data);
+        $saver->save($data['blocks']);
 
-		return Response::json();
-	}
+        return Response::json();
+    }
 
-	public function destroy(DestroyRequest $request, SingleSaver $saver)
-	{
-		$data = $request->validated();
+    public function destroy(DestroyRequest $request, SingleSaver $saver)
+    {
+        $data = $request->validated();
 
-		$saver->setPage($data);
-		$saver->remove();
+        $saver->setPage($data);
+        $saver->remove();
 
-		return Response::json();
-	}
+        return Response::json();
+    }
 }

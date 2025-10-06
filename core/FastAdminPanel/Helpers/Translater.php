@@ -5,180 +5,182 @@ namespace App\FastAdminPanel\Helpers;
 // legacy
 class Translater
 {
-	protected $tags = [];
-	protected $attempts;
+    protected $tags = [];
 
-	protected $tagsMask = [
-		' ☀ ',' 👆 ',' ☁ ',' 👇 ',' ☂ ',' 👈 ',' ✊ ',' 👉 ',' ✋ ',' 👊 ',' 👋 ',' 👌 ',' ☏ ',' ☐ ',' ☑ ',' ☒ ',' ☓ ',' ☔ ',' ☕ ',' ☖ ',' ☗ ',' ☘ ',' ☙ ',' ☚ ',' 🙈 ',' 🙉 ',' 🙊 ',' 🙋 ',' 🙌 ',' 🙍 ',' 🙎 ',' 🐲 ',' 👀 ',' 🐝 ',' 💢 ',' ☘ ',' ✌ ',' ∞ ',' 🐾 ',' 💋 ',' 👣 ',' 🚗 ',' ☠ ',' 🚀 ',' 🚃 ',' 🚄 ',' 🚅 ',' 🚇 ',' 🚉 ',' 🚌 ',' 🚏 ',' 🚑 ',' 🚒 ',' 🚓 ',' 🚕 ',' 😄 ',' 😅 ',' 🚙 ',' 🚚 ',' 🚢 ', ' 😁 ',' 😂 ',' 😃 ',' 😆 ',' 😇 ',' 😈 ',' 😉 ',' 😊 ',' 😋 ',' 😌 ',' 😍 ',' 😎 ',' 😏 ',' 😐 ',' 😒 ',' 🚤 ',' 😓 ',' 😔 ',' 😖 ',' 😘 ',' 😚 ',' 😜 ',' 😝 ',' 😞 ',' 😠 ',' 😡 ',' 😢 ',' 😣 ',' 😤 ',' 😥 ',' 😨 ',' 😩 ',' 😪 ',' 😫 ',' 😭 ',' 😰 ',' 🌏 ',' 🍀 ',' 😱 ',' 😲 ',' 😳 ',' 😵 ',' 😶 ',' 😷 ',' 😸 ',' 😹 ',' 😺 ',' 😻 ',' 😼 ',' 😽 ',' 😾 ',' 😿 ',' 🙀 ',' 🙅 ',' 🙆 ',' 🙇 ',
-	];
+    protected $attempts;
 
-	public function __construct($attempts = 4)
-	{
-		$this->attempts = $attempts;
-	}
+    protected $tagsMask = [
+        ' ☀ ', ' 👆 ', ' ☁ ', ' 👇 ', ' ☂ ', ' 👈 ', ' ✊ ', ' 👉 ', ' ✋ ', ' 👊 ', ' 👋 ', ' 👌 ', ' ☏ ', ' ☐ ', ' ☑ ', ' ☒ ', ' ☓ ', ' ☔ ', ' ☕ ', ' ☖ ', ' ☗ ', ' ☘ ', ' ☙ ', ' ☚ ', ' 🙈 ', ' 🙉 ', ' 🙊 ', ' 🙋 ', ' 🙌 ', ' 🙍 ', ' 🙎 ', ' 🐲 ', ' 👀 ', ' 🐝 ', ' 💢 ', ' ☘ ', ' ✌ ', ' ∞ ', ' 🐾 ', ' 💋 ', ' 👣 ', ' 🚗 ', ' ☠ ', ' 🚀 ', ' 🚃 ', ' 🚄 ', ' 🚅 ', ' 🚇 ', ' 🚉 ', ' 🚌 ', ' 🚏 ', ' 🚑 ', ' 🚒 ', ' 🚓 ', ' 🚕 ', ' 😄 ', ' 😅 ', ' 🚙 ', ' 🚚 ', ' 🚢 ', ' 😁 ', ' 😂 ', ' 😃 ', ' 😆 ', ' 😇 ', ' 😈 ', ' 😉 ', ' 😊 ', ' 😋 ', ' 😌 ', ' 😍 ', ' 😎 ', ' 😏 ', ' 😐 ', ' 😒 ', ' 🚤 ', ' 😓 ', ' 😔 ', ' 😖 ', ' 😘 ', ' 😚 ', ' 😜 ', ' 😝 ', ' 😞 ', ' 😠 ', ' 😡 ', ' 😢 ', ' 😣 ', ' 😤 ', ' 😥 ', ' 😨 ', ' 😩 ', ' 😪 ', ' 😫 ', ' 😭 ', ' 😰 ', ' 🌏 ', ' 🍀 ', ' 😱 ', ' 😲 ', ' 😳 ', ' 😵 ', ' 😶 ', ' 😷 ', ' 😸 ', ' 😹 ', ' 😺 ', ' 😻 ', ' 😼 ', ' 😽 ', ' 😾 ', ' 😿 ', ' 🙀 ', ' 🙅 ', ' 🙆 ', ' 🙇 ',
+    ];
 
-	public function tr($content, $languageFrom, $languageTo)
-	{
-		$content = $this->encodeData($content);
+    public function __construct($attempts = 4)
+    {
+        $this->attempts = $attempts;
+    }
 
-		if (mb_strlen($content) < 4000) {
+    public function tr($content, $languageFrom, $languageTo)
+    {
+        $content = $this->encodeData($content);
 
-			$content = $this->translateRequest($content, $languageFrom, $languageTo);
-			return $this->decodeData($content);
-		}
-		
-		$textParts = [];
+        if (mb_strlen($content) < 4000) {
 
-		while (mb_strlen($content) > 3000) {
+            $content = $this->translateRequest($content, $languageFrom, $languageTo);
 
-			$textPart = mb_substr($content, 0, 3000);
+            return $this->decodeData($content);
+        }
 
-			$partSeparatorPos = mb_strripos($textPart, '.') === false ? mb_strripos($textPart, ' ') : mb_strripos($textPart, '.');
-			
-			$textStartPart = mb_substr($textPart, 0, $partSeparatorPos + 1);
-			$textParts[] = $textStartPart;
+        $textParts = [];
 
-			$content = str_replace($textStartPart, '', $content);
-		}
+        while (mb_strlen($content) > 3000) {
 
-		$textParts[] = $content;
+            $textPart = mb_substr($content, 0, 3000);
 
-		$result = '';
-		foreach ($textParts as $textPart) {
-			$result .= $this->translateRequest($textPart, $languageFrom, $languageTo);
-		}
+            $partSeparatorPos = mb_strripos($textPart, '.') === false ? mb_strripos($textPart, ' ') : mb_strripos($textPart, '.');
 
-		$result = $this->decodeData($result);
+            $textStartPart = mb_substr($textPart, 0, $partSeparatorPos + 1);
+            $textParts[] = $textStartPart;
 
-		return $result;
-	}
+            $content = str_replace($textStartPart, '', $content);
+        }
 
-	protected function translateRequest($text, $languageFrom, $languageTo)
-	{
-		usleep(500000);
+        $textParts[] = $content;
 
-		$url = 'https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=uk-RU&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e';
+        $result = '';
+        foreach ($textParts as $textPart) {
+            $result .= $this->translateRequest($textPart, $languageFrom, $languageTo);
+        }
 
-		if (mb_strlen($text) >= 5000) {
-			throw new \Exception('Maximum number of characters exceeded: 5000');
-		}
+        $result = $this->decodeData($result);
 
-		$fields = [
-			'sl' => urlencode($languageFrom),
-			'tl' => urlencode($languageTo),
-			'q'  => urlencode($text),
-		];
+        return $result;
+    }
 
-		$fields_string = $this->fieldsToQuery($fields);
+    protected function translateRequest($text, $languageFrom, $languageTo)
+    {
+        usleep(500000);
 
-		$content = $this->request($url, $fields, $fields_string, 0);
+        $url = 'https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=uk-RU&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e';
 
-		$translation = $this->getSentencesFromJSON($content);
+        if (mb_strlen($text) >= 5000) {
+            throw new \Exception('Maximum number of characters exceeded: 5000');
+        }
 
-		return $translation;
-	}
+        $fields = [
+            'sl' => urlencode($languageFrom),
+            'tl' => urlencode($languageTo),
+            'q' => urlencode($text),
+        ];
 
-	protected function encodeData($text)
-	{
-		$this->tags = [];
+        $fields_string = $this->fieldsToQuery($fields);
 
-		$tagsCount = count($this->tagsMask);
-		
-		preg_match_all('/\<\/?[^\>]+\>/', $text, $matches);
+        $content = $this->request($url, $fields, $fields_string, 0);
 
-		$allTags = array_unique($matches[0]);
+        $translation = $this->getSentencesFromJSON($content);
 
-		$i = 0;
-		foreach ($allTags as $tag) {
+        return $translation;
+    }
 
-			$text = str_replace($tag, $this->tagsMask[$i], $text);
-			$this->tags[] = $tag;
-			$i++;
+    protected function encodeData($text)
+    {
+        $this->tags = [];
 
-			if ($i > $tagsCount) {
+        $tagsCount = count($this->tagsMask);
 
-				throw new \Exception('Need more tags mask');
-			}
-		}
+        preg_match_all('/\<\/?[^\>]+\>/', $text, $matches);
 
-		return $text;
-	}
+        $allTags = array_unique($matches[0]);
 
-	protected function decodeData($text)
-	{
-		for ($i = 0, $count = count($this->tags); $i < $count; $i++) {
-			
-			$tagMaskBack = str_replace(' ', '', $this->tagsMask[$i]);
+        $i = 0;
+        foreach ($allTags as $tag) {
 
-			$text = str_replace($tagMaskBack, $this->tags[$i], $text);
-		}
+            $text = str_replace($tag, $this->tagsMask[$i], $text);
+            $this->tags[] = $tag;
+            $i++;
 
-		$text = str_replace('  ', ' ', $text);
+            if ($i > $tagsCount) {
 
-		return $text;
-	}
+                throw new \Exception('Need more tags mask');
+            }
+        }
 
-	protected function request($url, $fields, $fields_string, $i)
-	{
-		$i++;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		// curl_setopt($ch, CURLOPT_PROXY, Proxy::$ip);
-		// curl_setopt($ch, CURLOPT_PROXYUSERPWD, Proxy::$auth);
-		curl_setopt($ch, CURLOPT_POST, count($fields));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		//curl_setopt($ch, CURLOPT_HEADER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1');
+        return $text;
+    }
 
-		$result = curl_exec($ch);
-		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		
-		curl_close($ch);
+    protected function decodeData($text)
+    {
+        for ($i = 0, $count = count($this->tags); $i < $count; $i++) {
 
-		if (false === $result || 200 !== $httpcode) {
+            $tagMaskBack = str_replace(' ', '', $this->tagsMask[$i]);
 
-			if ($i >= $this->attempts) {
-				throw new \Exception('Could not connect and get data');
-			}
+            $text = str_replace($tagMaskBack, $this->tags[$i], $text);
+        }
 
-			usleep(1500000);
+        $text = str_replace('  ', ' ', $text);
 
-			return $this->request($url, $fields, $fields_string, $i);
-		}
+        return $text;
+    }
 
-		return $result;
-	}
+    protected function request($url, $fields, $fields_string, $i)
+    {
+        $i++;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // curl_setopt($ch, CURLOPT_PROXY, Proxy::$ip);
+        // curl_setopt($ch, CURLOPT_PROXYUSERPWD, Proxy::$auth);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+        // curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1');
 
-	protected function fieldsToQuery($fields)
-	{
-		$fields_string = '';
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-		foreach ($fields as $key => $value) {
+        curl_close($ch);
 
-			$fields_string .= $key.'='.$value.'&';
-		}
+        if ($result === false || $httpcode !== 200) {
 
-		return rtrim($fields_string, '&');
-	}
+            if ($i >= $this->attempts) {
+                throw new \Exception('Could not connect and get data');
+            }
 
-	protected function getSentencesFromJSON($json)
-	{
-		$arr = json_decode($json, true);
-		$sentences = '';
+            usleep(1500000);
 
-		if (isset($arr['sentences'])) {
-			foreach ($arr['sentences'] as $s) {
-				$sentences .= isset($s['trans']) ? $s['trans'] : '';
-			}
-		}
+            return $this->request($url, $fields, $fields_string, $i);
+        }
 
-		return $sentences;
-	}
+        return $result;
+    }
+
+    protected function fieldsToQuery($fields)
+    {
+        $fields_string = '';
+
+        foreach ($fields as $key => $value) {
+
+            $fields_string .= $key.'='.$value.'&';
+        }
+
+        return rtrim($fields_string, '&');
+    }
+
+    protected function getSentencesFromJSON($json)
+    {
+        $arr = json_decode($json, true);
+        $sentences = '';
+
+        if (isset($arr['sentences'])) {
+            foreach ($arr['sentences'] as $s) {
+                $sentences .= isset($s['trans']) ? $s['trans'] : '';
+            }
+        }
+
+        return $sentences;
+    }
 }

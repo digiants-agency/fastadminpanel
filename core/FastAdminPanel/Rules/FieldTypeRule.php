@@ -10,7 +10,7 @@ class FieldTypeRule implements Rule
     public $fieldType;
 
     public $isRequired;
-    
+
     /**
      * Create a new rule instance.
      *
@@ -35,35 +35,35 @@ class FieldTypeRule implements Rule
 
             return is_string($value);
 
-        } else if(in_array($this->fieldType, ['photo'])) {
+        } elseif (in_array($this->fieldType, ['photo'])) {
 
             return in_array($value->getClientMimeType(), config('lfm.folder_categories.image.valid_mime'));
 
-        } else if(in_array($this->fieldType, ['file'])) {
+        } elseif (in_array($this->fieldType, ['file'])) {
 
             return in_array($value->getClientMimeType(), config('lfm.folder_categories.file.valid_mime'));
 
-        } else if (in_array($this->fieldType, ['number', 'checkbox'])) {
+        } elseif (in_array($this->fieldType, ['number', 'checkbox'])) {
 
             return is_numeric($value);
-            
-        } else if ($this->fieldType == 'date') {
+
+        } elseif ($this->fieldType == 'date') {
 
             return DateTime::createFromFormat('Y-m-d', $value) !== false;
-            
-        } else if ($this->fieldType == 'datetime') {
+
+        } elseif ($this->fieldType == 'datetime') {
 
             return DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false;
-            
-        } else if (in_array($this->fieldType, ['translater', 'gallery', 'repeat'])) {
+
+        } elseif (in_array($this->fieldType, ['translater', 'gallery', 'repeat'])) {
 
             return is_string($value);
-            
-        } else if ($this->fieldType == 'money') {
+
+        } elseif ($this->fieldType == 'money') {
 
             return is_numeric($value);
-            
-        } else if ($this->fieldType == 'relationship') {
+
+        } elseif ($this->fieldType == 'relationship') {
 
             return $this->isRequired == 'required' ? is_numeric($value) && $value > 0 : is_numeric($value);
         }
@@ -74,34 +74,34 @@ class FieldTypeRule implements Rule
     public function messageField()
     {
         if (in_array($this->fieldType, ['enum', 'password', 'text', 'email', 'textarea', 'color', 'ckeditor'])) {
-    
+
             return 'string';
 
-        }  elseif (in_array($this->fieldType, ['file', 'photo', 'gallery'])) {
+        } elseif (in_array($this->fieldType, ['file', 'photo', 'gallery'])) {
 
             return 'correct file';
 
-        } else if (in_array($this->fieldType, ['number', 'checkbox'])) {
+        } elseif (in_array($this->fieldType, ['number', 'checkbox'])) {
 
             return 'integer';
-            
-        } else if ($this->fieldType == 'date') {
+
+        } elseif ($this->fieldType == 'date') {
 
             return 'incorrect date format: Y-m-d';
-            
-        } else if ($this->fieldType == 'datetime') {
+
+        } elseif ($this->fieldType == 'datetime') {
 
             return 'incorrect datetime format: Y-m-d H:i:s';
-            
-        } else if (in_array($this->fieldType, ['translater', 'repeat'])) {
+
+        } elseif (in_array($this->fieldType, ['translater', 'repeat'])) {
 
             return 'string';
-            
-        } else if ($this->fieldType == 'money') {
+
+        } elseif ($this->fieldType == 'money') {
 
             return 'float';
-            
-        } else if ($this->fieldType == 'relationship') {
+
+        } elseif ($this->fieldType == 'relationship') {
 
             return 'integer';
         }

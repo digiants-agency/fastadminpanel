@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class DestroyRequest extends FormRequest
 {
     public function rules()
-	{
+    {
         return [
             'slug' => ['required', 'string', 'in:'.SinglePage::get(['slug'])->pluck('slug')->implode(',')],
         ];

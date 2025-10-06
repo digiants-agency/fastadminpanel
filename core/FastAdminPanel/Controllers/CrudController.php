@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -11,44 +11,44 @@ use Illuminate\Support\Facades\Response;
 
 class CrudController extends Controller
 {
-	public function index(MainPolicy $policy)
-	{
-		$cruds = Crud::get();
+    public function index(MainPolicy $policy)
+    {
+        $cruds = Crud::get();
 
-		$slugs = $policy->getSlugs('admin_read');
+        $slugs = $policy->getSlugs('admin_read');
 
-		if (!$slugs->contains('all')) {
+        if (! $slugs->contains('all')) {
 
-			$cruds = $cruds->filter(fn ($c) => $slugs->contains($c->table_name))->values();
-		}
+            $cruds = $cruds->filter(fn ($c) => $slugs->contains($c->table_name))->values();
+        }
 
-		return Response::json($cruds);
-	}
+        return Response::json($cruds);
+    }
 
-	public function store(StoreRequest $request)
-	{
-		$data = $request->validated();
+    public function store(StoreRequest $request)
+    {
+        $data = $request->validated();
 
-		$crud = Crud::create($data);
+        $crud = Crud::create($data);
 
-		return Response::json($crud);
-	}
+        return Response::json($crud);
+    }
 
-	public function update(UpdateRequest $request, $table)
-	{
-		$data = $request->validated();
+    public function update(UpdateRequest $request, $table)
+    {
+        $data = $request->validated();
 
-		$crud = Crud::findOrFail($table);
-		$crud->update($data);
+        $crud = Crud::findOrFail($table);
+        $crud->update($data);
 
-		return Response::json();
-	}
+        return Response::json();
+    }
 
-	public function destroy($table)
-	{
-		$crud = Crud::findOrFail($table);
-		$crud->delete();
+    public function destroy($table)
+    {
+        $crud = Crud::findOrFail($table);
+        $crud->delete();
 
-		return Response::json();
-	}
+        return Response::json();
+    }
 }

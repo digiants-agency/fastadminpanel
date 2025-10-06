@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class MultilanguageModel extends Model
 {
-	public function __construct($lang = '', $attributes = [])
-	{
-		if ($lang == '') {
-			
-			$lang = Lang::get();
-		}
+    public function __construct($lang = '', $attributes = [])
+    {
+        if ($lang == '') {
 
-		parent::__construct($attributes);
-		
-		$this->table .= '_'.$lang; 
-	}
+            $lang = Lang::get();
+        }
+
+        parent::__construct($attributes);
+
+        $this->table .= '_'.$lang;
+    }
 }

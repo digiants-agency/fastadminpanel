@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Single;
 
@@ -7,97 +7,99 @@ use App\FastAdminPanel\Services\Single\SingleGetService;
 
 class Single
 {
-	protected $page;
-	protected $fields;
-	protected $singles = [];
+    protected $page;
 
-	public function __construct(
-		protected SingleGetService $service,
-	) { }
+    protected $fields;
 
-	public function get(string $slug)
-	{
-		if (!isset($this->singles[$slug])) {
-			
-			$singlePageId = SinglePage::where('slug', $slug)->value('id');
+    protected $singles = [];
 
-			if (!$singlePageId) {
+    public function __construct(
+        protected SingleGetService $service,
+    ) {}
 
-				return null;
-			}
+    public function get(string $slug)
+    {
+        if (! isset($this->singles[$slug])) {
 
-			$singlePage = $this->service->get($singlePageId);
+            $singlePageId = SinglePage::where('slug', $slug)->value('id');
 
-			$this->singles[$slug] = $this->formatFields($singlePage);
-		}
-		
-		return $this->singles[$slug];
-	}
+            if (! $singlePageId) {
 
-	protected function formatFields($blocks)
-	{
-		$formattedBlocks = [];
+                return null;
+            }
 
-		foreach ($blocks as $block) {
+            $singlePage = $this->service->get($singlePageId);
 
-			$fields = [];
+            $this->singles[$slug] = $this->formatFields($singlePage);
+        }
 
-			foreach ($block->fields as $field) {
+        return $this->singles[$slug];
+    }
 
-				if ($field->type == 'repeat') {
+    protected function formatFields($blocks)
+    {
+        $formattedBlocks = [];
 
-					$fields[$field->slug] = $this->formatRepeat($field);
+        foreach ($blocks as $block) {
 
-				} elseif ($field->type == 'photo') {
-					
-					$fields[$field->slug] = url($field->value);
+            $fields = [];
 
-				} else {
+            foreach ($block->fields as $field) {
 
-					$fields[$field->slug] = $field->value;
-				}
-			}
+                if ($field->type == 'repeat') {
 
-			$formattedBlocks[$block->slug] = $fields;
-		}
-		
-		return $formattedBlocks;
-	}
+                    $fields[$field->slug] = $this->formatRepeat($field);
 
-	protected function formatRepeat($field)
-	{
-		$formattedValues = [];
+                } elseif ($field->type == 'photo') {
 
-		foreach ($field['value']['fields'] as $repeatedField) {
-			
-			$formattedRepeat = $repeatedField['type'] == 'repeat' ? $this->formatRepeat($repeatedField) : [];
-			
-			$repeatedFieldValueIndex = 0;
+                    $fields[$field->slug] = url($field->value);
 
-			foreach ($repeatedField['value']['length'] ?? $repeatedField['value'] as $repeatedFieldValue) {
+                } else {
 
-				$formattedValues[$repeatedFieldValueIndex][$repeatedField['slug']] = $repeatedField['type'] == 'repeat' ? 
-					$this->transpose($formattedRepeat[$repeatedFieldValueIndex] ?? []) :
-					$repeatedFieldValue;
+                    $fields[$field->slug] = $field->value;
+                }
+            }
 
-				$repeatedFieldValueIndex += 1;
-			}
-		}
+            $formattedBlocks[$block->slug] = $fields;
+        }
 
-		return $formattedValues;
-	}
+        return $formattedBlocks;
+    }
 
-	protected function transpose($array)
-	{
-		$result = [];
-		$keys = array_keys($array);
+    protected function formatRepeat($field)
+    {
+        $formattedValues = [];
 
-		for ($row = 0; $row < count(reset($array)); $row++) {
-			foreach ($keys as $key) {
-				$result[$row][$key] = $array[$key][$row];
-			}
-		}
+        foreach ($field['value']['fields'] as $repeatedField) {
 
-		return $result;
-	}
+            $formattedRepeat = $repeatedField['type'] == 'repeat' ? $this->formatRepeat($repeatedField) : [];
+
+            $repeatedFieldValueIndex = 0;
+
+            foreach ($repeatedField['value']['length'] ?? $repeatedField['value'] as $repeatedFieldValue) {
+
+                $formattedValues[$repeatedFieldValueIndex][$repeatedField['slug']] = $repeatedField['type'] == 'repeat' ?
+                    $this->transpose($formattedRepeat[$repeatedFieldValueIndex] ?? []) :
+                    $repeatedFieldValue;
+
+                $repeatedFieldValueIndex += 1;
+            }
+        }
+
+        return $formattedValues;
+    }
+
+    protected function transpose($array)
+    {
+        $result = [];
+        $keys = array_keys($array);
+
+        for ($row = 0; $row < count(reset($array)); $row++) {
+            foreach ($keys as $key) {
+                $result[$row][$key] = $array[$key][$row];
+            }
+        }
+
+        return $result;
+    }
 }

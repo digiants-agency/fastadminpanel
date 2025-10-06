@@ -14,14 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-		$languages = Language::get();
+        $languages = Language::get();
 
-		foreach ($languages as $lang) {
+        foreach ($languages as $lang) {
 
-			Schema::create("{{ table }}_{$lang->tag}", function (Blueprint $table) {
-			{{ fields }}
-			});
-		}
+            Schema::create("{{ table }}_{$lang->tag}", function (Blueprint $table) {
+            {{ fields }}
+            });
+        }
     }
 
     /**
@@ -31,11 +31,11 @@ return new class extends Migration
      */
     public function down()
     {
-		$languages = Language::get();
+        $languages = Language::get();
 
-		foreach ($languages as $lang) {
+        foreach ($languages as $lang) {
 
-        	Schema::dropIfExists("{{ table }}_{$lang->tag}");
-		}
+            Schema::dropIfExists("{{ table }}_{$lang->tag}");
+        }
     }
 };

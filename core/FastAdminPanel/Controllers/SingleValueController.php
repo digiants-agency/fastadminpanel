@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -12,51 +12,46 @@ use Illuminate\Support\Facades\Response;
 
 class SingleValueController extends Controller
 {
-	// TODO: validation
-	public function index(Request $request, MainPolicy $policy)
-	{
-		$data = $request->all();
+    // TODO: validation
+    public function index(Request $request, MainPolicy $policy)
+    {
+        $data = $request->all();
 
-		$slugs = $policy->getSlugs('admin_read');
+        $slugs = $policy->getSlugs('admin_read');
 
-		$pages = SinglePage::when($data['is_full'], fn ($q) =>
-			
-			$q->with(['blocks' => fn ($q) =>
-				$q->with(['fields' => fn($q) =>
-					$q->with(['fields' => fn($q) =>
-						$q->orderBy('sort', 'ASC')
-					])
-					->where('parent_id', 0)
-					->orderBy('sort', 'ASC')
-				])
-				->orderBy('sort', 'ASC')
-			])
-		)
-		->when(!$slugs->contains('all'), fn ($q) => $q->whereIn('slug', $slugs))
-		->get();
+        $pages = SinglePage::when($data['is_full'], fn ($q) => $q->with(['blocks' => fn ($q) => $q->with(['fields' => fn ($q) => $q->with(['fields' => fn ($q) => $q->orderBy('sort', 'ASC'),
+        ])
+            ->where('parent_id', 0)
+            ->orderBy('sort', 'ASC'),
+        ])
+            ->orderBy('sort', 'ASC'),
+        ])
+        )
+            ->when(! $slugs->contains('all'), fn ($q) => $q->whereIn('slug', $slugs))
+            ->get();
 
-		return Response::json($pages);
-	}
+        return Response::json($pages);
+    }
 
-	// TODO: validation
-	public function show(SingleGetService $service, SinglePage $singlePage)
-	{
-		$this->authorize('something', [$singlePage->slug, 'admin_read']);
+    // TODO: validation
+    public function show(SingleGetService $service, SinglePage $singlePage)
+    {
+        $this->authorize('something', [$singlePage->slug, 'admin_read']);
 
-		$blocks = $service->get($singlePage->id);
+        $blocks = $service->get($singlePage->id);
 
-		return Response::json($blocks);
-	}
-	
-	// TODO: validation
-	public function update(Request $request, SingleSetService $service, SinglePage $singlePage)
-	{
-		$this->authorize('something', [$singlePage->slug, 'admin_edit']);
+        return Response::json($blocks);
+    }
 
-		$blocks = $request->get('blocks');
+    // TODO: validation
+    public function update(Request $request, SingleSetService $service, SinglePage $singlePage)
+    {
+        $this->authorize('something', [$singlePage->slug, 'admin_edit']);
 
-		$service->set($blocks, $singlePage->id);
+        $blocks = $request->get('blocks');
 
-		return Response::json();
-	}
+        $service->set($blocks, $singlePage->id);
+
+        return Response::json();
+    }
 }

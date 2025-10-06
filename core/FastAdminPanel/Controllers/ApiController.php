@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -15,112 +15,112 @@ use Illuminate\Support\Facades\Response;
 
 class ApiController extends Controller
 {
-	public function __construct(
-		protected ApiService $service,
-	) { }
+    public function __construct(
+        protected ApiService $service,
+    ) {}
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index(IndexRequest $request, $slug)
-	{
-		$this->authorize('something', [$slug, 'api_read']);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(IndexRequest $request, $slug)
+    {
+        $this->authorize('something', [$slug, 'api_read']);
 
-		$data = $request->validated();
+        $data = $request->validated();
 
-		$crud = Crud::findOrFail($slug);
+        $crud = Crud::findOrFail($slug);
 
-		$this->service->setCrud($crud);
+        $this->service->setCrud($crud);
 
-		$filters = new FilterQueryBuilder($request);
+        $filters = new FilterQueryBuilder($request);
 
-		$items = $this->service->index($data, $filters);
-		
-		return Response::json($items);
-	}
+        $items = $this->service->index($data, $filters);
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(StoreRequest $request, $slug)
-	{
-		$this->authorize('something', [$slug, 'api_create']);
+        return Response::json($items);
+    }
 
-		$data = $request->validated();
-		
-		$crud = Crud::findOrFail($slug);
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreRequest $request, $slug)
+    {
+        $this->authorize('something', [$slug, 'api_create']);
 
-		$this->service->setCrud($crud);
+        $data = $request->validated();
 
-		$item = $this->service->store($data);
+        $crud = Crud::findOrFail($slug);
 
-		return Response::json($item); 
-	}
+        $this->service->setCrud($crud);
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show(ShowRequest $request, $slug, $id)
-	{
-		$this->authorize('something', [$slug, 'api_read']);
+        $item = $this->service->store($data);
 
-		$data = $request->validated();
-		
-		$crud = Crud::findOrFail($slug);
+        return Response::json($item);
+    }
 
-		$this->service->setCrud($crud);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(ShowRequest $request, $slug, $id)
+    {
+        $this->authorize('something', [$slug, 'api_read']);
 
-		$item = $this->service->show($id, $data);
-		
-		return Response::json($item, $item ? 200 : 404);
-	}
+        $data = $request->validated();
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(UpdateRequest $request, $slug, $id)
-	{
-		$this->authorize('something', [$slug, 'api_update']);
+        $crud = Crud::findOrFail($slug);
 
-		$data = $request->validated();
-		
-		$crud = Crud::findOrFail($slug);
+        $this->service->setCrud($crud);
 
-		$this->service->setCrud($crud);
+        $item = $this->service->show($id, $data);
 
-		$item = $this->service->update($id, $data);
+        return Response::json($item, $item ? 200 : 404);
+    }
 
-		return Response::json($item); 
-	}
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateRequest $request, $slug, $id)
+    {
+        $this->authorize('something', [$slug, 'api_update']);
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(Request $request, $slug, $id)
-	{
-		$this->authorize('something', [$slug, 'api_delete']);
+        $data = $request->validated();
 
-		$crud = Crud::findOrFail($slug);
+        $crud = Crud::findOrFail($slug);
 
-		$this->service->setCrud($crud);
+        $this->service->setCrud($crud);
 
-		$this->service->destroy($id);
+        $item = $this->service->update($id, $data);
 
-		return Response::json();
-	}
+        return Response::json($item);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $slug, $id)
+    {
+        $this->authorize('something', [$slug, 'api_delete']);
+
+        $crud = Crud::findOrFail($slug);
+
+        $this->service->setCrud($crud);
+
+        $this->service->destroy($id);
+
+        return Response::json();
+    }
 }

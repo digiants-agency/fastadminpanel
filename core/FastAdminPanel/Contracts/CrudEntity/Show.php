@@ -4,5 +4,5 @@ namespace App\FastAdminPanel\Contracts\CrudEntity;
 
 interface Show
 {
-	public function get($tableName, $entityId);
+    public function get($tableName, $entityId);
 }

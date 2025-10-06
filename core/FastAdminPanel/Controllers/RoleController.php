@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Response;
 
 class RoleController extends Controller
 {
-	public function index()
-	{
-		return Response::json([
-			'roles'		=> Role::get(),
-			'id_roles'	=> Auth::user()->id_roles ?? 0,
-		]);
-	}
+    public function index()
+    {
+        return Response::json([
+            'roles' => Role::get(),
+            'id_roles' => Auth::user()->id_roles ?? 0,
+        ]);
+    }
 }

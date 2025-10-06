@@ -10,207 +10,209 @@ use Illuminate\Support\Facades\DB;
 
 class ShowProductsService implements Show
 {
-	public function __construct(
-		protected TableService $tableService,
-	) { }
+    public function __construct(
+        protected TableService $tableService,
+    ) {}
 
-	public function get($tableName, $entityId)
-	{
-		return $this->getFields($tableName, $entityId);
-	}
+    public function get($tableName, $entityId)
+    {
+        return $this->getFields($tableName, $entityId);
+    }
 
-	protected function getFields($tableName, $entityId)
-	{
-		$crud = Crud::findOrFail($tableName);
+    protected function getFields($tableName, $entityId)
+    {
+        $crud = Crud::findOrFail($tableName);
 
-		$table = $this->tableService->getTable($crud->table_name);
-		
-		$instance = DB::table($table)
-		->where('id', $entityId)
-		->first();
+        $table = $this->tableService->getTable($crud->table_name);
 
-		$fields = [];
+        $instance = DB::table($table)
+            ->where('id', $entityId)
+            ->first();
 
-		foreach ($crud->fields as $field) {
+        $fields = [];
 
-			// TODO: refactor
-			$field = json_decode(json_encode($field));
+        foreach ($crud->fields as $field) {
 
-			// TODO: date/datetime?
-			if ($field->type == 'relationship') {
+            // TODO: refactor
+            $field = json_decode(json_encode($field));
 
-				if ($field->relationship_count != 'editable') {
+            // TODO: date/datetime?
+            if ($field->type == 'relationship') {
 
-					$field->values = DB::table($this->tableService->getTable(
-						$field->relationship_table_name, 
-					))
-					->select('id', $field->relationship_view_field.' as title')
-					->get();
+                if ($field->relationship_count != 'editable') {
 
-					#region for products table
-					if ($field->relationship_table_name == 'filter_fields') {
+                    $field->values = DB::table($this->tableService->getTable(
+                        $field->relationship_table_name,
+                    ))
+                        ->select('id', $field->relationship_view_field.' as title')
+                        ->get();
 
-						$field->values = DB::table($this->tableService->getTable(
-							$field->relationship_table_name, 
-						))
-						->select('id', 'title', 'id_filters')
-						->get();
-						
-						$filters = DB::table('filters_'.Lang::get())
-						->select('id', 'title')
-						->get();
-						
-						foreach ($field->values as &$value) {
+                    // region for products table
+                    if ($field->relationship_table_name == 'filter_fields') {
 
-							$filter = $filters->where('id', $value->id_filters)->first();
-							
-							if ($filter)
-								$value->title = $filter->title.': '.$value->title;	
-						}						
-					}
-					#endregion
+                        $field->values = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id', 'title', 'id_filters')
+                            ->get();
 
-					if ($field->relationship_count == 'single') {
+                        $filters = DB::table('filters_'.Lang::get())
+                            ->select('id', 'title')
+                            ->get();
 
-						if ($entityId == 0) {
+                        foreach ($field->values as &$value) {
 
-							$field->value = 0;
+                            $filter = $filters->where('id', $value->id_filters)->first();
 
-						} else {
+                            if ($filter) {
+                                $value->title = $filter->title.': '.$value->title;
+                            }
+                        }
+                    }
+                    // endregion
 
-							$field_title = 'id_' . $field->relationship_table_name;
-							$field->value = $instance->$field_title;
-							
-							if ($field->value) {
+                    if ($field->relationship_count == 'single') {
 
-								$field->value_title = $field->values->where('id', $field->value)->first()->title ?? '';
-							}
-						}
+                        if ($entityId == 0) {
 
-					} else if ($field->relationship_count == 'many') {
+                            $field->value = 0;
 
-						if ($entityId == 0) {
+                        } else {
 
-							$field->value = [];
+                            $field_title = 'id_'.$field->relationship_table_name;
+                            $field->value = $instance->$field_title;
 
-						} else {
+                            if ($field->value) {
 
-							$rel_table = $tableName.'_'.$field->relationship_table_name;
-							$rel_connected_table = $field->relationship_table_name;
+                                $field->value_title = $field->values->where('id', $field->value)->first()->title ?? '';
+                            }
+                        }
 
-							if ($rel_table == $tableName.'_'.$tableName)
-								$rel_connected_table .= '_other';
+                    } elseif ($field->relationship_count == 'many') {
 
-							$field->value = DB::table($rel_table)
-							->select('id_'.$rel_connected_table.' AS id')
-							->where('id_'.$tableName, $entityId)
-							->orderBy('id', 'ASC')
-							->get()
-							->pluck('id');
-						}
-					}
+                        if ($entityId == 0) {
 
-				} else if ($field->relationship_count == 'editable') {
+                            $field->value = [];
 
-					$field->value = [];
+                        } else {
 
-					if ($entityId != 0) {
+                            $rel_table = $tableName.'_'.$field->relationship_table_name;
+                            $rel_connected_table = $field->relationship_table_name;
 
-						$editable_ids = DB::table($this->tableService->getTable(
-							$field->relationship_table_name,
-						))
-						->select('id')
-						->where('id_'.$tableName, $entityId)
-						->get()
-						->pluck('id');
+                            if ($rel_table == $tableName.'_'.$tableName) {
+                                $rel_connected_table .= '_other';
+                            }
 
-						$values = [];
+                            $field->value = DB::table($rel_table)
+                                ->select('id_'.$rel_connected_table.' AS id')
+                                ->where('id_'.$tableName, $entityId)
+                                ->orderBy('id', 'ASC')
+                                ->get()
+                                ->pluck('id');
+                        }
+                    }
 
-						foreach ($editable_ids as $editable_id) {
-							
-							$values[] = [
-								'fields'	=> $this->getFields(
-									$field->relationship_table_name,
-									$editable_id,
-								),
-								'id'		=> $editable_id,
-							];
-						}
-					
-						$field->value = $values;
-					}
+                } elseif ($field->relationship_count == 'editable') {
 
-					$field->values = $this->getFields($field->relationship_table_name, 0);
-				}
+                    $field->value = [];
 
-			} else if ($field->type == 'gallery') {
+                    if ($entityId != 0) {
 
-				if ($entityId == 0) {
+                        $editable_ids = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id')
+                            ->where('id_'.$tableName, $entityId)
+                            ->get()
+                            ->pluck('id');
 
-					$field->value = [];
+                        $values = [];
 
-				} else {
+                        foreach ($editable_ids as $editable_id) {
 
-					$field_title = $field->db_title;
-					$field->value = json_decode($instance->$field_title);
-				}
+                            $values[] = [
+                                'fields' => $this->getFields(
+                                    $field->relationship_table_name,
+                                    $editable_id,
+                                ),
+                                'id' => $editable_id,
+                            ];
+                        }
 
-			} else if ($field->type == 'password') {
+                        $field->value = $values;
+                    }
 
-				$field->value = '';
+                    $field->values = $this->getFields($field->relationship_table_name, 0);
+                }
 
-			} else if ($field->type == 'checkbox' || $field->type == 'money' || $field->type == 'number') {
+            } elseif ($field->type == 'gallery') {
 
-				if ($entityId == 0) {
+                if ($entityId == 0) {
 
-					$field->value = 0;
+                    $field->value = [];
 
-				} else {
+                } else {
 
-					$field_title = $field->db_title;
-					$field->value = $instance->$field_title;
-				}
+                    $field_title = $field->db_title;
+                    $field->value = json_decode($instance->$field_title);
+                }
 
-			} else if ($field->type == 'date') {
+            } elseif ($field->type == 'password') {
 
-				if ($entityId == 0) {
+                $field->value = '';
 
-					$field->value = date('Y-m-d');
+            } elseif ($field->type == 'checkbox' || $field->type == 'money' || $field->type == 'number') {
 
-				} else {
+                if ($entityId == 0) {
 
-					$field_title = $field->db_title;
-					$field->value = $instance->$field_title;
-				}
-				
-			} else if ($field->type == 'datetime') {
+                    $field->value = 0;
 
-				if ($entityId == 0) {
+                } else {
 
-					$field->value = date('Y-m-d H:i');
+                    $field_title = $field->db_title;
+                    $field->value = $instance->$field_title;
+                }
 
-				} else {
+            } elseif ($field->type == 'date') {
 
-					$field_title = $field->db_title;
-					$field->value = $instance->$field_title;
-				}
+                if ($entityId == 0) {
 
-			} else {
-				
-				if ($entityId == 0) {
+                    $field->value = date('Y-m-d');
 
-					$field->value = '';
-					
-				} else {
+                } else {
 
-					$field_title = $field->db_title;
-					$field->value = $instance->$field_title;
-				}
-			}
+                    $field_title = $field->db_title;
+                    $field->value = $instance->$field_title;
+                }
 
-			$fields[] = $field;
-		}
+            } elseif ($field->type == 'datetime') {
 
-		return $fields;
-	}
+                if ($entityId == 0) {
+
+                    $field->value = date('Y-m-d H:i');
+
+                } else {
+
+                    $field_title = $field->db_title;
+                    $field->value = $instance->$field_title;
+                }
+
+            } else {
+
+                if ($entityId == 0) {
+
+                    $field->value = '';
+
+                } else {
+
+                    $field_title = $field->db_title;
+                    $field->value = $instance->$field_title;
+                }
+            }
+
+            $fields[] = $field;
+        }
+
+        return $fields;
+    }
 }

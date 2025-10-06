@@ -4,56 +4,55 @@ namespace App\FastAdminPanel\Services\Crud;
 
 use App\FastAdminPanel\Models\Crud;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class MigrationDevService
 {
-	public function removeMigrationFiles(Crud $crud, array $methods)
-	{
-		$path = database_path("migrations");
-		$files = scandir($path);
+    public function removeMigrationFiles(Crud $crud, array $methods)
+    {
+        $path = database_path('migrations');
+        $files = scandir($path);
 
-		foreach ($methods as $method) {
+        foreach ($methods as $method) {
 
-			foreach ($files as $file) {
-	
-				if (str_ends_with($file, "{$method}_{$crud->table_name}.php") ||
-					str_ends_with($file, "{$method}_{$crud->table_name}_table.php")) {
-	
-					unlink($path . DIRECTORY_SEPARATOR . $file);
+            foreach ($files as $file) {
 
-					$migration = str_replace('.php', '', $file);
+                if (str_ends_with($file, "{$method}_{$crud->table_name}.php") ||
+                    str_ends_with($file, "{$method}_{$crud->table_name}_table.php")) {
 
-					DB::statement("DELETE FROM migrations WHERE migration = '$migration'");
-				}
-			}
-		}
-	}
+                    unlink($path.DIRECTORY_SEPARATOR.$file);
 
-	public function updateOldMigration(Crud $crud, MigrationService $migrationService)
-	{
-		$filename = $this->findCreateMigration($crud);
-		
-		if ($filename) {
+                    $migration = str_replace('.php', '', $file);
 
-			$migrationService->create($crud, $filename);
-		}
-	}
+                    DB::statement("DELETE FROM migrations WHERE migration = '$migration'");
+                }
+            }
+        }
+    }
 
-	protected function findCreateMigration(Crud $crud)
-	{
-		$path = database_path("migrations");
-		$files = scandir($path);
+    public function updateOldMigration(Crud $crud, MigrationService $migrationService)
+    {
+        $filename = $this->findCreateMigration($crud);
 
-		foreach ($files as $file) {
+        if ($filename) {
 
-			if (str_ends_with($file, "create_{$crud->table_name}.php") ||
-				str_ends_with($file, "create_{$crud->table_name}_table.php")) {
+            $migrationService->create($crud, $filename);
+        }
+    }
 
-				return $file;
-			}
-		}
+    protected function findCreateMigration(Crud $crud)
+    {
+        $path = database_path('migrations');
+        $files = scandir($path);
 
-		return null;
-	}
+        foreach ($files as $file) {
+
+            if (str_ends_with($file, "create_{$crud->table_name}.php") ||
+                str_ends_with($file, "create_{$crud->table_name}_table.php")) {
+
+                return $file;
+            }
+        }
+
+        return null;
+    }
 }

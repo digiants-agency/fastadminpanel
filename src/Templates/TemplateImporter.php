@@ -4,23 +4,24 @@ namespace Digiants\FastAdminPanel\Templates;
 
 class TemplateImporter
 {
-	const DEFAULT 		= 'Default';
-	const COMPONENTS	= 'With components';
+    const DEFAULT = 'Default';
 
-	public function __construct(
-		protected TemplateComponents $templateComponents,
-		protected TemplateDefault $templateDefault,
-	) { }
+    const COMPONENTS = 'With components';
+
+    public function __construct(
+        protected TemplateComponents $templateComponents,
+        protected TemplateDefault $templateDefault,
+    ) {}
 
     public function import($template)
-	{
-		if ($template == self::DEFAULT) {
+    {
+        if ($template == self::DEFAULT) {
 
-			$this->templateDefault->import();	// deprecated
+            $this->templateDefault->import();	// deprecated
 
-		} else {
+        } else {
 
-			$this->templateComponents->import();
-		}
-	}
+            $this->templateComponents->import();
+        }
+    }
 }

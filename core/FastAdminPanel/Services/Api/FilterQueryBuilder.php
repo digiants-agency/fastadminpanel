@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 class FilterQueryBuilder
 {
     protected $request;
-    
+
     public function __construct($request)
     {
         $this->request = $request;
@@ -19,7 +19,7 @@ class FilterQueryBuilder
 
         $filters = $this->parseFilters($filters);
 
-        foreach($filters as $filter) {
+        foreach ($filters as $filter) {
             $query = $this->addFiltersToQuery($query, $filter);
         }
 
@@ -29,12 +29,12 @@ class FilterQueryBuilder
     private function getOperator($filter)
     {
         $operatorsPattern = '/=|!=|\(\)|>=|<=|~|>|</';
-        
+
         $operator = [];
         preg_match($operatorsPattern, $filter, $operator);
-        
+
         if (count($operator) == 1) {
-        
+
             return $operator[0];
         }
     }
@@ -61,24 +61,24 @@ class FilterQueryBuilder
     {
         $relations = explode('.', $relationKeys);
         $lastKey = array_key_last($relations);
-        
+
         $field = $relations[$lastKey];
-        
+
         unset($relations[$lastKey]);
 
         $result = [];
 
-        if (count($relations) > 0 ) {
-            
-            $result[$relations[count($relations)-1]] = [
+        if (count($relations) > 0) {
+
+            $result[$relations[count($relations) - 1]] = [
                 'field' => $field,
                 'operator' => $operator,
-                'value' => $value
+                'value' => $value,
             ];
 
-            for ($i=count($relations)-2; $i>-1; $i--) {
+            for ($i = count($relations) - 2; $i > -1; $i--) {
                 $result[$relations[$i]] = $result;
-                unset($result[$relations[$i+1]]);
+                unset($result[$relations[$i + 1]]);
             }
 
         } else {
@@ -86,7 +86,7 @@ class FilterQueryBuilder
             $result = [
                 'field' => $field,
                 'operator' => $operator,
-                'value' => $value
+                'value' => $value,
             ];
         }
 
@@ -102,7 +102,7 @@ class FilterQueryBuilder
         $result = [];
 
         foreach ($filters as $filter) {
-            
+
             if (empty($filter)) {
                 continue;
             }
@@ -122,15 +122,15 @@ class FilterQueryBuilder
     {
         if (count($filters) === 3) {
 
-            switch($filters['operator']) {
-                
+            switch ($filters['operator']) {
+
                 case '()':
 
                     return $query->whereIn($filters['field'], explode(',', $filters['value']));
 
                 case '~':
-                    
-                    return $query->where($filters['field'], 'LIKE', '%' . $filters['value'] . '%');
+
+                    return $query->where($filters['field'], 'LIKE', '%'.$filters['value'].'%');
 
                 default:
 
@@ -140,7 +140,7 @@ class FilterQueryBuilder
 
         $relation = array_key_first($filters);
 
-        return $query->whereHas($relation, function(Builder $query) use($relation, $filters) {
+        return $query->whereHas($relation, function (Builder $query) use ($relation, $filters) {
             $this->addFiltersToQuery($query, $filters[$relation]);
         });
     }

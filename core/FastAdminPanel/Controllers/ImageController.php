@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -9,22 +9,22 @@ use Illuminate\Support\Facades\Response;
 
 class ImageController extends Controller
 {
-	public function store(StoreRequest $request)
-	{
-		$userId = Auth::id();
+    public function store(StoreRequest $request)
+    {
+        $userId = Auth::id();
 
-		$uploadPath = "photos/$userId/";
+        $uploadPath = "photos/$userId/";
 
-		$img = $request->file('upload');
+        $img = $request->file('upload');
 
-		if ($img != null) {
+        if ($img != null) {
 
-			$imgName = time().'-'.$img->getClientOriginalName();
-			$img->move($uploadPath, $imgName);
+            $imgName = time().'-'.$img->getClientOriginalName();
+            $img->move($uploadPath, $imgName);
 
-			return Response::json(['url' => "/{$uploadPath}{$imgName}"]);
-		}
+            return Response::json(['url' => "/{$uploadPath}{$imgName}"]);
+        }
 
-		return Response::json([], 418);
-	}
+        return Response::json([], 418);
+    }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Services\Api;
 
@@ -7,291 +7,294 @@ use App\FastAdminPanel\Models\Crud;
 
 class ApiService
 {
-	protected Crud $crud;
+    protected Crud $crud;
 
-	public function __construct(
-		protected CustomValidation $customValidation,
-		protected CustomFilter $customFilter,
-	) { }
+    public function __construct(
+        protected CustomValidation $customValidation,
+        protected CustomFilter $customFilter,
+    ) {}
 
-	public function setCrud(Crud $crud)
-	{
-		$this->crud = $crud;
-	}
+    public function setCrud(Crud $crud)
+    {
+        $this->crud = $crud;
+    }
 
-	public function index($data, $filters)
-	{
-		$this->customValidation->validate('index', $this->crud);
+    public function index($data, $filters)
+    {
+        $this->customValidation->validate('index', $this->crud);
 
-		$model = new $this->crud->model;
-		
-		$query = $model->query();
+        $model = new $this->crud->model;
 
-		$query = $this->scopeSearch($query, $data);
-		$query = $this->scopeFields($query, $data);
-		$query = $this->scopeRelations($query, $data);
-		$query = $filters->buildQuery($query);
+        $query = $model->query();
 
-		$items = $query->orderBy($data['sort'], $data['order'])
-		->paginate($data['perPage'])
-		->through(function($item) {
-			$this->map($item);
-			return $item;
-		});
+        $query = $this->scopeSearch($query, $data);
+        $query = $this->scopeFields($query, $data);
+        $query = $this->scopeRelations($query, $data);
+        $query = $filters->buildQuery($query);
 
-		$this->customFilter->filter($items, 'index', $this->crud);
+        $items = $query->orderBy($data['sort'], $data['order'])
+            ->paginate($data['perPage'])
+            ->through(function ($item) {
+                $this->map($item);
 
-		return $items;
-	}
+                return $item;
+            });
 
-	public function store($data)
-	{
-		$this->customValidation->validate('store', $this->crud, true);
+        $this->customFilter->filter($items, 'index', $this->crud);
 
-		$data = $this->uploadFiles($data);
+        return $items;
+    }
 
-		$modelClass = $this->crud->model;
+    public function store($data)
+    {
+        $this->customValidation->validate('store', $this->crud, true);
 
-		if ($this->crud->multilanguage) {
+        $data = $this->uploadFiles($data);
 
-			foreach (Lang::all() as $lang) {
-				
-				$model = new $modelClass($lang->tag);
-	
-				if ($lang->tag == Lang::get()) {
-					
-					$item = $model->create($data);
+        $modelClass = $this->crud->model;
 
-				} else {
+        if ($this->crud->multilanguage) {
 
-					$itemOtherLang = $model->create($data);
+            foreach (Lang::all() as $lang) {
 
-					$this->customFilter->filter($itemOtherLang, 'store', $this->crud);
-				}
-			}
+                $model = new $modelClass($lang->tag);
 
-		} else {
+                if ($lang->tag == Lang::get()) {
 
-			$model = new $modelClass;
+                    $item = $model->create($data);
 
-			$item = $model->create($data);
-		}
+                } else {
 
-		$this->map($item);
+                    $itemOtherLang = $model->create($data);
 
-		$this->customFilter->filter($item, 'store', $this->crud);
+                    $this->customFilter->filter($itemOtherLang, 'store', $this->crud);
+                }
+            }
 
-		return $item;
-	}
+        } else {
 
-	public function show($id, $data)
-	{
-		$this->customValidation->validate('show', $this->crud);
+            $model = new $modelClass;
 
-		$model = new $this->crud->model;
+            $item = $model->create($data);
+        }
 
-		$slugField = $this->crud->fields->first(fn($f) => ($f->db_title ?? '') == 'slug');
+        $this->map($item);
 
-		if (is_numeric($id)) {
-			$query = $model->where('id', $id);
-		} else if ($slugField) {
-			$query = $model->where('slug', $id);
-		}
+        $this->customFilter->filter($item, 'store', $this->crud);
 
-		$query = $this->scopeFields($query, $data);
+        return $item;
+    }
 
-		$query = $this->scopeRelations($query, $data);
+    public function show($id, $data)
+    {
+        $this->customValidation->validate('show', $this->crud);
 
-		$item = $query->first();
+        $model = new $this->crud->model;
 
-		if (!$item) {
+        $slugField = $this->crud->fields->first(fn ($f) => ($f->db_title ?? '') == 'slug');
 
-			return null;
-		}
+        if (is_numeric($id)) {
+            $query = $model->where('id', $id);
+        } elseif ($slugField) {
+            $query = $model->where('slug', $id);
+        }
 
-		$this->map($item);
+        $query = $this->scopeFields($query, $data);
 
-		$this->customFilter->filter($item, 'show', $this->crud);
+        $query = $this->scopeRelations($query, $data);
 
-		return $item;
-	}
+        $item = $query->first();
 
+        if (! $item) {
 
-	public function update($id, $data)
-	{
-		$this->customValidation->validate('update', $this->crud, true);
+            return null;
+        }
 
-		$model = new $this->crud->model;
-		
-		$model->where('id', $id)
-		->update($data);
+        $this->map($item);
 
-		$item = $model->where('id', $id)
-		->first();
+        $this->customFilter->filter($item, 'show', $this->crud);
 
-		$this->map($item);
+        return $item;
+    }
 
-		$this->customFilter->filter($item, 'update', $this->crud);
+    public function update($id, $data)
+    {
+        $this->customValidation->validate('update', $this->crud, true);
 
-		return $item;
-	}
+        $model = new $this->crud->model;
 
-	public function destroy($id)
-	{
-		$this->customValidation->validate('destroy', $this->crud);
+        $model->where('id', $id)
+            ->update($data);
 
-		$modelClass = $this->crud->model;
+        $item = $model->where('id', $id)
+            ->first();
 
-		if ($this->crud->multilanguage) {
+        $this->map($item);
 
-			foreach (Lang::all() as $lang) {
-				
-				$model = new $modelClass($lang->tag);
+        $this->customFilter->filter($item, 'update', $this->crud);
 
-				$model->where('id', $id)
-				->delete();
-			}
+        return $item;
+    }
 
-		} else {
-			
-			$model = new $modelClass;
+    public function destroy($id)
+    {
+        $this->customValidation->validate('destroy', $this->crud);
 
-			$model->where('id', $id)
-			->delete();
-		}
+        $modelClass = $this->crud->model;
 
-		return;
-	}
+        if ($this->crud->multilanguage) {
 
-	protected function map($item)
-	{
-		$fields = $this->crud->getFieldsType();
+            foreach (Lang::all() as $lang) {
 
-		foreach ($fields as $key => $field) {
-			
-			if (in_array($field, ['photo', 'file'])) {
+                $model = new $modelClass($lang->tag);
 
-				$item->$key = $item->$key ? url($item->$key) : '';
-			
-			} elseif (in_array($field, ['gallery'])) {
+                $model->where('id', $id)
+                    ->delete();
+            }
 
-				$gallery = [];
+        } else {
 
-				$images = json_decode($item->$key);
-				
-				if ($images) {
-					foreach ($images as $image) {
-						$gallery[] = url($image);
-					}
-				}
-				
-				$item->$key = $gallery;
-			}
-		}
+            $model = new $modelClass;
 
-		return $item;
-	}
+            $model->where('id', $id)
+                ->delete();
+        }
 
-	#TODO: make search for all fields ? or mark field as searchable, now searching by admin visible fields
-	protected function scopeSearch($query, $data)
-	{	
-		$visible = $this->crud->getVisibleFields();
+    }
 
-		$query = $query->where(function($query) use ($visible, $data) {
+    protected function map($item)
+    {
+        $fields = $this->crud->getFieldsType();
 
-			foreach ($visible as $field) {
+        foreach ($fields as $key => $field) {
 
-				$query->orWhere($field, 'LIKE', "%{$data['search']}%");
-			}
-		});
+            if (in_array($field, ['photo', 'file'])) {
 
-		return $query;
-	}
+                $item->$key = $item->$key ? url($item->$key) : '';
 
-	protected function scopeFields($query, $data)
-	{
-		$select = [];
+            } elseif (in_array($field, ['gallery'])) {
 
-		foreach ($data['fields'] as $field) {
-			$select[] = $field;
-		}
+                $gallery = [];
 
-		$query = $query->select($select);
+                $images = json_decode($item->$key);
 
-		return $query;
-	}
+                if ($images) {
+                    foreach ($images as $image) {
+                        $gallery[] = url($image);
+                    }
+                }
 
-	protected function scopeRelations($query, $data)
-	{
-		$relations = $this->crud->getRelations();
-		
-		return $query->when($data['relations'], function($q) use ($data, $relations) {
-			
-			if ($data['relations'] == '*') {
-				
-				foreach ($relations as $relation) {
-					if ($relation == 'user') continue;
-					$q->with($relation);
-				}
+                $item->$key = $gallery;
+            }
+        }
 
-			} else {
-				
-				foreach ($data['relations'] as $relation) {
-					if ($relation == 'user') continue;
-					$q->with($relation);
-				}
-			}
+        return $item;
+    }
 
-		});
-	}
+    // TODO: make search for all fields ? or mark field as searchable, now searching by admin visible fields
+    protected function scopeSearch($query, $data)
+    {
+        $visible = $this->crud->getVisibleFields();
 
-	protected function uploadFiles($data)
-	{
-		$fieldsTypes = $this->crud->getFieldsType();
-		
-		foreach ($data as $key => $value) {
+        $query = $query->where(function ($query) use ($visible, $data) {
 
-			if (!isset($fieldsTypes[$key])) {
-				continue;
-			}
+            foreach ($visible as $field) {
 
-			$fieldType = $fieldsTypes[$key];
-			
-			if (!in_array($fieldType, ['photo', 'file', 'gallery'])) {
-				continue;
-			}
+                $query->orWhere($field, 'LIKE', "%{$data['search']}%");
+            }
+        });
 
-			$uploadPath = $fieldType == 'file' ? "files/1/" : "photos/1/";
+        return $query;
+    }
 
-			if ($fieldType == 'gallery') {
+    protected function scopeFields($query, $data)
+    {
+        $select = [];
 
-				$gallery = [];
+        foreach ($data['fields'] as $field) {
+            $select[] = $field;
+        }
 
-				foreach ($value as $valueItem) {
-					$gallery[] = $this->uploadFile($valueItem, $uploadPath);
-				}
+        $query = $query->select($select);
 
-				$data[$key] = $gallery;
+        return $query;
+    }
 
-			} else {
-				$data[$key] = $this->uploadFile($value, $uploadPath);
-			}
-		}
+    protected function scopeRelations($query, $data)
+    {
+        $relations = $this->crud->getRelations();
 
-		return $data;
-	}
+        return $query->when($data['relations'], function ($q) use ($data, $relations) {
 
-	protected function uploadFile($file, $uploadPath)
-	{
-		if ($file != null) {
+            if ($data['relations'] == '*') {
 
-			$fileName = time() . '-' . $file->getClientOriginalName();
+                foreach ($relations as $relation) {
+                    if ($relation == 'user') {
+                        continue;
+                    }
+                    $q->with($relation);
+                }
 
-			$file->move($uploadPath, $fileName);
+            } else {
 
-			return '/' . $uploadPath . $fileName;
-		}
+                foreach ($data['relations'] as $relation) {
+                    if ($relation == 'user') {
+                        continue;
+                    }
+                    $q->with($relation);
+                }
+            }
 
-		return '';
-	}
+        });
+    }
+
+    protected function uploadFiles($data)
+    {
+        $fieldsTypes = $this->crud->getFieldsType();
+
+        foreach ($data as $key => $value) {
+
+            if (! isset($fieldsTypes[$key])) {
+                continue;
+            }
+
+            $fieldType = $fieldsTypes[$key];
+
+            if (! in_array($fieldType, ['photo', 'file', 'gallery'])) {
+                continue;
+            }
+
+            $uploadPath = $fieldType == 'file' ? 'files/1/' : 'photos/1/';
+
+            if ($fieldType == 'gallery') {
+
+                $gallery = [];
+
+                foreach ($value as $valueItem) {
+                    $gallery[] = $this->uploadFile($valueItem, $uploadPath);
+                }
+
+                $data[$key] = $gallery;
+
+            } else {
+                $data[$key] = $this->uploadFile($value, $uploadPath);
+            }
+        }
+
+        return $data;
+    }
+
+    protected function uploadFile($file, $uploadPath)
+    {
+        if ($file != null) {
+
+            $fileName = time().'-'.$file->getClientOriginalName();
+
+            $file->move($uploadPath, $fileName);
+
+            return '/'.$uploadPath.$fileName;
+        }
+
+        return '';
+    }
 }

@@ -9,87 +9,87 @@ use Illuminate\Support\Facades\DB;
 
 class DestroyService implements Destroy
 {
-	public function __construct(
-		protected TableService $tableService,
-	) { }
+    public function __construct(
+        protected TableService $tableService,
+    ) {}
 
-	public function destroy($crud, $ids)
-	{
-		$tables = $this->tableService->getTables($crud->table_name);
+    public function destroy($crud, $ids)
+    {
+        $tables = $this->tableService->getTables($crud->table_name);
 
-		foreach ($tables as $table) {
+        foreach ($tables as $table) {
 
-			DB::table($table)
-			->whereIn('id', $ids)
-			->delete();
-		}
+            DB::table($table)
+                ->whereIn('id', $ids)
+                ->delete();
+        }
 
-		foreach ($ids as $id) {
+        foreach ($ids as $id) {
 
-			$this->removeRelationshipMany($id, $crud->table_name);
-			$this->removeEditable($id, $crud->table_name);
-		}
-	}
+            $this->removeRelationshipMany($id, $crud->table_name);
+            $this->removeEditable($id, $crud->table_name);
+        }
+    }
 
-	protected function removeRelationshipMany($id, $table)
-	{
-		$crud = Crud::findOrFail($table);
+    protected function removeRelationshipMany($id, $table)
+    {
+        $crud = Crud::findOrFail($table);
 
-		foreach ($crud->fields as $field) {
+        foreach ($crud->fields as $field) {
 
-			if ($field->type == 'relationship' && $field->relationship_count == 'many') {
-				
-				DB::table("{$crud->table_name}_{$field->relationship_table_name}")
-				->where("id_{$crud->table_name}", $id)
-				->delete();
-			}
-		}
-	}
+            if ($field->type == 'relationship' && $field->relationship_count == 'many') {
 
-	protected function removeEditable($id, $table)
-	{
-		$crud = Crud::findOrFail($table);
+                DB::table("{$crud->table_name}_{$field->relationship_table_name}")
+                    ->where("id_{$crud->table_name}", $id)
+                    ->delete();
+            }
+        }
+    }
 
-		$editable = $crud->fields->filter(fn ($f) => $f->type == 'relationship' && $f->relationship_count == 'editable')
-		->map(fn ($f) => $f->relationship_table_name);
+    protected function removeEditable($id, $table)
+    {
+        $crud = Crud::findOrFail($table);
 
-		foreach ($editable as $tableName) {
+        $editable = $crud->fields->filter(fn ($f) => $f->type == 'relationship' && $f->relationship_count == 'editable')
+            ->map(fn ($f) => $f->relationship_table_name);
 
-			$tables = $this->tableService->getTables($tableName);
+        foreach ($editable as $tableName) {
 
-			$parents = []; 
+            $tables = $this->tableService->getTables($tableName);
 
-			foreach ($tables as $table_index => $tbl) {
+            $parents = [];
 
-				$editableItems = DB::table($tbl)
-				->where("id_{$crud->table_name}", $id)
-				->get()
-				->all();
-	
-				foreach ($editableItems as $editable_item) {
-	
-					if ($table_index == 0) {
+            foreach ($tables as $table_index => $tbl) {
 
-						$parents[] = [
-							'id'	=> $editable_item->id,
-							'table' => $tableName,
-						];
-					}
-	
-					DB::table($tbl)
-					->where('id', $editable_item->id)
-					->delete();
-				}
-			}
+                $editableItems = DB::table($tbl)
+                    ->where("id_{$crud->table_name}", $id)
+                    ->get()
+                    ->all();
 
-			if ($parents) {
+                foreach ($editableItems as $editable_item) {
 
-				foreach ($parents as $parent) {
+                    if ($table_index == 0) {
 
-					$this->removeRelationshipMany($parent['id'], $parent['table']);
-					$this->removeEditable($parent['id'], $parent['table']);
-				}
-			}
-		}
-	}
+                        $parents[] = [
+                            'id' => $editable_item->id,
+                            'table' => $tableName,
+                        ];
+                    }
+
+                    DB::table($tbl)
+                        ->where('id', $editable_item->id)
+                        ->delete();
+                }
+            }
+
+            if ($parents) {
+
+                foreach ($parents as $parent) {
+
+                    $this->removeRelationshipMany($parent['id'], $parent['table']);
+                    $this->removeEditable($parent['id'], $parent['table']);
+                }
+            }
+        }
+    }
 }

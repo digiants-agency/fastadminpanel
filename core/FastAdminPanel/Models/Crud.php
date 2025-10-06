@@ -16,200 +16,200 @@ use Illuminate\Support\Facades\Schema;
 #[ObservedBy(CrudObserver::class)]
 class Crud extends JsonModel
 {
-	public $timestamps = false;
-	
-	protected $table = 'cruds';
+    public $timestamps = false;
 
-	protected static $fileName = 'cruds';
-	
-	protected static $jsonPrimaryKey = 'table_name';
+    protected $table = 'cruds';
 
-	protected $fillable = [
-		'title',
-		'table_name',
-		'fields',
-		'is_dev',
-		'multilanguage',
-		'is_soft_delete',
-		'sort',
-		'dropdown_slug',
-		'icon',
-		'is_docs',
-		'is_statistics',
-		'model',
-		'default_order',
-	];
+    protected static $fileName = 'cruds';
 
-	protected $casts = [
-		'fields' => Fields::class,
-	];
+    protected static $jsonPrimaryKey = 'table_name';
 
-	public function getTableAttribute()
-	{
-		if ($this->multilanguage == 1) {
-			
-			return $this->table_name . '_' . Lang::get();
-		}
+    protected $fillable = [
+        'title',
+        'table_name',
+        'fields',
+        'is_dev',
+        'multilanguage',
+        'is_soft_delete',
+        'sort',
+        'dropdown_slug',
+        'icon',
+        'is_docs',
+        'is_statistics',
+        'model',
+        'default_order',
+    ];
 
-		return $this->table_name;
-	}
+    protected $casts = [
+        'fields' => Fields::class,
+    ];
 
-	// TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
-	public function getFields($withDefaults = true)
-	{
-		$fields = [];
+    public function getTableAttribute()
+    {
+        if ($this->multilanguage == 1) {
 
-		if ($withDefaults) {
-			$fields[] = 'id';
-		}
+            return $this->table_name.'_'.Lang::get();
+        }
 
-		foreach ($this->fields as $field) {
+        return $this->table_name;
+    }
 
-			if ($field->type == 'relationship') {
-				
-				if ($field->relationship_count == 'single') {
-					$fields[] = 'id_'.$field->relationship_table_name;
-				}
+    // TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
+    public function getFields($withDefaults = true)
+    {
+        $fields = [];
 
-			} else {
-				$fields[] = $field->db_title;
-			}
-		}
+        if ($withDefaults) {
+            $fields[] = 'id';
+        }
 
-		if ($withDefaults) {
-			$fields[] = 'created_at';
-			$fields[] = 'updated_at';
-		}
+        foreach ($this->fields as $field) {
 
-		return $fields;
-	}
+            if ($field->type == 'relationship') {
 
-	// TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
-	public function getFieldsType()
-	{
-		$fields = [];
+                if ($field->relationship_count == 'single') {
+                    $fields[] = 'id_'.$field->relationship_table_name;
+                }
 
-		foreach ($this->fields as $field) {
+            } else {
+                $fields[] = $field->db_title;
+            }
+        }
 
-			if ($field->type == 'relationship') {
-				
-				if ($field->relationship_count == 'single') {
-					$fields['id_'.$field->relationship_table_name] = $field->type;
-				}
+        if ($withDefaults) {
+            $fields[] = 'created_at';
+            $fields[] = 'updated_at';
+        }
 
-			} else {
-				$fields[$field->db_title] = $field->type;
-			}
-		}
+        return $fields;
+    }
 
-		return $fields;
-	}
+    // TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
+    public function getFieldsType()
+    {
+        $fields = [];
 
-	// TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
-	public function getFieldsRequired()
-	{
-		$fields = [];
+        foreach ($this->fields as $field) {
 
-		foreach ($this->fields as $field) {
+            if ($field->type == 'relationship') {
 
-			$required = $field->required == 'optional' ? 'nullable' : 'required';
+                if ($field->relationship_count == 'single') {
+                    $fields['id_'.$field->relationship_table_name] = $field->type;
+                }
 
-			if ($field->type == 'relationship') {
-				
-				if ($field->relationship_count == 'single') {
-					$fields['id_'.$field->relationship_table_name] = $required;
-				}
+            } else {
+                $fields[$field->db_title] = $field->type;
+            }
+        }
 
-			} else {
-				$fields[$field->db_title] = $required;
-			}
-		}
+        return $fields;
+    }
 
-		return $fields;
-	}
+    // TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
+    public function getFieldsRequired()
+    {
+        $fields = [];
 
-	// TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
-	public function getVisibleFields()
-	{
-		$fields = [];
+        foreach ($this->fields as $field) {
 
-		foreach ($this->getOriginal('fields') as $field) {
+            $required = $field->required == 'optional' ? 'nullable' : 'required';
 
-			if ($field->show_in_list !== 'yes') {
-				continue;
-			}
+            if ($field->type == 'relationship') {
 
-			if ($field->type == 'relationship') {
-				
-				if ($field->relationship_count == 'single') {
-					$fields[] = 'id_'.$field->relationship_table_name;
-				}
+                if ($field->relationship_count == 'single') {
+                    $fields['id_'.$field->relationship_table_name] = $required;
+                }
 
-			} else {
-				$fields[] = $field->db_title;
-			}
-		}
+            } else {
+                $fields[$field->db_title] = $required;
+            }
+        }
 
-		return $fields;
-	}
+        return $fields;
+    }
 
-	// TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
-	public function getRelations()
-	{
-		$relations = [];
+    // TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
+    public function getVisibleFields()
+    {
+        $fields = [];
 
-		foreach ($this->fields as $field) {
-			
-			if ($field->type != 'relationship') {
-				continue;
-			}
+        foreach ($this->getOriginal('fields') as $field) {
 
-			if ($field->relationship_count == 'single') {
+            if ($field->show_in_list !== 'yes') {
+                continue;
+            }
 
-				$relation = new BelongsTo($field);
+            if ($field->type == 'relationship') {
 
-			} else if ($field->relationship_count == 'many') {
+                if ($field->relationship_count == 'single') {
+                    $fields[] = 'id_'.$field->relationship_table_name;
+                }
 
-				$relation = new BelongsToMany($this->table_name, $field);
+            } else {
+                $fields[] = $field->db_title;
+            }
+        }
 
-			} elseif ($field->relationship_count == 'editable') {
+        return $fields;
+    }
 
-				$relation = new HasMany($this->table_name, $field);
-			}
+    // TODO: move to App\FastAdminPanel\Casts\Entities\Field.php
+    public function getRelations()
+    {
+        $relations = [];
 
-			$relations[] = $relation->name();
-		}
+        foreach ($this->fields as $field) {
 
-		return $relations;
-	}
+            if ($field->type != 'relationship') {
+                continue;
+            }
 
-	// TODO: move
-	public function removeTables($tag)
-	{
-		$crud = static::get();
+            if ($field->relationship_count == 'single') {
 
-		foreach ($crud as $elm) {
+                $relation = new BelongsTo($field);
 
-			if ($elm->multilanguage == 1) {
+            } elseif ($field->relationship_count == 'many') {
 
-				Schema::dropIfExists("{$elm->table_name}_$tag");
-			}
-		}
-	}
+                $relation = new BelongsToMany($this->table_name, $field);
 
-	// TODO: move
-	public function addTables($tag, $main_tag)
-	{
-		$crud = static::get();
+            } elseif ($field->relationship_count == 'editable') {
 
-		foreach ($crud as $elm) {
+                $relation = new HasMany($this->table_name, $field);
+            }
 
-			if ($elm->multilanguage == 1) {
+            $relations[] = $relation->name();
+        }
 
-				Schema::dropIfExists("{$elm->table_name}_$tag");
-				DB::statement("CREATE TABLE {$elm->table_name}_$tag LIKE {$elm->table_name}_$main_tag");
-				DB::statement("INSERT {$elm->table_name}_$tag SELECT * FROM {$elm->table_name}_$main_tag");
-			}
-		}
-	}
+        return $relations;
+    }
+
+    // TODO: move
+    public function removeTables($tag)
+    {
+        $crud = static::get();
+
+        foreach ($crud as $elm) {
+
+            if ($elm->multilanguage == 1) {
+
+                Schema::dropIfExists("{$elm->table_name}_$tag");
+            }
+        }
+    }
+
+    // TODO: move
+    public function addTables($tag, $main_tag)
+    {
+        $crud = static::get();
+
+        foreach ($crud as $elm) {
+
+            if ($elm->multilanguage == 1) {
+
+                Schema::dropIfExists("{$elm->table_name}_$tag");
+                DB::statement("CREATE TABLE {$elm->table_name}_$tag LIKE {$elm->table_name}_$main_tag");
+                DB::statement("INSERT {$elm->table_name}_$tag SELECT * FROM {$elm->table_name}_$main_tag");
+            }
+        }
+    }
 }

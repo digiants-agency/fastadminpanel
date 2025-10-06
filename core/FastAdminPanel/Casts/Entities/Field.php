@@ -5,107 +5,107 @@ namespace App\FastAdminPanel\Casts\Entities;
 // TODO: divide so much responsibility
 class Field implements \JsonSerializable
 {
-	protected $field;
+    protected $field;
 
-	public function __construct($field)
-	{
-		$this->field = is_string($field) ? json_decode($field) : (object)$field;
-	}
+    public function __construct($field)
+    {
+        $this->field = is_string($field) ? json_decode($field) : (object) $field;
+    }
 
-	public function __get($name)
-	{
-		return $this->field->$name;
-	}
+    public function __get($name)
+    {
+        return $this->field->$name;
+    }
 
-	public function __set($name, $value)
-	{
-		return $this->field->$name = $value;
-	}
+    public function __set($name, $value)
+    {
+        return $this->field->$name = $value;
+    }
 
-	public function default()
-	{
-		return match($this->field->type) {
-			'text'			=> '',
-			'textarea'		=> '',
-			'ckeditor'		=> '',
-			'checkbox'		=> 0,
-			'color'			=> '#000000',
-			'date'			=> date('Y-m-d'),
-			'datetime'		=> date('Y-m-d H:i:s'),
-			'relationship'	=> 0,
-			'file'			=> '',
-			'photo'			=> '',
-			'gallery'		=> [],
-			'password'		=> '',
-			'money'			=> 0,
-			'number'		=> 0,
-			'enum'			=> '',
-			// 'repeat'		=> '',
-			default			=> '',
-		};
-	}
+    public function default()
+    {
+        return match ($this->field->type) {
+            'text' => '',
+            'textarea' => '',
+            'ckeditor' => '',
+            'checkbox' => 0,
+            'color' => '#000000',
+            'date' => date('Y-m-d'),
+            'datetime' => date('Y-m-d H:i:s'),
+            'relationship' => 0,
+            'file' => '',
+            'photo' => '',
+            'gallery' => [],
+            'password' => '',
+            'money' => 0,
+            'number' => 0,
+            'enum' => '',
+            // 'repeat'		=> '',
+            default => '',
+        };
+    }
 
-	public function getDbTitle()
-	{
-		if ($this->field->type == 'relationship') {
-				
-			if ($this->field->relationship_count == 'single') {
+    public function getDbTitle()
+    {
+        if ($this->field->type == 'relationship') {
 
-				return "id_{$this->field->relationship_table_name}";
-			}
+            if ($this->field->relationship_count == 'single') {
 
-		} else {
+                return "id_{$this->field->relationship_table_name}";
+            }
 
-			return $this->field->db_title;
-		}
-		
-		return false;
-	}
+        } else {
 
-	public function jsonSerialize() : mixed
-	{
-		return $this->field;
-	}
+            return $this->field->db_title;
+        }
 
-	public function getFillable()
-	{
-		if (in_array($this->field->type, ['password'])) {
+        return false;
+    }
 
-			return false;
-		}
+    public function jsonSerialize(): mixed
+    {
+        return $this->field;
+    }
 
-		if ($this->field->type == 'relationship') {
-                
-			if ($this->field->relationship_count == 'single') {
+    public function getFillable()
+    {
+        if (in_array($this->field->type, ['password'])) {
 
-				return "id_".$this->field->relationship_table_name;
-			}
+            return false;
+        }
 
-			return false;
-		}
+        if ($this->field->type == 'relationship') {
 
-		return $this->field->db_title;
-	}
+            if ($this->field->relationship_count == 'single') {
 
-	public function isSearchable()
-	{
-		$types = ['text', 'textarea', 'ckeditor', 'date', 'datetime', 'money', 'number', 'enum'];
+                return 'id_'.$this->field->relationship_table_name;
+            }
 
-		if (in_array($this->field->type, $types) && $this->field->show_in_list != 'no') {
+            return false;
+        }
 
-			return true;
-		}
+        return $this->field->db_title;
+    }
 
-		return false;
-	}
+    public function isSearchable()
+    {
+        $types = ['text', 'textarea', 'ckeditor', 'date', 'datetime', 'money', 'number', 'enum'];
 
-	public function isCommon()
-	{
-		return $this->lang == 0;
-	}
+        if (in_array($this->field->type, $types) && $this->field->show_in_list != 'no') {
 
-	public function isSeparate()
-	{
-		return $this->lang == 1;
-	}
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCommon()
+    {
+        return $this->lang == 0;
+    }
+
+    public function isSeparate()
+    {
+        return $this->lang == 1;
+    }
 }

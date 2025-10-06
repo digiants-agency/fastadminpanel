@@ -1,146 +1,146 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Single;
 
 use App\FastAdminPanel\Models\SingleBlock;
-use App\FastAdminPanel\Models\SinglePage;
 use App\FastAdminPanel\Models\SingleField;
+use App\FastAdminPanel\Models\SinglePage;
 use Lang;
 
 class SingleSaver
 {
-	protected $page;
+    protected $page;
 
-	protected $sorts = [];
+    protected $sorts = [];
 
-	public function setPage($data)
-	{
-		$page = SinglePage::where('slug', $data['slug'])->first();
+    public function setPage($data)
+    {
+        $page = SinglePage::where('slug', $data['slug'])->first();
 
-		if (empty($page)) {
+        if (empty($page)) {
 
-			$page = new SinglePage($data);
-			$page->save();
+            $page = new SinglePage($data);
+            $page->save();
 
-		} else {
+        } else {
 
-			$page->title = $data['title'];
-			$page->slug = $data['slug'];
-			$page->sort = $data['sort'];
-			$page->icon = $data['icon'];
-			$page->dropdown_slug = $data['dropdown_slug'];
-			$page->save();
-		}
+            $page->title = $data['title'];
+            $page->slug = $data['slug'];
+            $page->sort = $data['sort'];
+            $page->icon = $data['icon'];
+            $page->dropdown_slug = $data['dropdown_slug'];
+            $page->save();
+        }
 
-		$this->page = $page;
-	}
+        $this->page = $page;
+    }
 
-	public function save($blocks)
-	{
-		$singleBlocksIdsToDelete = SingleBlock::select('id')
-		->where('single_page_id', $this->page->id)
-		->whereNotIn('slug', array_column($blocks, 'slug'))
-		->get();
+    public function save($blocks)
+    {
+        $singleBlocksIdsToDelete = SingleBlock::select('id')
+            ->where('single_page_id', $this->page->id)
+            ->whereNotIn('slug', array_column($blocks, 'slug'))
+            ->get();
 
-		SingleBlock::whereIn('id', $singleBlocksIdsToDelete)
-		->delete();
+        SingleBlock::whereIn('id', $singleBlocksIdsToDelete)
+            ->delete();
 
-		foreach (Lang::all() as $lang) {
-			(new SingleField($lang->tag))->whereIn('single_block_id', $singleBlocksIdsToDelete)
-			->delete();
-		}
+        foreach (Lang::all() as $lang) {
+            (new SingleField($lang->tag))->whereIn('single_block_id', $singleBlocksIdsToDelete)
+                ->delete();
+        }
 
-		foreach ($blocks as $blockIndex => $block) {
+        foreach ($blocks as $blockIndex => $block) {
 
-			$block['sort'] = $blockIndex + 1;
-			$block['single_page_id'] = $this->page->id;
+            $block['sort'] = $blockIndex + 1;
+            $block['single_page_id'] = $this->page->id;
 
-			$singleBlock = SingleBlock::updateOrCreate(
-				[
-					'slug' 				=> $block['slug'],
-					'single_page_id' 	=> $block['single_page_id'],
-				],
-				$block
-			);
+            $singleBlock = SingleBlock::updateOrCreate(
+                [
+                    'slug' => $block['slug'],
+                    'single_page_id' => $block['single_page_id'],
+                ],
+                $block
+            );
 
-			$this->saveFields($block, $singleBlock->id);
-		}
-	}
+            $this->saveFields($block, $singleBlock->id);
+        }
+    }
 
-	public function saveFields($block, $singleBlockId, $parentId = 0)
-	{
-		$fieldsSlugs = [];
+    public function saveFields($block, $singleBlockId, $parentId = 0)
+    {
+        $fieldsSlugs = [];
 
-		foreach ($block['fields'] as $fieldIndex => $field) {
-				
-			unset($field['id']);
+        foreach ($block['fields'] as $fieldIndex => $field) {
 
-			$field['sort'] = $fieldIndex + 1;
-			$field['single_block_id'] = $singleBlockId;
-			$field['parent_id'] = $parentId;
-			$field['value'] = !empty($field['value']) ? $field['value'] : '';
+            unset($field['id']);
 
-			$singleField = SingleField::where('slug', $field['slug'])
-			->where('single_block_id', $field['single_block_id'])
-			->where('parent_id', $field['parent_id'])
-			->first();
+            $field['sort'] = $fieldIndex + 1;
+            $field['single_block_id'] = $singleBlockId;
+            $field['parent_id'] = $parentId;
+            $field['value'] = ! empty($field['value']) ? $field['value'] : '';
 
-			if (empty($singleField)) {
-				
-				foreach (Lang::all() as $lang) {
-					$singleField = (new SingleField($lang->tag))->create($field);
-					$singleField->value = $field['type'] == 'repeat' ? 0 : $singleField->encodeValue($field['value'] ?? $singleField->default());
-					$singleField->save();
-				}
+            $singleField = SingleField::where('slug', $field['slug'])
+                ->where('single_block_id', $field['single_block_id'])
+                ->where('parent_id', $field['parent_id'])
+                ->first();
 
-			} else {
+            if (empty($singleField)) {
 
-				foreach (Lang::all() as $lang) {
+                foreach (Lang::all() as $lang) {
+                    $singleField = (new SingleField($lang->tag))->create($field);
+                    $singleField->value = $field['type'] == 'repeat' ? 0 : $singleField->encodeValue($field['value'] ?? $singleField->default());
+                    $singleField->save();
+                }
 
-					$singleField = (new SingleField($lang->tag))->where('slug', $field['slug'])
-					->where('single_block_id', $field['single_block_id'])
-					->where('parent_id', $field['parent_id'])
-					->first();
+            } else {
 
-					$singleField->is_multilanguage = $field['is_multilanguage'];
-					$singleField->sort = $field['sort'];
-					$singleField->title = $field['title'];
-					$singleField->type = $field['type'];
-					$singleField->save();
-				}
-			}
+                foreach (Lang::all() as $lang) {
 
-			$fieldsSlugs[] = $field['slug'];
+                    $singleField = (new SingleField($lang->tag))->where('slug', $field['slug'])
+                        ->where('single_block_id', $field['single_block_id'])
+                        ->where('parent_id', $field['parent_id'])
+                        ->first();
 
-			if ($field['type'] == 'repeat') {
-				$this->saveFields($field, $singleBlockId, $singleField->id);
-			}
-		}
+                    $singleField->is_multilanguage = $field['is_multilanguage'];
+                    $singleField->sort = $field['sort'];
+                    $singleField->title = $field['title'];
+                    $singleField->type = $field['type'];
+                    $singleField->save();
+                }
+            }
 
-		foreach (Lang::all() as $lang) {
-			(new SingleField($lang->tag))->where('single_block_id', $singleBlockId)
-			->where('parent_id', $parentId)
-			->whereNotIn('slug', $fieldsSlugs)
-			->delete();
-		}
-	}
+            $fieldsSlugs[] = $field['slug'];
 
-	public function remove()
-	{
-		$pageId = $this->page->id;
+            if ($field['type'] == 'repeat') {
+                $this->saveFields($field, $singleBlockId, $singleField->id);
+            }
+        }
 
-		$this->page->delete();
+        foreach (Lang::all() as $lang) {
+            (new SingleField($lang->tag))->where('single_block_id', $singleBlockId)
+                ->where('parent_id', $parentId)
+                ->whereNotIn('slug', $fieldsSlugs)
+                ->delete();
+        }
+    }
 
-		$blocksToDelete = SingleBlock::where('single_page_id', $pageId)
-		->get(['id'])
-		->pluck('id');
+    public function remove()
+    {
+        $pageId = $this->page->id;
 
-		SingleBlock::whereIn('id', $blocksToDelete)
-		->delete();
-		
-		foreach (Lang::all() as $lang) {
-			(new SingleField($lang->tag))->whereIn('single_block_id', $blocksToDelete)
-			->delete();
-		}
-	}
+        $this->page->delete();
+
+        $blocksToDelete = SingleBlock::where('single_page_id', $pageId)
+            ->get(['id'])
+            ->pluck('id');
+
+        SingleBlock::whereIn('id', $blocksToDelete)
+            ->delete();
+
+        foreach (Lang::all() as $lang) {
+            (new SingleField($lang->tag))->whereIn('single_block_id', $blocksToDelete)
+                ->delete();
+        }
+    }
 }

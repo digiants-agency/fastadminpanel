@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -9,19 +9,19 @@ use Illuminate\Support\Facades\Response;
 
 class CrudEntityFieldController extends Controller
 {
-	public function __construct(
-		protected FieldService $fieldService,
-	) { }
+    public function __construct(
+        protected FieldService $fieldService,
+    ) {}
 
-	// TODO: add validation
-	public function update(Request $request, $table, $entity_id, $field_id)
-	{
-		$this->authorize('something', [$table, 'admin_edit']);
+    // TODO: add validation
+    public function update(Request $request, $table, $entity_id, $field_id)
+    {
+        $this->authorize('something', [$table, 'admin_edit']);
 
-		$data = $request->all();
+        $data = $request->all();
 
-		$this->fieldService->update($data, $table, $entity_id, $field_id);
-		
-		return Response::json();
-	}
+        $this->fieldService->update($data, $table, $entity_id, $field_id);
+
+        return Response::json();
+    }
 }

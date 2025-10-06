@@ -15,11 +15,11 @@ class BelongsTo implements Relation
 
     public function body()
     {
-        $body = "public function ".$this->name()."() \n";
+        $body = 'public function '.$this->name()."() \n";
 
-        $body .= "\t{\n";
+        $body .= "    {\n";
 
-        $body .= "\t\t";
+        $body .= "        ";
 
         $body .= 'return $this->belongsTo(';
 
@@ -29,7 +29,7 @@ class BelongsTo implements Relation
 
         $body .= ");\n";
 
-        $body .= "\t}";
+        $body .= "    }";
 
         return $body;
     }

@@ -6,88 +6,89 @@ use Illuminate\Support\Facades\Storage;
 
 class Core
 {
-	public function publish()
-	{
-		$this->publishPartsFolder(
-			$this->pathPackage('/core/storage'),
-			Storage::path("")
-		);
+    public function publish()
+    {
+        $this->publishPartsFolder(
+            $this->pathPackage('/core/storage'),
+            Storage::path('')
+        );
 
-		$this->publishPartsFolder(
-			$this->pathPackage('/core/FastAdminPanel'),
-			base_path('/app/FastAdminPanel')
-		);
+        $this->publishPartsFolder(
+            $this->pathPackage('/core/FastAdminPanel'),
+            base_path('/app/FastAdminPanel')
+        );
 
-		$this->publishPartsFolder(
-			$this->pathPackage('/core/views'),
-			base_path('/resources/views/fastadminpanel')
-		);
+        $this->publishPartsFolder(
+            $this->pathPackage('/core/views'),
+            base_path('/resources/views/fastadminpanel')
+        );
 
-		$this->publishPartsFolder(
-			$this->pathPackage('/core/migrations'),
-			base_path('/database/migrations')
-		);
+        $this->publishPartsFolder(
+            $this->pathPackage('/core/migrations'),
+            base_path('/database/migrations')
+        );
 
-		$this->publishPartsFolder(
-			$this->pathPackage('/core/lang'),
-			base_path('/lang')
-		);
+        $this->publishPartsFolder(
+            $this->pathPackage('/core/lang'),
+            base_path('/lang')
+        );
 
-		$this->publishPartsFolder(
-			$this->pathPackage('/public'),
-			public_path('/vendor/fastadminpanel')
-		);
+        $this->publishPartsFolder(
+            $this->pathPackage('/public'),
+            public_path('/vendor/fastadminpanel')
+        );
 
-		copy(
-			$this->pathPackage('/templates/components/Controllers/Controller.php'),
-			base_path('/app/Http/Controllers/Controller.php')
-		);
+        copy(
+            $this->pathPackage('/templates/components/Controllers/Controller.php'),
+            base_path('/app/Http/Controllers/Controller.php')
+        );
 
-		copy(
-			$this->pathPackage('/core/routes.php'),
-			base_path('/routes/fap.php')
-		);
+        copy(
+            $this->pathPackage('/core/routes.php'),
+            base_path('/routes/fap.php')
+        );
 
-		copy(
-			$this->pathPackage('/core/api.php'),
-			base_path('/routes/fapi.php')
-		);
+        copy(
+            $this->pathPackage('/core/api.php'),
+            base_path('/routes/fapi.php')
+        );
 
-		copy(
-			$this->pathPackage('/core/config.php'),
-			base_path('/config/fap.php')
-		);
-	}
+        copy(
+            $this->pathPackage('/core/config.php'),
+            base_path('/config/fap.php')
+        );
+    }
 
-	protected function pathPackage($path)
-	{
-		return base_path("/vendor/digiants-agency/fastadminpanel" . $path);
-	}
+    protected function pathPackage($path)
+    {
+        return base_path('/vendor/digiants-agency/fastadminpanel'.$path);
+    }
 
-	protected function publishPartsFolder($source, $destination)
-	{
-		if (!is_dir($destination)) {
-			mkdir($destination, 0777, true);
-		}
+    protected function publishPartsFolder($source, $destination)
+    {
+        if (! is_dir($destination)) {
+            mkdir($destination, 0777, true);
+        }
 
-		$files = scandir($source);
+        $files = scandir($source);
 
-		foreach ($files as $file) {
+        foreach ($files as $file) {
 
-			if ($file == '.' || $file == '..')
-				continue;
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
 
-			if (is_dir($source . '/' . $file)) {
+            if (is_dir($source.'/'.$file)) {
 
-				$this->publishPartsFolder($source . '/' . $file, $destination . '/' . $file);
+                $this->publishPartsFolder($source.'/'.$file, $destination.'/'.$file);
 
-			} else {
+            } else {
 
-				copy(
-					$source . '/' . $file,
-					$destination . '/' . $file
-				);
-			}
-		}
-	}
+                copy(
+                    $source.'/'.$file,
+                    $destination.'/'.$file
+                );
+            }
+        }
+    }
 }

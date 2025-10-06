@@ -6,24 +6,24 @@ use App\FastAdminPanel\Models\SinglePage;
 
 class SingleService
 {
-	public function get()
-	{
-		$pages = SinglePage::get();
+    public function get()
+    {
+        $pages = SinglePage::get();
 
-		$docs = collect([]);
+        $docs = collect([]);
 
-		$singles = $pages->map(fn ($p) => [
-			'method'		=> "GET",
-			'endpoint'		=> "/fapi/singles/{$p->slug}",
-			'description'	=> "Get all phrases from part: '{$p->title}'",
-			'fields'		=> [],
-		]);
+        $singles = $pages->map(fn ($p) => [
+            'method' => 'GET',
+            'endpoint' => "/fapi/singles/{$p->slug}",
+            'description' => "Get all phrases from part: '{$p->title}'",
+            'fields' => [],
+        ]);
 
-		if ($singles->count()) {
+        if ($singles->count()) {
 
-			$docs['Static parts'] = $singles;
-		}
+            $docs['Static parts'] = $singles;
+        }
 
-		return $docs;
-	}
+        return $docs;
+    }
 }

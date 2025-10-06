@@ -14,12 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-		$languages = Language::get();
+        $languages = Language::get();
 
-		foreach ($languages as $lang) {
-        	
-			Schema::dropIfExists("{{ table }}_{$lang->tag}");
-		}
+        foreach ($languages as $lang) {
+            
+            Schema::dropIfExists("{{ table }}_{$lang->tag}");
+        }
     }
 
     /**

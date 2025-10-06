@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Services;
 
@@ -8,245 +8,249 @@ use Illuminate\Support\Facades\App;
 
 class LanguageService
 {
-	protected $lang = '';
-	protected $langs = [];
-	protected $host;
+    protected $lang = '';
 
-	public function __construct(Request $request)
-	{
-		try {
+    protected $langs = [];
 
-			$this->langs = Language::get();
+    protected $host;
 
-		} catch (\Exception $e) { // for migrate purpose
-			
-			if (App::runningInConsole()) {
-				echo 'Warning! Cant connect to db or table languages doesnt exist', PHP_EOL;
-			}
+    public function __construct(Request $request)
+    {
+        try {
 
-			$this->langs = collect([
-				(object)[
-					'id'		=> 1,
-					'tag'		=> 'en',
-					'main_lang'	=> 1,
-				],
-			]);
-		}
-		
-		$this->host = $request->getHost();
-		$this->lang = $this->findLang($request, $this->langs);
+            $this->langs = Language::get();
 
-		App::setLocale($this->lang);
-	}
+        } catch (\Exception $e) { // for migrate purpose
 
-	public function url($lang, $url = '')
-	{
-		$host = $this->host;
+            if (App::runningInConsole()) {
+                echo 'Warning! Cant connect to db or table languages doesnt exist', PHP_EOL;
+            }
 
-		if ($url == '') {
+            $this->langs = collect([
+                (object) [
+                    'id' => 1,
+                    'tag' => 'en',
+                    'main_lang' => 1,
+                ],
+            ]);
+        }
 
-			$url = url()->current();
-		}
+        $this->host = $request->getHost();
+        $this->lang = $this->findLang($request, $this->langs);
 
-		foreach ($this->langs as $l) {
+        App::setLocale($this->lang);
+    }
 
-			$tag = $l->tag;
+    public function url($lang, $url = '')
+    {
+        $host = $this->host;
 
-			if (strpos($url, "/$tag") == mb_strlen($url) - 3) {
+        if ($url == '') {
 
-				$url = str_replace("$host/$tag", $host, $url);
+            $url = url()->current();
+        }
 
-			} else {
+        foreach ($this->langs as $l) {
 
-				$url = str_replace("$host/$tag/", $host . '/', $url);
-			}
-		}
+            $tag = $l->tag;
 
-		$prefix = $this->prefix($lang);
+            if (strpos($url, "/$tag") == mb_strlen($url) - 3) {
 
-		if ($prefix != '') {
+                $url = str_replace("$host/$tag", $host, $url);
 
-			$prefix = '/' . $prefix;
-		}
+            } else {
 
-		return str_replace($host, "$host$prefix", $url);
-	}
+                $url = str_replace("$host/$tag/", $host.'/', $url);
+            }
+        }
 
-	public function getUrl($lang, $url = '')
-	{
-		return $this->url($lang, $url);
-	}
+        $prefix = $this->prefix($lang);
 
-	public function is($lang)
-	{
-		return $this->lang == $lang;
-	}
+        if ($prefix != '') {
 
-	public function prefix($lang = '', $prefix = '')
-	{
-		if ($lang == '') {
+            $prefix = '/'.$prefix;
+        }
 
-			$lang = $this->lang;
-		}
-		
-		foreach ($this->langs as $l) {
+        return str_replace($host, "$host$prefix", $url);
+    }
 
-			if ($lang == $l->tag && $l->main_lang == 1) {
+    public function getUrl($lang, $url = '')
+    {
+        return $this->url($lang, $url);
+    }
 
-				$lang = '';
-			}
-		}
+    public function is($lang)
+    {
+        return $this->lang == $lang;
+    }
 
-		if ($prefix) {
+    public function prefix($lang = '', $prefix = '')
+    {
+        if ($lang == '') {
 
-			if ($lang) {
+            $lang = $this->lang;
+        }
 
-				return "$lang/$prefix";
-			}
+        foreach ($this->langs as $l) {
 
-			return $prefix;
-		}
-		
-		return $lang;
-	}
+            if ($lang == $l->tag && $l->main_lang == 1) {
 
-	public function get()
-	{
-		return $this->lang;
-	}
+                $lang = '';
+            }
+        }
 
-	public function tag()
-	{
-		return $this->lang;
-	}
+        if ($prefix) {
 
-	public function main($to = '')
-	{
-		if ($to == '') {
+            if ($lang) {
 
-			return $this->langs->firstWhere('main_lang', 1)->tag ?? '';
-		}
+                return "$lang/$prefix";
+            }
 
-		Language::where('main_lang', 1)
-		->update([
-			'main_lang'	=> 0,
-		]);
+            return $prefix;
+        }
 
-		Language::where('tag', $to)
-		->update([
-			'main_lang'	=> 1,
-		]);
-	}
+        return $lang;
+    }
 
-	public function isMain()
-	{
-		return $this->main() == $this->lang;
-	}
+    public function get()
+    {
+        return $this->lang;
+    }
 
-	public function getMain()
-	{
-		return $this->main();
-	}
+    public function tag()
+    {
+        return $this->lang;
+    }
 
-	public function changeMain($to)
-	{
-		$this->main($to);
-	}
+    public function main($to = '')
+    {
+        if ($to == '') {
 
-	public function langs()
-	{
-		return $this->langs;
-	}
+            return $this->langs->firstWhere('main_lang', 1)->tag ?? '';
+        }
 
-	public function all()
-	{
-		return $this->langs;
-	}
+        Language::where('main_lang', 1)
+            ->update([
+                'main_lang' => 0,
+            ]);
 
-	public function getLangs()
-	{
-		return $this->langs;
-	}
+        Language::where('tag', $to)
+            ->update([
+                'main_lang' => 1,
+            ]);
+    }
 
-	public function count()
-	{
-		return $this->langs->count();
-	}
+    public function isMain()
+    {
+        return $this->main() == $this->lang;
+    }
 
-	public function link($url)
-	{
-		if (mb_strpos($url, '#') === 0) {
+    public function getMain()
+    {
+        return $this->main();
+    }
 
-			return $url;
-		}
+    public function changeMain($to)
+    {
+        $this->main($to);
+    }
 
-		$parts = parse_url($url);
+    public function langs()
+    {
+        return $this->langs;
+    }
 
-		if (isset($parts['path'])) {
+    public function all()
+    {
+        return $this->langs;
+    }
 
-			$url = $parts['path'];
+    public function getLangs()
+    {
+        return $this->langs;
+    }
 
-		} else if (isset($parts['fragment'])) {
+    public function count()
+    {
+        return $this->langs->count();
+    }
 
-			$url = $parts['fragment'];
+    public function link($url)
+    {
+        if (mb_strpos($url, '#') === 0) {
 
-		} else {
+            return $url;
+        }
 
-			return $url;
-		}
+        $parts = parse_url($url);
 
-		$lang = $this->lang;
+        if (isset($parts['path'])) {
 
-		foreach ($this->langs as $l) {
+            $url = $parts['path'];
 
-			if ($lang == $l->tag && $l->main_lang == 1) {
+        } elseif (isset($parts['fragment'])) {
 
-				return ($url == '') ? '/' : $url;
-			}
-		}
+            $url = $parts['fragment'];
 
-		if ($url == '/')
-			return "/$lang";
-		return "/$lang$url";
-	}
+        } else {
 
-	public function ending($isMultilanguage)
-	{
-		if ($isMultilanguage) {
+            return $url;
+        }
 
-			return '_' . $this->lang;
-		}
+        $lang = $this->lang;
 
-		return '';
-	}
+        foreach ($this->langs as $l) {
 
-	protected function findLang($request, $langs)
-	{
-		$lang = '';
+            if ($lang == $l->tag && $l->main_lang == 1) {
 
-		$uri = $request->path();
+                return ($url == '') ? '/' : $url;
+            }
+        }
 
-		$segmentsURI = explode('/', $uri);
+        if ($url == '/') {
+            return "/$lang";
+        }
 
-		$main_lang = '';
+        return "/$lang$url";
+    }
 
-		foreach ($langs as $l) {
+    public function ending($isMultilanguage)
+    {
+        if ($isMultilanguage) {
 
-			if ($l->tag == $segmentsURI[0] && $l->main_lang != 1) {
+            return '_'.$this->lang;
+        }
 
-				$lang = $l->tag;
-				
-			} else if ($l->main_lang == 1) {
-				
-				$main_lang = $l->tag;
-			}
-		}
+        return '';
+    }
 
-		if ($lang == '' && $main_lang != '') {
+    protected function findLang($request, $langs)
+    {
+        $lang = '';
 
-			$lang = $main_lang;
-		}
+        $uri = $request->path();
 
-		return $lang;
-	}
+        $segmentsURI = explode('/', $uri);
+
+        $main_lang = '';
+
+        foreach ($langs as $l) {
+
+            if ($l->tag == $segmentsURI[0] && $l->main_lang != 1) {
+
+                $lang = $l->tag;
+
+            } elseif ($l->main_lang == 1) {
+
+                $main_lang = $l->tag;
+            }
+        }
+
+        if ($lang == '' && $main_lang != '') {
+
+            $lang = $main_lang;
+        }
+
+        return $lang;
+    }
 }

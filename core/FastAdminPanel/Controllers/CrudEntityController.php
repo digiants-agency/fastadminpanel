@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -15,78 +15,78 @@ use Illuminate\Support\Facades\Response;
 
 class CrudEntityController extends Controller
 {
-	public function index(IndexRequest $request, Index $indexService, $table)
-	{
-		$this->authorize('something', [$table, 'admin_read']);
+    public function index(IndexRequest $request, Index $indexService, $table)
+    {
+        $this->authorize('something', [$table, 'admin_read']);
 
-		$crud = Crud::findOrFail($table);
-		
-		$data = $request->validated();
+        $crud = Crud::findOrFail($table);
 
-		[$instances, $count] = $indexService->get($crud, $data);
+        $data = $request->validated();
 
-		return Response::json([
-			'instances'	=> $instances,
-			'count'		=> $count,
-		]);
-	}
+        [$instances, $count] = $indexService->get($crud, $data);
 
-	public function show(Show $showService, $table, $entity_id)
-	{
-		$this->authorize('something', [$table, 'admin_read']);
+        return Response::json([
+            'instances' => $instances,
+            'count' => $count,
+        ]);
+    }
 
-		$entity = $showService->get($table, $entity_id);
+    public function show(Show $showService, $table, $entity_id)
+    {
+        $this->authorize('something', [$table, 'admin_read']);
 
-		return Response::json([
-			'entity'	=> $entity,
-		]);
-	}
+        $entity = $showService->get($table, $entity_id);
 
-	// TODO: validation
-	public function insertOrUpdate(Request $request, InsertOrUpdate $insertOrUpdate)
-	{		
-		$input = $request->all();
+        return Response::json([
+            'entity' => $entity,
+        ]);
+    }
 
-		$this->authorize('something', [$input['table'], 'admin_edit']);
+    // TODO: validation
+    public function insertOrUpdate(Request $request, InsertOrUpdate $insertOrUpdate)
+    {
+        $input = $request->all();
 
-		$insertOrUpdate->save($input);
+        $this->authorize('something', [$input['table'], 'admin_edit']);
 
-		return Response::json();
-	}
+        $insertOrUpdate->save($input);
 
-	public function copy(Copy $copyService, $table, $entity_id)
-	{
-		$this->authorize('something', [$table, 'admin_edit']);
+        return Response::json();
+    }
 
-		$crud = Crud::findOrFail($table);
+    public function copy(Copy $copyService, $table, $entity_id)
+    {
+        $this->authorize('something', [$table, 'admin_edit']);
 
-		$copyService->copy($crud, $entity_id);
+        $crud = Crud::findOrFail($table);
 
-		return Response::json();
-	}
+        $copyService->copy($crud, $entity_id);
 
-	public function destroy(Destroy $destroyService, $table, $entity_id)
-	{
-		$this->authorize('something', [$table, 'admin_edit']);
+        return Response::json();
+    }
 
-		$crud = Crud::findOrFail($table);
+    public function destroy(Destroy $destroyService, $table, $entity_id)
+    {
+        $this->authorize('something', [$table, 'admin_edit']);
 
-		$destroyService->destroy($crud, [$entity_id]);
+        $crud = Crud::findOrFail($table);
 
-		return Response::json();
-	}
+        $destroyService->destroy($crud, [$entity_id]);
 
-	// TODO: validation
-	public function bulkDestroy(Request $request, Destroy $destroyService, $table)
-	{
-		$this->authorize('something', [$table, 'admin_edit']);
+        return Response::json();
+    }
 
-		$crud = Crud::findOrFail($table);
+    // TODO: validation
+    public function bulkDestroy(Request $request, Destroy $destroyService, $table)
+    {
+        $this->authorize('something', [$table, 'admin_edit']);
 
-		$ids = $request->get('ids');
+        $crud = Crud::findOrFail($table);
 
-		$destroyService->destroy($crud, $ids);
+        $ids = $request->get('ids');
 
-		return Response::json();
-	}
+        $destroyService->destroy($crud, $ids);
+
+        return Response::json();
+    }
 }

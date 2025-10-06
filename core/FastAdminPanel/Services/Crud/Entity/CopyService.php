@@ -9,148 +9,149 @@ use Illuminate\Support\Facades\DB;
 
 class CopyService implements Copy
 {
-	public function __construct(
-		protected TableService $tableService,
-	) { }
+    public function __construct(
+        protected TableService $tableService,
+    ) {}
 
-	public function copy($crud, $entityId)
-	{
-		$tables = $this->tableService->getTables($crud->table_name);
+    public function copy($crud, $entityId)
+    {
+        $tables = $this->tableService->getTables($crud->table_name);
 
-		foreach ($tables as $table) {
+        foreach ($tables as $table) {
 
-			$row = DB::table($table)
-			->where('id', $entityId)
-			->first();
+            $row = DB::table($table)
+                ->where('id', $entityId)
+                ->first();
 
-			$insert = [];
+            $insert = [];
 
-			foreach ($row as $key => $value) {
-				
-				if ($key == 'id' || $key == 'created_at' || $key == 'updated_at')
-					continue;
+            foreach ($row as $key => $value) {
 
-				if ($key == 'slug') {
-					preg_match('/-copy-(\d)$/', $value, $matches);
-					if (!empty($matches)) {
-						$value = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $value);
-					} else {
-						$value .= '-copy-1';
-					}
-				}
+                if ($key == 'id' || $key == 'created_at' || $key == 'updated_at') {
+                    continue;
+                }
 
-				if ($key == 'title') {
+                if ($key == 'slug') {
+                    preg_match('/-copy-(\d)$/', $value, $matches);
+                    if (! empty($matches)) {
+                        $value = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $value);
+                    } else {
+                        $value .= '-copy-1';
+                    }
+                }
 
-					$value .= ' copy';
-				}
+                if ($key == 'title') {
 
-				$insert[$key] = $value;
-			}
+                    $value .= ' copy';
+                }
 
-			$newId = DB::table($table)->insertGetId($insert);
-		}
+                $insert[$key] = $value;
+            }
 
-		$this->copyRelationshipMany($entityId, $crud->table_name, $newId);
-		$this->copyEditable($entityId, $crud->table_name, $newId);
-	}
-	
-	protected function copyRelationshipMany($id, $table, $newId)
-	{
-		$crud = Crud::findOrFail($table);
+            $newId = DB::table($table)->insertGetId($insert);
+        }
 
-		foreach ($crud->fields as $field) {
+        $this->copyRelationshipMany($entityId, $crud->table_name, $newId);
+        $this->copyEditable($entityId, $crud->table_name, $newId);
+    }
 
-			if ($field->type == 'relationship' && $field->relationship_count == 'many') {
-				
-				$manyItems = DB::table("{$table}_{$field->relationship_table_name}")
-				->where("id_{$table}", $id)
-				->get()
-				->all();
+    protected function copyRelationshipMany($id, $table, $newId)
+    {
+        $crud = Crud::findOrFail($table);
 
-				foreach ($manyItems as $key => &$manyItem){
+        foreach ($crud->fields as $field) {
 
-					$manyItem = (array)$manyItem;
+            if ($field->type == 'relationship' && $field->relationship_count == 'many') {
 
-					unset($manyItems[$key]['id']);
-					$manyItem['id_' . $table] = $newId;
-				}
+                $manyItems = DB::table("{$table}_{$field->relationship_table_name}")
+                    ->where("id_{$table}", $id)
+                    ->get()
+                    ->all();
 
-				DB::table("{$table}_{$field->relationship_table_name}")
-				->insert($manyItems);
-			}
-		}
-	}
+                foreach ($manyItems as $key => &$manyItem) {
 
-	protected function copyEditable($id, $table, $newId)
-	{
-		$crud = Crud::findOrFail($table);
+                    $manyItem = (array) $manyItem;
 
-		$editable = $crud->fields->filter(fn ($f) => $f->type == 'relationship' && $f->relationship_count == 'editable')
-		->map(fn ($f) => $f->relationship_table_name);
+                    unset($manyItems[$key]['id']);
+                    $manyItem['id_'.$table] = $newId;
+                }
 
-		foreach ($editable as $tableName) {
+                DB::table("{$table}_{$field->relationship_table_name}")
+                    ->insert($manyItems);
+            }
+        }
+    }
 
-			$tables = $this->tableService->getTables($tableName);
+    protected function copyEditable($id, $table, $newId)
+    {
+        $crud = Crud::findOrFail($table);
 
-			$parents = [];
+        $editable = $crud->fields->filter(fn ($f) => $f->type == 'relationship' && $f->relationship_count == 'editable')
+            ->map(fn ($f) => $f->relationship_table_name);
 
-			foreach ($tables as $tblIndex => $tbl){
+        foreach ($editable as $tableName) {
 
-				$editableItems = DB::table($tbl)
-				->where("id_$table", $id)
-				->get()
-				->all();
+            $tables = $this->tableService->getTables($tableName);
 
-				foreach ($editableItems as $key => &$editableItem) {
+            $parents = [];
 
-					$editableItem = (array)$editableItem;
+            foreach ($tables as $tblIndex => $tbl) {
 
-					$itemId = $editableItem['id'];
+                $editableItems = DB::table($tbl)
+                    ->where("id_$table", $id)
+                    ->get()
+                    ->all();
 
-					unset($editableItems[$key]['id']);
-					unset($editableItems[$key]['created_at']);
-					unset($editableItems[$key]['updated_at']);
+                foreach ($editableItems as $key => &$editableItem) {
 
-					foreach ($editableItem as $key_item => &$item){
+                    $editableItem = (array) $editableItem;
 
-						if ($key_item == 'slug') {
-							preg_match('/-copy-(\d)$/', $item, $matches);
-							if (!empty($matches)) {
-								$item = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $item);
-							} else {
-								$item .= '-copy-1';
-							}
-						}
-		
-						if ($key_item == 'title') {
-							$item .= ' copy';
-						}
-					}
-					
-					$editableItem['id_' . $table] = $newId;
+                    $itemId = $editableItem['id'];
 
-					$newEditableId = DB::table($tbl)
-					->insertGetId($editableItem);
+                    unset($editableItems[$key]['id']);
+                    unset($editableItems[$key]['created_at']);
+                    unset($editableItems[$key]['updated_at']);
 
-					if ($tblIndex == 0) {
+                    foreach ($editableItem as $key_item => &$item) {
 
-						$parents[] = [
-							'id'		=> $itemId,
-							'table'		=> $tableName,
-							'new_id'	=> $newEditableId,
-						];
-					}
-				}
-			}
+                        if ($key_item == 'slug') {
+                            preg_match('/-copy-(\d)$/', $item, $matches);
+                            if (! empty($matches)) {
+                                $item = str_replace('-copy-'.intval($matches[1]), '-copy-'.(intval($matches[1]) + 1), $item);
+                            } else {
+                                $item .= '-copy-1';
+                            }
+                        }
 
-			if ($parents) {
+                        if ($key_item == 'title') {
+                            $item .= ' copy';
+                        }
+                    }
 
-				foreach ($parents as $parent) {
+                    $editableItem['id_'.$table] = $newId;
 
-					$this->copyRelationshipMany($parent['id'], $parent['table'], $parent['new_id']);
-					$this->copyEditable($parent['id'], $parent['table'], $parent['new_id']);
-				}
-			}
-		}
-	}
+                    $newEditableId = DB::table($tbl)
+                        ->insertGetId($editableItem);
+
+                    if ($tblIndex == 0) {
+
+                        $parents[] = [
+                            'id' => $itemId,
+                            'table' => $tableName,
+                            'new_id' => $newEditableId,
+                        ];
+                    }
+                }
+            }
+
+            if ($parents) {
+
+                foreach ($parents as $parent) {
+
+                    $this->copyRelationshipMany($parent['id'], $parent['table'], $parent['new_id']);
+                    $this->copyEditable($parent['id'], $parent['table'], $parent['new_id']);
+                }
+            }
+        }
+    }
 }

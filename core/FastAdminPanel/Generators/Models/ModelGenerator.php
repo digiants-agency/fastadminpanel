@@ -23,7 +23,7 @@ class ModelGenerator
         $uses = $this->getUses();
 
         file_put_contents(
-            $path, 
+            $path,
             $this->populateStub($namespace, $uses, $class, $extends, $table, $fillable, $relationships)
         );
 
@@ -32,10 +32,11 @@ class ModelGenerator
 
     public function update($table, $modelPath, $isMulilanguage, $fields)
     {
-		$path = $this->getPathByModel($modelPath);
+        $path = $this->getPathByModel($modelPath);
 
-		if (!file_exists($path))
-			return;
+        if (! file_exists($path)) {
+            return;
+        }
 
         $model = file_get_contents($path);
 
@@ -44,25 +45,25 @@ class ModelGenerator
         } else {
             $model = str_replace('extends MultilanguageModel', 'extends Model', $model);
         }
-        
+
         $fillable = $this->getFillable($fields);
 
         $model = preg_replace(
-            '/(protected \$fillable = \[)[\s\S]+?(];)/', 
-            "$1"."\n\t\t".$fillable."\n\t"."$2", 
+            '/(protected \$fillable = \[)[\s\S]+?(];)/',
+            '$1'."\n        ".$fillable."\n    ".'$2',
             $model
         );
 
-        $relationships  = $this->getRelationships($table, $fields);
+        $relationships = $this->getRelationships($table, $fields);
 
         $model = preg_replace(
-            '/(#region Relationships)[\s\S]+?(#endregion)/', 
-            "$1"."\n\n\t".$relationships."\n\n\t"."$2", 
+            '/(#region Relationships)[\s\S]+?(#endregion)/',
+            '$1'."\n\n    ".$relationships."\n\n    ".'$2',
             $model
         );
 
         file_put_contents(
-            $path, 
+            $path,
             $model,
         );
     }
@@ -71,8 +72,9 @@ class ModelGenerator
     {
         $path = $this->getPathByModel($modelPath);
 
-		if (!file_exists($path))
-			return;
+        if (! file_exists($path)) {
+            return;
+        }
 
         unlink($path);
     }
@@ -83,13 +85,13 @@ class ModelGenerator
 
         return str_replace(
             [
-                '{{ namespace }}', 
-                '{{ uses }}', 
-                '{{ class }}', 
-                '{{ extends }}', 
-                '{{ table }}', 
-                '{{ fillable }}', 
-                '{{ relationships }}'
+                '{{ namespace }}',
+                '{{ uses }}',
+                '{{ class }}',
+                '{{ extends }}',
+                '{{ table }}',
+                '{{ fillable }}',
+                '{{ relationships }}',
             ],
             [
                 $namespace,
@@ -98,7 +100,7 @@ class ModelGenerator
                 $extends,
                 $table,
                 $fillable,
-                $relationships
+                $relationships,
             ],
             $stub
         );
@@ -136,15 +138,15 @@ class ModelGenerator
 
         foreach ($fields as $field) {
 
-			$fillable = $field->getFillable();
+            $fillable = $field->getFillable();
 
-			if ($fillable) {
-				
-				$fillableFields[] = "'$fillable'";
-			}
+            if ($fillable) {
+
+                $fillableFields[] = "'$fillable'";
+            }
         }
 
-        return $fillableFields->implode(",\n\t\t") . ',';
+        return $fillableFields->implode(",\n        ").',';
     }
 
     protected function getRelationships($table, $fields)
@@ -152,7 +154,7 @@ class ModelGenerator
         $relationships = [];
 
         foreach ($fields as $field) {
-            
+
             if ($field->type != 'relationship') {
                 continue;
             }
@@ -163,7 +165,7 @@ class ModelGenerator
 
                 $relation = new BelongsTo($field);
 
-            } else if ($field->relationship_count == 'many') {
+            } elseif ($field->relationship_count == 'many') {
 
                 $relation = new BelongsToMany($table, $field);
 
@@ -175,12 +177,12 @@ class ModelGenerator
             $body = $relation->body();
             $this->usesRelations[] = $relation->uses();
 
-            if (!empty($body)) {
+            if (! empty($body)) {
                 $relationships[] = $body;
             }
         }
 
-        return implode("\n\n\t", $relationships);
+        return implode("\n\n    ", $relationships);
     }
 
     protected function getStub()
@@ -192,23 +194,23 @@ class ModelGenerator
 
     protected function getPathByClass($name)
     {
-        return app_path("Models").'/'.$name.'.php';
+        return app_path('Models').'/'.$name.'.php';
     }
 
-	protected function getPathByModel($modelPath)
-	{
-		$parts = explode("\\", $modelPath);
-		$path = '';
+    protected function getPathByModel($modelPath)
+    {
+        $parts = explode('\\', $modelPath);
+        $path = '';
 
-		for ($i = 1, $count = count($parts) - 1; $i < $count; $i++) {
-			
-			$path .= strtolower($parts[$i]) . '/';
-		}
+        for ($i = 1, $count = count($parts) - 1; $i < $count; $i++) {
 
-		$modelName = array_pop($parts);
-		
-		return base_path($path) . $modelName . '.php';
-	}
+            $path .= strtolower($parts[$i]).'/';
+        }
+
+        $modelName = array_pop($parts);
+
+        return base_path($path).$modelName.'.php';
+    }
 
     public function stubPath($path)
     {

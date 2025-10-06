@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\FastAdminPanel\Controllers;
 
@@ -8,17 +8,17 @@ use Illuminate\Support\Facades\Response;
 
 class SingleValueApiController extends Controller
 {
-	public function show($slug)
-	{
-		$this->authorize('something', [$slug, 'api_read']);
+    public function show($slug)
+    {
+        $this->authorize('something', [$slug, 'api_read']);
 
-		$single = Single::get($slug);
+        $single = Single::get($slug);
 
-		if (!$single) {
+        if (! $single) {
 
-			return Response::json(null, 404);
-		}
+            return Response::json(null, 404);
+        }
 
-		return Response::json($single);
-	}
+        return Response::json($single);
+    }
 }

@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade;
 
 class Lang extends Facade
 {
-	protected static function getFacadeAccessor()
-	{
-		return 'lang';
-	}
+    protected static function getFacadeAccessor()
+    {
+        return 'lang';
+    }
 }
