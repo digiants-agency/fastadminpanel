@@ -1,11 +1,5 @@
-<header>
-	<div class="container">
-		<div class="header-inner">
-			
-			header
-
-		</div>
-	</div>
+<header class="container">
+	header
 </header>
 
 

@@ -1,11 +1,5 @@
-<footer>
-	<div class="container">
-		<div class="footer-inner">
-
-			footer 
-
-		</div>
-	</div>
+<footer class="container">
+	footer
 </footer>
 
 <div id="loader">
@@ -36,81 +30,6 @@
 @startjs('0')
 
 <script>
-
-	// lazy load START
-	/**
-	 * Usage: <img srcset="/images/lazy.svg" src="/images/original.png" alt="">
-	 */
-	function checkLazy() {
-		for (var i = lazy_imgs.length - 1; i >= 0; i--) {
-			var img = lazy_imgs[i]
-			if (img.srcset == '/images/lazy.svg' && img.getBoundingClientRect().top - 100 < window.innerHeight) {
-				(function(img) {
-					img.onload = () => {
-						img.removeAttribute('srcset')
-					}
-				})(img)
-				img.srcset = img.src
-			}
-		}
-	}
-	var lazy_imgs = []
-	window.addEventListener('DOMContentLoaded', () => {
-		lazy_imgs = Array.prototype.slice.call(document.querySelectorAll('img[srcset]'))
-		setTimeout(() => {
-			checkLazy()
-		}, 200)
-	})
-	window.addEventListener('scroll', () => {
-		checkLazy()
-	})
-	// lazy load END
-
-
-	function scrollIt(destination, duration = 500, easing = 'easeInOutCubic', callback) {
-
-		const easings = {
-			easeInOutCubic(t) {
-				return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-			},
-		};
-
-		const start = window.scrollY;
-		const startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
-
-		const documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-		const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
-		const destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
-		const destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
-
-		if ('requestAnimationFrame' in window === false) {
-			window.scroll(0, destinationOffsetToScroll);
-			if (callback) {
-				callback();
-			}
-			return;
-		}
-
-		function scroll() {
-			const now = 'now' in window.performance ? performance.now() : new Date().getTime();
-			const time = Math.min(1, ((now - startTime) / duration));
-			const timeFunction = easings[easing](time);
-			window.scroll(0, Math.ceil((timeFunction * (destinationOffsetToScroll - start)) + start));
-
-			if (Math.abs(window.scrollY - destinationOffsetToScroll) < 2) {
-				if (callback) {
-					callback();
-				}
-				return;
-			}
-
-			requestAnimationFrame(scroll);
-		}
-
-		scroll();
-	}
-
-
 	// ajax request START
 	const req = {
 		count: 0,
@@ -234,21 +153,12 @@
 		},
 	}
 	// ajax request END
-		
 
-	function resize() {
+	function setCssVarWidth() {
         document.body.style.setProperty('--width', document.body.clientWidth)
     }
-    resize()
-    window.addEventListener('resize', resize)
-
-	function appHeight() {
-		const doc = document.documentElement
-		doc.style.setProperty('--app-height', `${window.innerHeight}px`)
-	}
-	appHeight()
-	window.addEventListener('resize', appHeight)
-
+    setCssVarWidth()
+    window.addEventListener('resize', setCssVarWidth)
 </script>
 
 

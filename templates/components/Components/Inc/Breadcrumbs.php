@@ -5,20 +5,26 @@ namespace App\View\Components\Inc;
 use App\FastAdminPanel\Facades\Lang;
 use Illuminate\View\Component;
 
+// TODO: refactor
 class Breadcrumbs extends Component
 {
-	public $APP_URL;
-	public $actualLink;
+    public $appUrl;
+
+    public $actualLink;
+
     public $breadcrumbs;
+
     public $breadcrumbsFirst;
+
     public $json;
+
     public $type;
 
     public function __construct($breadcrumbs, $type = '')
-	{
-        $this->APP_URL = config('app.url');
-        $this->actualLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        
+    {
+        $this->appUrl = config('app.url');
+        $this->actualLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')."://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
         $this->breadcrumbsFirst = 'Main';
 
         $this->breadcrumbs = $this->makeBreadcrumbs($breadcrumbs);
@@ -26,54 +32,54 @@ class Breadcrumbs extends Component
         $this->type = $type;
     }
 
+    public function render()
+    {
+        return view('components.inc.breadcrumbs');
+    }
+
     protected function makeBreadcrumbs($breadcrumbs)
-	{
+    {
         $result = [
             [
-                'full_link' => $this->APP_URL,
-                'link'      => Lang::link('/'),
-                'title'     => $this->breadcrumbsFirst,
+                'full_link' => $this->appUrl,
+                'link' => Lang::link('/'),
+                'title' => $this->breadcrumbsFirst,
             ],
         ];
 
         foreach ($breadcrumbs as $link) {
             $result[] = [
-                'full_link'  => $this->APP_URL . '/' . $link['link'],
-                'link'  => $link['link'],
+                'full_link' => $this->appUrl.'/'.$link['link'],
+                'link' => $link['link'],
                 'title' => $link['title'],
             ];
         }
 
-        $result[sizeof($result) - 1]['full_link'] = $this->actualLink;
+        $result[count($result) - 1]['full_link'] = $this->actualLink;
 
         return $result;
     }
 
     protected function makeJson($breadcrumbs)
-	{
+    {
         $result = [
-            "@context"			=> "http://schema.org",
-            "@type"				=> "BreadcrumbList", 
+            '@context' => 'http://schema.org',
+            '@type' => 'BreadcrumbList',
         ];
 
         $bread = [];
 
         foreach ($breadcrumbs as $index => $link) {
             $bread[] = [
-                "@type"		=> "ListItem",
-                "position"	=> $index + 1,
-                "name"		=> $link['title'],
-                "item"		=> $link['full_link'],
-            ]; 
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $link['title'],
+                'item' => $link['full_link'],
+            ];
         }
 
-        $result["itemListElement"] = $bread;
+        $result['itemListElement'] = $bread;
 
         return $result;
-    }
-
-    public function render()
-	{
-        return view('components.inc.breadcrumbs');
     }
 }

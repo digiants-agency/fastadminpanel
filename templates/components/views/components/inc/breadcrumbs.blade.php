@@ -51,7 +51,7 @@
 	display: inline;
 }
 
-.breadcrumbs-link::after{
+.breadcrumbs-link::after {
 	content: "/";
 	font-style: normal;
 	font-weight: normal;
@@ -61,11 +61,11 @@
 	margin: 0 2.1px;
 }
 
-.breadcrumbs-last::after{
+.breadcrumbs-last::after {
 	display: none;
 }
 
-.breadcrumbs-last{
+.breadcrumbs-last {
 	color: var(--color-text);
 }
 
@@ -97,7 +97,7 @@
 	display: inline;
 }
 
-.breadcrumbs-link::after{
+.breadcrumbs-link::after {
 	content: "/";
 	font-style: normal;
 	font-weight: normal;
@@ -107,11 +107,11 @@
 	margin: 0 2.5px;
 }
 
-.breadcrumbs-last::after{
+.breadcrumbs-last::after {
 	display: none;
 }
 
-.breadcrumbs-last{
+.breadcrumbs-last {
 	color: var(--color-text);
 }
 
