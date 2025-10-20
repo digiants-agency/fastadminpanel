@@ -15,7 +15,7 @@
 					<div class="reletionship_inner">
 						<div v-for="(f, index) in group.fields.filter(f => f.is_visible && table !== f.relationship_table_name)" :class="'field-' + f.type">
 							<component
-								:is="findFieldComponent(f.type, field.relationship_table_name, f.db_title)"
+								:is="findFieldComponent(f.type, field.relationship_table_name, f.db_title ?? (f.relationship_table_name + '_' + f.relationship_count))"
 								:field="f"
 								:table="field.relationship_table_name"
 								:parent_id="i"

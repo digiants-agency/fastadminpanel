@@ -13,7 +13,7 @@
 		<div class="edit-fields" :class="table">
 			<div v-for="(field, index) in fields.filter(f => f.is_visible && f.relationship_count != 'editable')" :class="'field-' + field.type">
 				<component
-					:is="findFieldComponent(field.type, table, field.db_title)"
+					:is="findFieldComponent(field.type, table, field.db_title ?? (field.relationship_table_name + '_' + field.relationship_count))"
 					:field="field"
 					:table="table"
 					:parent_id="0"
@@ -24,7 +24,7 @@
 		<div v-for="(field, index) in fields.filter(f => f.is_visible && f.relationship_count == 'editable')" :class="'editable-' + table">
 			<div class="edit-fields edit-fields-editable">
 				<component
-					:is="findFieldComponent(field.type, table, field.db_title)"
+					:is="findFieldComponent(field.type, table, field.db_title ?? (field.relationship_table_name + '_' + field.relationship_count))"
 					:field="field"
 					:table="table"
 					:parent_id="0"
