@@ -15,11 +15,11 @@ class Convertor
     private static $styleSourcePath = [
         'desktop' => [
             'css/desktop-src.css',
-            'css/desktop-forms-src.css',
+            // 'css/desktop-forms-src.css', // just for example
         ],
         'mobile' => [
             'css/mobile-src.css',
-            'css/mobile-forms-src.css',
+            // 'css/mobile-forms-src.css', // just for example
         ],
     ];
 
