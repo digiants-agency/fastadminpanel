@@ -73,6 +73,10 @@ class BelongsToMany implements Relation
 
     protected function relatedPivotKey()
     {
+        if ($this->table === $this->field->relationship_table_name) {
+            return 'id_'.$this->table.'_other';
+        }
+
         return 'id_'.$this->field->relationship_table_name;
     }
 
