@@ -7,7 +7,7 @@
 					<div
 						class="reletionship_title" 
 						v-on:click="e => e.target.parentElement.classList.toggle('active')"
-						v-text="group.fields[0].relationship_count != 'single' ? group.fields[0].value : group.fields[0].value_title" 
+						v-text="getEditableTitle(group.fields[0])" 
 					></div>
 					<div class="btn btn-editable-delete btn-delete btn-danger btn-small" v-on:click="field.value.splice(i, 1)">
 						<img src="/vendor/fastadminpanel/images/close.svg" alt="">
@@ -80,6 +80,21 @@ app.component('field-relationship', {
 				id: 0, 
 				fields: JSON.parse(JSON.stringify(this.field.values)), 
 			})
+		},
+		getEditableTitle(field) {
+
+			if (field.relationship_count == 'single') {
+
+				const option = field.values.find(v => v.id == field.value)
+
+				if (!option) {
+					return '{{ __('fastadminpanel.choose_select') }}'
+				}
+
+				return option.title
+			}
+
+			return field.value
 		},
 	},
 })

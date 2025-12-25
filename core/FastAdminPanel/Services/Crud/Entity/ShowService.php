@@ -56,11 +56,6 @@ class ShowService implements Show
 
                             $field_title = 'id_'.$field->relationship_table_name;
                             $field->value = $instance->$field_title;
-
-                            if ($field->value) {
-
-                                $field->value_title = $field->values->where('id', $field->value)->first()->title ?? '';
-                            }
                         }
 
                     } elseif ($field->relationship_count == 'many') {
