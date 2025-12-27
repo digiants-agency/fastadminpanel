@@ -9,7 +9,7 @@
         "homepage": "https://digiants.agency"
     }],
     "require": {
-        "unisharp/laravel-filemanager": "2.10.0",
+        "unisharp/laravel-filemanager": "2.12.1",
         "mobiledetect/mobiledetectlib": "4.8.06",
         "maatwebsite/excel": "^3.1"
     },
