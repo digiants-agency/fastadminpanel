@@ -94,7 +94,7 @@ const req = {
 			let k = prefix ? prefix + "[" + p + "]" : p,
 				v = obj[p];
 				str.push((v !== null && typeof v === "object") ?
-				serialize(v, k) :
+				this.serialize(v, k) :
 				encodeURIComponent(k) + "=" + encodeURIComponent(v));
 			}
 		}
