@@ -81,7 +81,7 @@ app.component('field-relationship', {
 			ajaxThreshold: {{config('fap.relationship_ajax_threshold')}},
 			error: '',
 			searchTimeout: 0,
-			options: [...this.field.values],
+			options: [],
 		}
 	},
 	computed: {
@@ -92,6 +92,12 @@ app.component('field-relationship', {
 	watch: {
 	},
 	created() {
+		this.options = this.field.relationship_count == 'single' 
+			? [
+				{id: 0, title: '{{ __('fastadminpanel.choose_select') }}'},
+				...this.field.values,
+			]
+			: [...this.field.values]
 	},
 	mounted() {
 	},
