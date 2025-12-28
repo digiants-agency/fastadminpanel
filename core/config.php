@@ -40,4 +40,16 @@ return [
     */
 
     'migrations_mode' => 'dev',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationship AJAX threshold
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the threshold for using AJAX in relationship fields in the admin panel.
+    | If the number of related records exceeds this threshold, AJAX will be used to load the options.
+    |
+    */
+
+    'relationship_ajax_threshold' => 200,
 ];

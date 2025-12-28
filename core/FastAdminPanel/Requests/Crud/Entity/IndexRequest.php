@@ -9,6 +9,7 @@ class IndexRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'fields' => $this->fields ?? null,
             'search' => $this->search ?? '',
             'per_page' => $this->per_page ?? 10,
             'sort_order' => $this->sort_order ?? 'DESC',
@@ -19,6 +20,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
+            'fields' => ['nullable', 'array'],
             'search' => ['max:191'],
             'per_page' => ['integer', 'between:10,200'],
             'order' => ['required'],	// TODO: validation by field

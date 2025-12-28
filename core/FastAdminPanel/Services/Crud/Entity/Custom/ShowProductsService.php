@@ -41,36 +41,6 @@ class ShowProductsService implements Show
 
                 if ($field->relationship_count != 'editable') {
 
-                    $field->values = DB::table($this->tableService->getTable(
-                        $field->relationship_table_name,
-                    ))
-                        ->select('id', $field->relationship_view_field.' as title')
-                        ->get();
-
-                    // region for products table
-                    if ($field->relationship_table_name == 'filter_fields') {
-
-                        $field->values = DB::table($this->tableService->getTable(
-                            $field->relationship_table_name,
-                        ))
-                            ->select('id', 'title', 'id_filters')
-                            ->get();
-
-                        $filters = DB::table('filters_'.Lang::get())
-                            ->select('id', 'title')
-                            ->get();
-
-                        foreach ($field->values as &$value) {
-
-                            $filter = $filters->where('id', $value->id_filters)->first();
-
-                            if ($filter) {
-                                $value->title = $filter->title.': '.$value->title;
-                            }
-                        }
-                    }
-                    // endregion
-
                     if ($field->relationship_count == 'single') {
 
                         if ($entityId == 0) {
@@ -106,6 +76,60 @@ class ShowProductsService implements Show
                                 ->pluck('id');
                         }
                     }
+
+                    #region for products table
+                    if ($field->relationship_table_name == 'product_filter_fields') {
+
+                        $firstRows = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id', 'title', 'id_product_filters')
+                            ->orderBy('id', 'asc')
+                            ->limit(config('fap.relationship_ajax_threshold'));
+
+                        $field->values = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id', 'title', 'id_product_filters')
+                            ->when(is_int($field->value), fn ($query) => $query->where('id', $field->value))
+                            ->when(! is_int($field->value), fn ($query) => $query->whereIn('id', $field->value))
+                            ->union($firstRows)
+                            ->distinct()
+                            ->get();
+
+                        $filters = DB::table('product_filters_'.Lang::get())
+                            ->select('id', 'title')
+                            ->get();
+
+                        foreach ($field->values as &$value) {
+
+                            $filter = $filters->where('id', $value->id_product_filters)->first();
+
+                            if ($filter) {
+                                $value->title = $filter->title.': '.$value->title;
+                            }
+                        }
+
+                    } else {
+
+                        $firstRows = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id', $field->relationship_view_field.' as title')
+                            ->orderBy('id', 'asc')
+                            ->limit(config('fap.relationship_ajax_threshold'));
+
+                        $field->values = DB::table($this->tableService->getTable(
+                            $field->relationship_table_name,
+                        ))
+                            ->select('id', $field->relationship_view_field.' as title')
+                            ->when(is_int($field->value), fn ($query) => $query->where('id', $field->value))
+                            ->when(! is_int($field->value), fn ($query) => $query->whereIn('id', $field->value))
+                            ->union($firstRows)
+                            ->distinct()
+                            ->get();
+                    }
+                    #endregion
 
                 } elseif ($field->relationship_count == 'editable') {
 

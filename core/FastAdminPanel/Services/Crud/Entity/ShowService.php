@@ -40,12 +40,6 @@ class ShowService implements Show
 
                 if ($field->relationship_count != 'editable') {
 
-                    $field->values = DB::table($this->tableService->getTable(
-                        $field->relationship_table_name,
-                    ))
-                        ->select('id', $field->relationship_view_field.' as title')
-                        ->get();
-
                     if ($field->relationship_count == 'single') {
 
                         if ($entityId == 0) {
@@ -81,6 +75,23 @@ class ShowService implements Show
                                 ->pluck('id');
                         }
                     }
+
+                    $firstRows = DB::table($this->tableService->getTable(
+                        $field->relationship_table_name,
+                    ))
+                        ->select('id', $field->relationship_view_field.' as title')
+                        ->orderBy('id', 'asc')
+                        ->limit(config('fap.relationship_ajax_threshold'));
+
+                    $field->values = DB::table($this->tableService->getTable(
+                        $field->relationship_table_name,
+                    ))
+                        ->select('id', $field->relationship_view_field.' as title')
+                        ->when(is_int($field->value), fn ($query) => $query->where('id', $field->value))
+                        ->when(! is_int($field->value), fn ($query) => $query->whereIn('id', $field->value))
+                        ->union($firstRows)
+                        ->distinct()
+                        ->get();
 
                 } elseif ($field->relationship_count == 'editable') {
 

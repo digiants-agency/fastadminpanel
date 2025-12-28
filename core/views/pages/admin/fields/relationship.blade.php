@@ -34,8 +34,16 @@
 				<label class="edit-field-title" v-text="field.title"></label>
 			</div>
 			<div>
-				<div v-if="field.relationship_count == 'single'" class="select-wrapper">
-					<v-select class="form-control" :options="[].concat.apply([{id: 0, title: '{{ __('fastadminpanel.choose_select') }}'}], field.values)" label="title" :reduce="title => title.id" v-model="field.value"></v-select>
+				<div class="select-wrapper" v-if="field.relationship_count == 'single'">
+					<v-select
+						class="form-control"
+						:options="options"
+						label="title"
+						:reduce="value => value.id"
+						:filterable="filterable"
+						v-on:search="onSearch"
+						v-model="field.value"
+					></v-select>
 					<div class="select-arrow-block">
 						<img src="/vendor/fastadminpanel/images/dropdown-ico.svg" alt="" class="select-arrow">
 					</div>
@@ -43,7 +51,16 @@
 				<div v-else-if="field.relationship_count == 'many'">
 					<div class="relationship-many" >
 						<div class="select-wrapper">
-							<v-select class="form-control" multiple :options="field.values" label="title" :reduce="title => title.id" v-model="field.value"></v-select>
+							<v-select
+								class="form-control"
+								:options="options"
+								label="title"
+								:reduce="value => value.id"
+								:filterable="filterable"
+								multiple
+								v-on:search="onSearch"
+								v-model="field.value"
+							></v-select>
 						</div>
 					</div>
 				</div>
@@ -53,6 +70,7 @@
 	</div>
 </template>
 
+{{-- TODO: divide - single, many, editable --}}
 <script>
 app.component('field-relationship', {
 	template: '#field-relationship',
@@ -60,10 +78,16 @@ app.component('field-relationship', {
 	props: ['field', 'pointer', 'table'],
 	data() {
 		return {
+			ajaxThreshold: {{config('fap.relationship_ajax_threshold')}},
 			error: '',
+			searchTimeout: 0,
+			options: [...this.field.values],
 		}
 	},
 	computed: {
+		filterable() {
+			return this.field.values.length < this.ajaxThreshold
+		},
 	},
 	watch: {
 	},
@@ -72,14 +96,52 @@ app.component('field-relationship', {
 	mounted() {
 	},
 	methods: {
-		check() {
-			return true
-		},
-		addGroup() {
-			this.field.value.push({
-				id: 0, 
-				fields: JSON.parse(JSON.stringify(this.field.values)), 
-			})
+		async onSearch(search, loading) {
+
+			if (this.filterable || !search.length) return
+
+			clearTimeout(this.searchTimeout)
+			this.searchTimeout = setTimeout(async () => {
+
+				const route = "{{ route('admin-api-cruds-entities-index', ['table' => 'table'], false) }}"
+					.replace('table', this.field.relationship_table_name)
+
+				const response = await req.get(route, {
+					fields: [`${this.field.relationship_view_field} as title`],
+					order: this.field.relationship_view_field,
+					order_sort: 'ASC',
+					search: search,
+					per_page: 200,
+				})
+
+				if (response.success) {
+					const options = response.data.instances.map(i => ({
+						id: i.id,
+						title: i.title,
+					}))
+
+					const applyOptions = []
+					const fields = this.field.relationship_count == 'single'
+						? [
+							{id: 0, title: '{{ __('fastadminpanel.choose_select') }}'},
+							this.field.values.find(f => f.id == this.field.value),
+						]
+						: this.field.value.map(id => this.field.values.find(f => f.id == id))
+
+					for (const field of fields) {
+						if (!field) continue
+						const option = options.find(o => o.id == field.id)
+						if (!option) {
+							applyOptions.push(field)
+						}
+					}
+
+					this.options = [
+						...applyOptions,
+						...options,
+					]
+				}
+			}, 500)
 		},
 		getEditableTitle(field) {
 
@@ -95,6 +157,15 @@ app.component('field-relationship', {
 			}
 
 			return field.value
+		},
+		check() {
+			return true
+		},
+		addGroup() {
+			this.field.value.push({
+				id: 0, 
+				fields: JSON.parse(JSON.stringify(this.field.values)), 
+			})
 		},
 	},
 })

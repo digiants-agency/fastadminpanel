@@ -23,7 +23,7 @@ class CrudEntityController extends Controller
 
         $data = $request->validated();
 
-        [$instances, $count] = $indexService->get($crud, $data);
+        [$instances, $count] = $indexService->get($crud, $data, $data['fields']);
 
         return Response::json([
             'instances' => $instances,

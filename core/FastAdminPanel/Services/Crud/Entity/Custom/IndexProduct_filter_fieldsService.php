@@ -3,6 +3,7 @@
 namespace App\FastAdminPanel\Services\Crud\Entity;
 
 use App\FastAdminPanel\Contracts\CrudEntity\Index;
+use App\FastAdminPanel\Facades\Lang;
 use App\FastAdminPanel\Services\Crud\TableService;
 use Illuminate\Support\Facades\DB;
 
@@ -39,16 +40,21 @@ class IndexService implements Index
                 ->map(fn ($f) => $f->db_title ? $f->db_title : "id_{$f->relationship_table_name}");
         }
 
-        $query->select('id', ...$select);
+        $query->select('id', 'id_product_filters', ...$select);
 
         $count = $query->count();
+
+        $filters = DB::table('product_filters_'.Lang::get())
+            ->select('id', 'title')
+            ->get();
 
         $instances = $query->orderBy($data['order'], $data['sort_order'])
             ->offset($data['offset'])
             ->limit($data['per_page'])
             ->get()
-            ->map(function ($i) {
+            ->map(function ($i) use ($filters) {
                 $i->is_marked = false;
+                $i->title = $filters->where('id', $i->id_product_filters)->first()->title.': '.$i->title;
 
                 return $i;
             });
