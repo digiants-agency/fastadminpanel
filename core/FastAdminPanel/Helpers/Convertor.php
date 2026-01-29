@@ -168,10 +168,15 @@ class Convertor
                 }
             }';
         $mobileStyles = self::pxToVw($styleFiles['mobile'], self::$width['mobile'], 'mobile');
+        $desktopStyles = self::pxToVw($styleFiles['desktop'], self::$width['desktop'], 'desktop');
 
-        self::saveToFile($filePathL, $styleFiles['desktop'], $cacheTime);
-        self::saveToFile($filePathM, self::pxToVw($styleFiles['desktop'], self::$width['desktop'], 'desktop'), $cacheTime);
-        self::saveToFile($filePathS, $tabletStyles.$mobileStyles, $cacheTime);
+        $lStyles = self::minify($styleFiles['desktop']);
+        $mStyles = self::minify($desktopStyles);
+        $sStyles = self::minify($tabletStyles.$mobileStyles);
+
+        self::saveToFile($filePathL, $lStyles, $cacheTime);
+        self::saveToFile($filePathM, $mStyles, $cacheTime);
+        self::saveToFile($filePathS, $sStyles, $cacheTime);
 
         $version = filemtime($cachePath.'/l'.$pageName.$hash.'.css');
 
@@ -225,5 +230,11 @@ class Convertor
         }
 
         return $styles;
+    }
+
+    protected static function minify($styles)
+    {
+        $styles = preg_replace('/^[ \t]+/m', '', $styles); // ltrim lines
+        return str_replace(array("\r", "\n"), '', $styles);
     }
 }
