@@ -59,21 +59,8 @@ class Convertor
             $method = '404';
         }
 
-        $pageName = strtolower(
-            str_replace(
-                [
-                    'App\Http\Controllers\\',
-                    '@',
-                    'Controller',
-                ],
-                [
-                    '',
-                    '_',
-                    '',
-                ],
-                $method
-            )
-        );
+        preg_match("/([a-zA-Z]+)Controller@([a-zA-Z]+)/", $method, $matches);
+        $pageName = strtolower($matches[1].'_'.$matches[2]);
 
         $filePathL = $cachePath.'/l'.$pageName.$hash.'.css';
 
