@@ -60,7 +60,7 @@ class Convertor
         }
 
         preg_match("/([a-zA-Z]+)Controller@([a-zA-Z]+)/", $method, $matches);
-        $pageName = strtolower($matches[1].'_'.$matches[2]);
+        $pageName = strtolower(($matches[1] ?? '').'_'.($matches[2] ?? ''));
 
         $filePathL = $cachePath.'/l'.$pageName.$hash.'.css';
 
