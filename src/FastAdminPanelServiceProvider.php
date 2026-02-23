@@ -5,6 +5,7 @@ namespace Digiants\FastAdminPanel;
 use Digiants\FastAdminPanel\Commands\FastAdminPanelInstall;
 use Digiants\FastAdminPanel\Commands\FastAdminPanelUninstall;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class FastAdminPanelServiceProvider extends ServiceProvider
@@ -17,6 +18,10 @@ class FastAdminPanelServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
 
         $this->commands([
             'fastadminpanel:install',
