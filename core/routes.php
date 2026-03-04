@@ -18,8 +18,10 @@ use App\FastAdminPanel\Controllers\SpaController;
 use App\FastAdminPanel\Facades\Lang;
 use UniSharp\LaravelFilemanager\Lfm;
 
+$panelUrl = config('fap.panel_url');
+
 Route::group([
-    'prefix' => Lang::prefix(prefix: 'admin/api'),
+    'prefix' => Lang::prefix(prefix: "$panelUrl/api"),
 ], function () {
 
     Route::get('/ping', [AuthController::class, 'ping'])->name('admin-api-ping');
@@ -94,8 +96,8 @@ Route::group([
 
 Route::group([
     'prefix' => Lang::prefix(),
-], function () {
+], function () use ($panelUrl) {
 
-    Route::get('/admin', [SpaController::class, 'spa']);
-    Route::get('/admin/{any}', [SpaController::class, 'spa'])->where('any', '.*');
+    Route::get("/$panelUrl", [SpaController::class, 'spa']);
+    Route::get("/$panelUrl/{any}", [SpaController::class, 'spa'])->where('any', '.*');
 });

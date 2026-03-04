@@ -29,7 +29,7 @@ class MyUploadAdapter {
         // integration to choose the right communication channel. This example uses
         // a POST request with JSON as a data structure but your configuration
         // could be different.
-        xhr.open( 'POST', location.origin + "/admin/api/image", true );
+        xhr.open( 'POST', `${location.origin}/${baseUrl}/api/image`, true );
         xhr.responseType = 'json';
     }
 

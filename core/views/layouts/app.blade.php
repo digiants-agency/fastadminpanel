@@ -92,6 +92,8 @@
 		@endforeach
 
 		<script>
+			const baseUrl = '{{ config("fap.panel_url") }}'
+
 			const initStores = async () => {
 
 				const dropdownsStore = useDropdownsStore()
@@ -121,12 +123,12 @@
 
 			const routes = [
 				{ 
-					path: '/admin/login',
+					path: `/${baseUrl}/login`,
 					name: 'login',
 					component: loginPage,
 				},
 				{
-					path: '/admin',
+					path: `/${baseUrl}`,
 					component: adminPage,
 					beforeEnter: checkAuth,
 					children: [
@@ -188,7 +190,7 @@
 					],
 				},
 				{ 
-					path: '/admin/:pathMatch(.*)*',
+					path: `/${baseUrl}/:pathMatch(.*)*`,
 					name: 'not-found',
 					component: notFoundPage,
 				},
