@@ -45,7 +45,7 @@ const dashboardPage = {
 	},
 	methods: {
 		async fetch() {
-			const response = await req.get("{{ route('admin-api-dashboard-index') }}")
+			const response = await req.get("{{ route('admin-api-dashboard-index', [], false) }}")
 			this.statistics = response.data
 
 			this.$nextTick(()=>{
