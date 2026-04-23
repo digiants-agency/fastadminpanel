@@ -29,7 +29,7 @@ return new class extends Migration
                     $table->integer('single_block_id');
                     $table->integer('sort')->default(0);
                     $table->integer('parent_id')->default(0);
-                    $table->text('value')->default('');
+                    $table->text('value')->nullable();
 
                     $table->index('single_block_id');
                     $table->index('parent_id');
