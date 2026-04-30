@@ -54,7 +54,7 @@ class IndexService implements Index
             });
 
         $relationFields = $crud->fields->filter(
-            fn ($f) => $f->type == 'relationship' && $f->relationship_count == 'single' && $f->show_in_list != 'no'
+            fn ($f) => !$select && $f->type == 'relationship' && $f->relationship_count == 'single' && $f->show_in_list != 'no'
         );
 
         foreach ($relationFields as $field) {
