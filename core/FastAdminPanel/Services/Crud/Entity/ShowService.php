@@ -88,7 +88,7 @@ class ShowService implements Show
                     ))
                         ->select('id', $field->relationship_view_field.' as title')
                         ->when(is_int($field->value), fn ($query) => $query->where('id', $field->value))
-                        ->when(! is_int($field->value), fn ($query) => $query->whereIn('id', $field->value))
+                        ->when(is_array($field->value), fn ($query) => $query->whereIn('id', $field->value))
                         ->union($firstRows)
                         ->distinct()
                         ->get();
