@@ -24,11 +24,11 @@ class SingleSaver
 
         } else {
 
-            $page->title = $data['title'];
-            $page->slug = $data['slug'];
-            $page->sort = $data['sort'];
-            $page->icon = $data['icon'];
-            $page->dropdown_slug = $data['dropdown_slug'];
+            $page->title = $data['title'] ?? $page->title;
+            $page->slug = $data['slug'] ?? $page->slug;
+            $page->sort = $data['sort'] ?? $page->sort;
+            $page->icon = $data['icon'] ?? $page->icon;
+            $page->dropdown_slug = $data['dropdown_slug'] ?? $page->dropdown_slug;
             $page->save();
         }
 

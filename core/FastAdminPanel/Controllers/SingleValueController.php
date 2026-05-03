@@ -19,15 +19,21 @@ class SingleValueController extends Controller
 
         $slugs = $policy->getSlugs('admin_read');
 
-        $pages = SinglePage::when($data['is_full'], fn ($q) => $q->with(['blocks' => fn ($q) => $q->with(['fields' => fn ($q) => $q->with(['fields' => fn ($q) => $q->orderBy('sort', 'ASC'),
-        ])
-            ->where('parent_id', 0)
-            ->orderBy('sort', 'ASC'),
-        ])
-            ->orderBy('sort', 'ASC'),
-        ])
-        )
-            ->when(! $slugs->contains('all'), fn ($q) => $q->whereIn('slug', $slugs))
+        $pages = SinglePage::query()
+            ->when(
+                $data['is_full'],
+                fn($q) => $q->with([
+                    'blocks' => fn($q) => $q->with([
+                        'fields' => fn($q) => $q->with([
+                            'fields' => fn($q) => $q->orderBy('sort', 'ASC'),
+                        ])
+                        ->where('parent_id', 0)
+                        ->orderBy('sort', 'ASC'),
+                    ])
+                    ->orderBy('sort', 'ASC'),
+                ])
+            )
+            ->when(! $slugs->contains('all'), fn($q) => $q->whereIn('slug', $slugs))
             ->get();
 
         return Response::json($pages);

@@ -190,7 +190,7 @@ const singlesEditPage = {
 
 			if (confirm("Are you sure?")) {
 				
-				const response = await req.post("{{ route('admin-api-singles-destroy', [], false) }}", {
+				const response = await req.delete("{{ route('admin-api-singles-destroy', [], false) }}", {
 					slug: this.single.slug,
 				})
 
